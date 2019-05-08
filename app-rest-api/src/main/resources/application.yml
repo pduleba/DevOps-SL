@@ -1,0 +1,39 @@
+---
+server:
+  port: 8080
+  servlet:
+    context-path: /app-rest
+---
+spring:
+  profiles:
+    active: dev
+---
+spring:
+  profiles: dev
+  freemarker:
+    template-loader-path: classpath:/templates
+    suffix: .ftl
+  datasource:
+    url: jdbc:mysql://localhost:3306/app-db
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      # Naming strategies for use with Hibernate entities
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    # Use spring.jpa.properties.* for Hibernate native properties (the prefix is
+    # stripped before adding them to the entity manager)
+    properties:
+      hibernate:
+        # Do not initialize the schema on startup
+        hbm2ddl:
+          auto: none
+        # Show each sql query
+        show_sql: true
+        # Format each sql query
+        format_sql: false
+        # The SQL dialect makes Hibernate generate better SQL for the chosen database
+        dialect: org.hibernate.dialect.MySQL5Dialect
+...

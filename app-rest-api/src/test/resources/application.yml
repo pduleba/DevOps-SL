@@ -1,0 +1,22 @@
+---
+server:
+  port: 8080
+  servlet:
+    context-path: /app-rest
+---
+spring:
+  profiles:
+    active: test
+---
+spring:
+  profiles: test
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  datasource:
+    url: jdbc:h2:mem:app-db-test
+    platform: h2
+...

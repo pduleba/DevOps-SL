@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS orders (
+  id       INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name     VARCHAR(25),
+  amount   INT,
+  path     VARCHAR(50)
+) ENGINE=InnoDB;
