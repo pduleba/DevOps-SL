@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6ecf9073-b248-44fc-bbdc-568bc0629be8",
+		"_postman_id": "bbdc0374-27a6-4903-af85-00a201c14aa2",
 		"name": "DevOps",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -100,7 +100,7 @@
 					"response": []
 				},
 				{
-					"name": "/deleteById/{orderId}",
+					"name": "/delete/{id}",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -121,7 +121,7 @@
 							"raw": "{\n\t\"id\" : 5,\n\t\"name\" : \"Dog\",\n\t\"amount\" : 1\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/app-rest/api/order/deleteById/7",
+							"raw": "http://localhost:8080/app-rest/api/order/delete/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -131,8 +131,8 @@
 								"app-rest",
 								"api",
 								"order",
-								"deleteById",
-								"7"
+								"delete",
+								"4"
 							]
 						}
 					},
@@ -144,23 +144,16 @@
 			"name": "S3Controller",
 			"item": [
 				{
-					"name": "/signedUrl",
+					"name": "/findAll",
 					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"method": "GET",
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"httpMethod\": \"PUT\",\n\t\"fileName\": \"file.txt\",\n\t\"params\" : {\n\t\t\"x-amz-acl\": \"private\",\n\t\t\"x-amz-storage-class\": \"STANDARD_IA\"\n\t}\n}"
+							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:8080/app-rest/api/s3/signedUrl",
+							"raw": "http://localhost:8080/app-rest/api/s3/findAll",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -170,26 +163,28 @@
 								"app-rest",
 								"api",
 								"s3",
-								"signedUrl"
+								"findAll"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "sendToS3",
+					"name": "/save [direct]",
 					"request": {
 						"method": "PUT",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "text/plain",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							},
 							{
 								"key": "Accept",
 								"value": "application/json, text/plain, */*",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -197,7 +192,7 @@
 							"file": {}
 						},
 						"url": {
-							"raw": "https://pduleba-us-east-1.s3.amazonaws.com/file.txt?x-amz-acl=private&x-amz-storage-class=STANDARD_IA&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190508T150725Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1799&X-Amz-Credential=AKIA46ZQGKPVQYMMBL7W%2F20190508%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=2e7dbf0fdad5fcf82164ac067ba992af894e68660395a3000cd88d121f309e20",
+							"raw": "https://pduleba-us-east-1.s3.amazonaws.com/file.txt?x-amz-acl=private&x-amz-storage-class=STANDARD_IA&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190510T071452Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1799&X-Amz-Credential=AKIA46ZQGKPVQYMMBL7W%2F20190510%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=529536c18e1d3ebf4e823ece1a30f7c817d0bc7d3c394b3b43cc6c218e848643",
 							"protocol": "https",
 							"host": [
 								"pduleba-us-east-1",
@@ -223,7 +218,7 @@
 								},
 								{
 									"key": "X-Amz-Date",
-									"value": "20190508T150725Z"
+									"value": "20190510T071452Z"
 								},
 								{
 									"key": "X-Amz-SignedHeaders",
@@ -235,12 +230,84 @@
 								},
 								{
 									"key": "X-Amz-Credential",
-									"value": "AKIA46ZQGKPVQYMMBL7W%2F20190508%2Fus-east-1%2Fs3%2Faws4_request"
+									"value": "AKIA46ZQGKPVQYMMBL7W%2F20190510%2Fus-east-1%2Fs3%2Faws4_request"
 								},
 								{
 									"key": "X-Amz-Signature",
-									"value": "2e7dbf0fdad5fcf82164ac067ba992af894e68660395a3000cd88d121f309e20"
+									"value": "529536c18e1d3ebf4e823ece1a30f7c817d0bc7d3c394b3b43cc6c218e848643"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/delete/{id}",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/app-rest/api/s3/delete/file.txt",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app-rest",
+								"api",
+								"s3",
+								"delete",
+								"file.txt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/signedUrl",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"httpMethod\": \"PUT\",\n\t\"key\": \"file.txt\",\n\t\"params\" : {\n\t\t\"x-amz-acl\": \"private\",\n\t\t\"x-amz-storage-class\": \"STANDARD_IA\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/app-rest/api/s3/signedUrl",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app-rest",
+								"api",
+								"s3",
+								"signedUrl"
 							]
 						}
 					},
