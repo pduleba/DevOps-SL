@@ -32,7 +32,7 @@ public class OrderService {
         return orderMapper.toDto(orderRepository.save(orderMapper.fromDto(order)));
     }
 
-    public Optional<Order> deleteById(Integer orderId) {
+    public Optional<Order> delete(Integer orderId) {
         Optional<OrderEntity> orderEntity = orderRepository.findById(orderId);
 
         if (orderEntity.isPresent()) {

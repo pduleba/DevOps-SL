@@ -1,23 +1,23 @@
-var app = angular.module('app',['ui.router','ngStorage']);
+var rds = angular.module('rds',['ui.router','ngStorage']);
 
-app.constant('urls', {
+rds.constant('urls', {
     ORDER_API: 'http://localhost:8080/app-rest/api/order'
 });
 
-app.config(['$stateProvider', '$urlRouterProvider',
+rds.config(['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
 
         $stateProvider
-            .state('home', {
+            .state('rds', {
                 url: '/',
-                templateUrl: 'partials/list',
-                controller:'OrderController',
+                templateUrl: 'partials/view',
+                controller:'RDSController',
                 controllerAs:'ctrl',
                 resolve: {
-                    orders: function ($q, OrderService) {
+                    orders: function ($q, RDSService) {
                         console.log('Load all orders');
                         var deferred = $q.defer();
-                        OrderService.findAll().then(deferred.resolve, deferred.resolve);
+                        RDSService.findAll().then(deferred.resolve, deferred.resolve);
                         return deferred.promise;
                     }
                 }

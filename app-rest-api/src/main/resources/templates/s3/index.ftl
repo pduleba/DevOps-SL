@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" ng-app="app">
+<html lang="en" ng-app="s3">
     <head>
         <title>${title}</title>
         <link href="css/bootstrap.css" rel="stylesheet"/>
@@ -12,8 +12,8 @@
         <script src="js/lib/angular-ui-router.min.js"></script>
         <script src="js/lib/localforage.min.js"></script>
         <script src="js/lib/ngStorage.min.js"></script>
-        <script src="js/app/app.js"></script>
-        <script src="js/app/OrderService.js"></script>
-        <script src="js/app/OrderController.js"></script>
+        <script src="js/s3/s3.js"></script>
+        <script src="js/s3/S3Service.js"></script>
+        <script src="js/s3/S3Controller.js"></script>
     </body>
 </html>

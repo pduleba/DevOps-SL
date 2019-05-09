@@ -42,9 +42,9 @@ public class OrderController {
         return hateoasMapper.toResource(order, RESOURCE.save(order));
     }
 
-    @DeleteMapping("/deleteById/{orderId}")
-    public RestResponse<Order> deleteById(@PathVariable("orderId") Integer orderId) {
-        Optional<Order> order = orderService.deleteById(orderId);
-        return hateoasMapper.toResource(order.orElse(null), RESOURCE.deleteById(orderId));
+    @DeleteMapping("/delete/{orderId}")
+    public RestResponse<Order> delete(@PathVariable("orderId") Integer orderId) {
+        Optional<Order> order = orderService.delete(orderId);
+        return hateoasMapper.toResource(order.orElse(null), RESOURCE.delete(orderId));
     }
 }

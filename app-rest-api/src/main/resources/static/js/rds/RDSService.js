@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').factory('OrderService',
+angular.module('rds').factory('RDSService',
     ['$localStorage', '$http', '$q', 'urls',
         function ($localStorage, $http, $q, urls) {
 
@@ -15,23 +15,23 @@ angular.module('app').factory('OrderService',
             return factory;
 
             function getAll(){
-                console.log('Get :: From Local storage');
+                console.log('Service.GetAll :: From Local storage');
                 return $localStorage.orders;
             }
 
             function findAll() {
-                console.log('Find');
+                console.log('Service.FindAll');
                 var deferred = $q.defer();
                 $http.get(urls.ORDER_API + '/findAll')
                     .then(
                         function (response) {
-                            console.log('Find :: Complete');
+                            console.log('Service.FindAll :: Complete');
                             $localStorage.orders = response.data.body;
-                            console.log('Find :: In Local storage');
+                            console.log('Service.FindAll :: In Local storage');
                             deferred.resolve(response);
                         },
                         function (error) {
-                            console.error('Find :: Error :: ' + error.data.errorMessage);
+                            console.error('Service.FindAll :: Error :: ' + error.data.errorMessage);
                             deferred.reject(error);
                         }
                     );
@@ -39,16 +39,16 @@ angular.module('app').factory('OrderService',
             }
 
             function findById(id) {
-                console.log('FindById');
+                console.log('Service.FindById');
                 var deferred = $q.defer();
                 $http.get(urls.ORDER_API + '/findById/' + id)
                     .then(
                         function (response) {
-                            console.log('FindById :: Complete');
+                            console.log('Service.FindById :: Complete');
                             deferred.resolve(response.data.body);
                         },
                         function (error) {
-                            console.error('FindById :: Error :: ' + error.data.errorMessage);
+                            console.error('Service.FindById :: Error :: ' + error.data.errorMessage);
                             deferred.reject(error);
                         }
                     );
@@ -56,18 +56,18 @@ angular.module('app').factory('OrderService',
             }
 
             function saveOrder(order) {
-                console.log('Save');
+                console.log('Service.SaveOrder');
                 var deferred = $q.defer();
                 $http.put(urls.ORDER_API + '/save', order)
                     .then(
                         function (response) {
-                            console.log('Save :: Complete');
+                            console.log('Service.SaveOrder :: Complete');
                             findAll();
-                            console.log('Save :: Updating Complete');
+                            console.log('Service.SaveOrder :: Updating Complete');
                             deferred.resolve(response.data.body);
                         },
                         function (error) {
-                            console.error('Save :: Error :: ' + error.data.errorMessage);
+                            console.error('Service.SaveOrder :: Error :: ' + error.data.errorMessage);
                             deferred.reject(error);
                         }
                     );
@@ -75,18 +75,18 @@ angular.module('app').factory('OrderService',
             }
 
             function deleteOrder(id) {
-                console.log('Delete');
+                console.log('Service.DeleteOrder');
                 var deferred = $q.defer();
-                $http.delete(urls.ORDER_API + '/deleteById/' + id)
+                $http.delete(urls.ORDER_API + '/delete/' + id)
                     .then(
                         function (response) {
-                            console.log('Delete :: Complete');
+                            console.log('Service.DeleteOrder :: Complete');
                             findAll();
-                            console.log('Delete :: Updating Complete');
+                            console.log('Service.DeleteOrder :: Updating Complete');
                             deferred.resolve(response.data.body);
                         },
                         function (error) {
-                            console.error('Delete :: Error :: ' + error.data.errorMessage);
+                            console.error('Service.DeleteOrder :: Error :: ' + error.data.errorMessage);
                             deferred.reject(error);
                         }
                     );

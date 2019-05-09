@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('app').controller('OrderController',
-    ['OrderService', '$scope',  function( OrderService, $scope) {
+angular.module('rds').controller('RDSController',
+    ['RDSService', '$scope',  function( RDSService, $scope) {
 
         var self = this;
         self.order = {};
@@ -37,7 +37,7 @@ angular.module('app').controller('OrderController',
 
         function getAll(){
             console.log('GetAll');
-            return OrderService.getAll();
+            return RDSService.getAll();
             console.log('GetAll :: Complete');
         }
 
@@ -45,7 +45,7 @@ angular.module('app').controller('OrderController',
             console.log('FindById');
             self.successMessage='';
             self.errorMessage='';
-            OrderService.findById(id).then(
+            RDSService.findById(id).then(
                 function (order) {
                     self.order = order;
                     console.log='FindById :: Complete';
@@ -62,7 +62,7 @@ angular.module('app').controller('OrderController',
             console.log('SaveOrder');
             self.successMessage='';
             self.errorMessage='';
-            OrderService.saveOrder(order)
+            RDSService.saveOrder(order)
                 .then(
                     function (response){
                         console.log('SaveOrder :: Complete');
@@ -80,7 +80,7 @@ angular.module('app').controller('OrderController',
             console.log('DeleteOrder');
             self.successMessage='';
             self.errorMessage='';
-            OrderService.deleteOrder(id)
+            RDSService.deleteOrder(id)
                 .then(
                     function(){
                         console.log('DeleteOrder :: Complete');
@@ -97,7 +97,7 @@ angular.module('app').controller('OrderController',
             console.log('EditOrder');
             self.successMessage='';
             self.errorMessage='';
-            OrderService.findById(id).then(
+            RDSService.findById(id).then(
                 function (order) {
                     console.log('EditOrder :: Complete');
                     self.order = order;

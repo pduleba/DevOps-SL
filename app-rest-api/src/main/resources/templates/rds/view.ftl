@@ -11,10 +11,10 @@
                     <input type="hidden" ng-model="ctrl.order.id"/>
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label class="col-md-2 control-lable" for="oname">Name</label>
+                            <label class="col-md-2 control-label" for="name">Name</label>
                             <div class="col-md-7">
-                                <input type="text" ng-model="ctrl.order.name" id="oname"
-                                       class="ordername form-control input-sm" placeholder="Enter order name" required
+                                <input type="text" ng-model="ctrl.order.name" id="name"
+                                       class="form-control input-sm" placeholder="Enter order name" required
                                        ng-minlength="1"/>
                             </div>
                         </div>
@@ -22,7 +22,7 @@
 
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label class="col-md-2 control-lable" for="amount">Amount</label>
+                            <label class="col-md-2 control-label" for="amount">Amount</label>
                             <div class="col-md-7">
                                 <input type="text" ng-model="ctrl.order.amount" id="amount"
                                        class="form-control input-sm" placeholder="Enter order Amount." required
@@ -34,9 +34,9 @@
                     <div class="row">
                         <div class="form-actions floatRight">
                             <input type="submit" value="{{!ctrl.order.id ? 'Add' : 'Update'}}"
-                                   class="btn btn-primary btn-sm" ng-disabled="orderForm.$invalid || orderForm.$pristine">
-                            <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm"
-                                    ng-disabled="orderForm.$pristine">Reset Form
+                                   class="btn btn-primary btn-sm"
+                                   ng-disabled="orderForm.$invalid || orderForm.$pristine" />
+                            <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm">Reset Form
                             </button>
                         </div>
                     </div>
