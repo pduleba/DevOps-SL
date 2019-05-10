@@ -1,16 +1,25 @@
 'use strict';
 
-angular.module('s3').controller('S3Controller',
+angular.module('s3').
+directive('fileInput', ['$parse', function($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, elm, attrs) {
+            elm.bind('change', function() {
+                $parse(attrs.fileInput).assign(scope, elm[0].files[0])
+                scope.$apply()
+            });
+        }
+    }
+}]).
+controller('S3Controller',
     ['S3Service', '$scope',  function( S3Service, $scope) {
 
         var self = this;
-        self.s3object = {};
-        self.s3objects=[];
 
         self.submit = submit;
-        self.reset = reset;
         self.getAll = getAll;
-        self.saveS3Object = saveS3Object;
+        self.uploadS3Object = uploadS3Object;
         self.deleteS3Object = deleteS3Object;
 
         self.successMessage = '';
@@ -19,57 +28,60 @@ angular.module('s3').controller('S3Controller',
         self.onlyIntegers = /^\d+$/;
 
         function submit() {
-            console.log('Submit');
-            saveS3Object(self.s3object);
-            console.log('Submit :: Complete');
-        }
-
-        function reset(){
-            console.log('Reset');
-            self.successMessage='';
-            self.errorMessage='';
-            self.s3object={};
-            $scope.s3objectForm.$setPristine(); //reset Form
-            console.log('Reset :: Complete');
+            console.log('Controller.submit');
+            uploadS3Object();
+            console.log('Controller.submit :: Complete');
         }
 
         function getAll(){
-            console.log('GetAll');
+            console.log('Controller.getAll');
             return S3Service.getAll();
-            console.log('GetAll :: Complete');
+            console.log('Controller.getAll :: Complete');
         }
 
-        function saveS3Object(s3object){
-            console.log('Save');
+        function uploadS3Object(){
+            console.log('Controller.uploadS3Object');
             self.successMessage='';
             self.errorMessage='';
-            S3Service.saveS3Object(s3object)
+            var file = $scope.file;
+            console.log('Controller.uploadS3Object :: getSignedUrl');
+            S3Service.getSignedUrl(file.name)
                 .then(
-                    function (response){
-                        console.log('Save :: Complete');
-                        self.successMessage='Save :: Complete';
-                        $scope.s3objectForm.$setPristine();
+                    function(signedUrl) {
+                        console.log('Controller.uploadS3Object :: getSignedUrl :: Complete');
+                        S3Service.uploadS3Object(signedUrl, file)
+                            .then(
+                                function (response){
+                                    $scope.s3objectForm.$setPristine();
+                                    console.log('Controller.uploadS3Object :: Complete');
+                                    self.successMessage='Controller.uploadS3Object :: Complete';
+                                },
+                                function(error){
+                                    console.error('Controller.uploadS3Object :: Error :: ' + error.data);
+                                    self.errorMessage='Controller.uploadS3Object :: Error :: ' + error.data;
+                                }
+                            );
                     },
                     function(error){
-                        console.error('Save :: Error :: ' + error.data);
-                        self.errorMessage='Save :: Error :: ' + error.data;
+                        console.error('Controller.uploadS3Object :: getSignedUrl :: Error :: ' + error.data);
+                        self.errorMessage='Controller.uploadS3Object :: getSignedUrl :: Error :: ' + error.data;
                     }
                 );
         }
 
         function deleteS3Object(key){
-            console.log('Delete');
+            console.log('Controller.deleteS3Object');
             self.successMessage='';
             self.errorMessage='';
             S3Service.deleteS3Object(key)
                 .then(
                     function(){
-                        console.log('Delete :: Complete');
-                        self.successMessage='Delete :: Complete';
+                        console.log('Controller.deleteS3Object :: Complete');
+                        self.successMessage='Controller.deleteS3Object :: Complete';
                     },
                     function(error){
-                        console.error('Delete :: Error :: ' + error.data);
-                        self.errorMessage='Delete :: Error :: ' + error.data;
+                        console.error('Controller.deleteS3Object :: Error :: ' + error.data);
+                        self.errorMessage='Controller.deleteS3Object :: Error :: ' + error.data;
                     }
                 );
         }

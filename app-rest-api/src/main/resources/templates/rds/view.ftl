@@ -1,7 +1,7 @@
 <div class="generic-container">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <span class="lead">Order</span>
+            <span class="lead">New RDS entry</span>
         </div>
         <div class="panel-body">
             <div class="formcontainer">
@@ -46,7 +46,7 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <span class="lead">List of Orders</span>
+            <span class="lead">Content of RDS</span>
         </div>
         <div class="panel-body">
             <div class="table-responsive">

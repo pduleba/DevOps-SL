@@ -5,7 +5,6 @@ angular.module('rds').controller('RDSController',
 
         var self = this;
         self.order = {};
-        self.orders=[];
 
         self.submit = submit;
         self.reset = reset;
@@ -21,89 +20,89 @@ angular.module('rds').controller('RDSController',
         self.onlyIntegers = /^\d+$/;
 
         function submit() {
-            console.log('Submit');
+            console.log('Controller.submit');
             saveOrder(self.order);
-            console.log('Submit :: Complete');
+            console.log('Controller.submit :: Complete');
         }
 
         function reset(){
-            console.log('Reset');
+            console.log('Controller.reset');
             self.successMessage='';
             self.errorMessage='';
             self.order={};
             $scope.orderForm.$setPristine(); //reset Form
-            console.log('Reset :: Complete');
+            console.log('Controller.reset :: Complete');
         }
 
         function getAll(){
-            console.log('GetAll');
+            console.log('Controller.getAll');
             return RDSService.getAll();
-            console.log('GetAll :: Complete');
+            console.log('Controller.getAll :: Complete');
         }
 
         function findById(id) {
-            console.log('FindById');
+            console.log('Controller.findById');
             self.successMessage='';
             self.errorMessage='';
             RDSService.findById(id).then(
                 function (order) {
                     self.order = order;
-                    console.log='FindById :: Complete';
-                    self.successMessage='FindById :: Complete';
+                    console.log='Controller.findById :: Complete';
+                    self.successMessage='Controller.findById :: Complete';
                 },
                 function (error) {
-                        console.error('FindById :: Error :: ' + error.data);
-                        self.errorMessage='FindById :: Error :: ' + error.data;
+                        console.error('Controller.findById :: Error :: ' + error.data);
+                        self.errorMessage='Controller.findById :: Error :: ' + error.data;
                 }
             );
         }
 
         function saveOrder(order){
-            console.log('SaveOrder');
+            console.log('Controller.saveOrder');
             self.successMessage='';
             self.errorMessage='';
             RDSService.saveOrder(order)
                 .then(
                     function (response){
-                        console.log('SaveOrder :: Complete');
-                        self.successMessage='SaveOrder :: Complete';
+                        console.log('Controller.saveOrder :: Complete');
+                        self.successMessage='Controller.saveOrder :: Complete';
                         $scope.orderForm.$setPristine();
                     },
                     function(error){
-                        console.error('SaveOrder :: Error :: ' + error.data);
-                        self.errorMessage='SaveOrder :: Error :: ' + error.data;
+                        console.error('Controller.saveOrder :: Error :: ' + error.data);
+                        self.errorMessage='Controller.saveOrder :: Error :: ' + error.data;
                     }
                 );
         }
 
         function deleteOrder(id){
-            console.log('DeleteOrder');
+            console.log('Controller.deleteOrder');
             self.successMessage='';
             self.errorMessage='';
             RDSService.deleteOrder(id)
                 .then(
                     function(){
-                        console.log('DeleteOrder :: Complete');
-                        self.successMessage='DeleteOrder :: Complete';
+                        console.log('Controller.deleteOrder :: Complete');
+                        self.successMessage='Controller.deleteOrder :: Complete';
                     },
                     function(error){
-                        console.error('DeleteOrder :: Error :: ' + error.data);
-                        self.errorMessage='DeleteOrder :: Error :: ' + error.data;
+                        console.error('Controller.deleteOrder :: Error :: ' + error.data);
+                        self.errorMessage='Controller.deleteOrder :: Error :: ' + error.data;
                     }
                 );
         }
 
         function editOrder(id) {
-            console.log('EditOrder');
+            console.log('Controller.editOrder');
             self.successMessage='';
             self.errorMessage='';
             RDSService.findById(id).then(
                 function (order) {
-                    console.log('EditOrder :: Complete');
+                    console.log('Controller.editOrder :: Complete');
                     self.order = order;
                 },
                 function (error) {
-                    console.error('EditOrder :: Error :: ' + error.data);
+                    console.error('Controller.editOrder :: Error :: ' + error.data);
                 }
             );
         }

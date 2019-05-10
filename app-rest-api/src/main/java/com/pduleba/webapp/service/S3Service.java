@@ -76,7 +76,7 @@ public class S3Service {
 
         try {
 
-            // maxKeys is set to 2 to demonstrate the use of
+            // maxKeys is set to 10 to demonstrate the use of
             // ListObjectsV2Result.getNextContinuationToken()
             ListObjectsV2Request request = new ListObjectsV2Request()
                     .withBucketName(bucketName)

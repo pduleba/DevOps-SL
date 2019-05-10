@@ -9,6 +9,8 @@
 
 #### RESTful API
 * Import [DevOps.postman_collection.json](/util-postman/DevOps.postman_collection.json) Postman collection, where
+  * `StatusController` contains API status (for monitoring)
+    * http `ping` returns server status for health check purposes
   * `OrderController` contains API for RDS/MySQL
     * http `findAll` all entries in DB
     * http `findById` entry by id in DB

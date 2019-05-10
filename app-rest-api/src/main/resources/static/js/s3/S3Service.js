@@ -4,8 +4,9 @@ angular.module('s3').factory('S3Service',
     ['$localStorage', '$http', '$q', 'urls',
         function ($localStorage, $http, $q, urls) {
 
-            var s3request = {
+            self.s3requestTemplate = {
                 "httpMethod": "PUT",
+                "key": "",
                 "params": {
                         "x-amz-acl":"private",
                         "x-amz-storage-class": "STANDARD_IA"
@@ -46,10 +47,10 @@ angular.module('s3').factory('S3Service',
                 return deferred.promise;
             }
 
-            function uploadS3Object(s3object) {
+            function uploadS3Object(signedUrl, file) {
                 console.log('Service.UploadS3Object');
                 var deferred = $q.defer();
-                $http.put(urls.S3_API + '/TODO', s3object)
+                $http.put(signedUrl, file)
                     .then(
                         function (response) {
                             console.log('Service.UploadS3Object :: Complete');
@@ -65,12 +66,12 @@ angular.module('s3').factory('S3Service',
                 return deferred.promise;
             }
 
-            function getSignedUrl(s3object) {
+            function getSignedUrl(key) {
                 console.log('Service.SignedUrl');
                 var deferred = $q.defer();
-                self.s3request.key = s3object.key;
+                self.s3requestTemplate.key = key;
 
-                $http.post(urls.S3_API + '/signedUrl', s3request)
+                $http.post(urls.S3_API + '/signedUrl', s3requestTemplate)
                     .then(
                         function (response) {
                             console.log('Service.SignedUrl :: Complete');
