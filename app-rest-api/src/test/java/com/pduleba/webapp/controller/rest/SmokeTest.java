@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SmokeTest {
 
     @Autowired
-    private OrderController controller;
+    private RDSController controller;
 
     @Test
     public void contexLoads() throws Exception {

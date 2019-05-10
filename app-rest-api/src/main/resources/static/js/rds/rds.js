@@ -1,8 +1,4 @@
-var rds = angular.module('rds',['ui.router','ngStorage']);
-
-rds.constant('urls', {
-    ORDER_API: 'http://localhost:8080/app-rest/api/order'
-});
+var rds = angular.module('rds',['ui.router','ngStorage','app']);
 
 rds.config(['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {

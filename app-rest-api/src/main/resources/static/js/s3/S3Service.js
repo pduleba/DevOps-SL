@@ -31,7 +31,7 @@ angular.module('s3').factory('S3Service',
             function findAll() {
                 console.log('Service.FindAll');
                 var deferred = $q.defer();
-                $http.get(urls.S3_API + '/findAll')
+                $http.get(urls.API_URL + '/s3/findAll')
                     .then(
                         function (response) {
                             console.log('Service.FindAll :: Complete');
@@ -71,7 +71,7 @@ angular.module('s3').factory('S3Service',
                 var deferred = $q.defer();
                 self.s3requestTemplate.key = key;
 
-                $http.post(urls.S3_API + '/signedUrl', s3requestTemplate)
+                $http.post(urls.API_URL + '/s3/signedUrl', s3requestTemplate)
                     .then(
                         function (response) {
                             console.log('Service.SignedUrl :: Complete');
@@ -88,7 +88,7 @@ angular.module('s3').factory('S3Service',
             function deleteS3Object(key) {
                 console.log('Service.DeleteS3Object');
                 var deferred = $q.defer();
-                $http.delete(urls.S3_API + '/delete/' + key)
+                $http.delete(urls.API_URL + '/s3/delete/' + key)
                     .then(
                         function (response) {
                             console.log('Service.DeleteS3Object :: Complete');

@@ -22,7 +22,7 @@ angular.module('rds').factory('RDSService',
             function findAll() {
                 console.log('Service.findAll');
                 var deferred = $q.defer();
-                $http.get(urls.ORDER_API + '/findAll')
+                $http.get(urls.API_URL + '/rds/findAll')
                     .then(
                         function (response) {
                             console.log('Service.findAll :: Complete');
@@ -41,7 +41,7 @@ angular.module('rds').factory('RDSService',
             function findById(id) {
                 console.log('Service.findById');
                 var deferred = $q.defer();
-                $http.get(urls.ORDER_API + '/findById/' + id)
+                $http.get(urls.API_URL + '/rds/findById/' + id)
                     .then(
                         function (response) {
                             console.log('Service.findById :: Complete');
@@ -58,7 +58,7 @@ angular.module('rds').factory('RDSService',
             function saveOrder(order) {
                 console.log('Service.saveOrder');
                 var deferred = $q.defer();
-                $http.put(urls.ORDER_API + '/save', order)
+                $http.put(urls.API_URL + '/rds/save', order)
                     .then(
                         function (response) {
                             console.log('Service.saveOrder :: Complete');
@@ -77,7 +77,7 @@ angular.module('rds').factory('RDSService',
             function deleteOrder(id) {
                 console.log('Service.deleteOrder');
                 var deferred = $q.defer();
-                $http.delete(urls.ORDER_API + '/delete/' + id)
+                $http.delete(urls.API_URL + '/rds/delete/' + id)
                     .then(
                         function (response) {
                             console.log('Service.deleteOrder :: Complete');

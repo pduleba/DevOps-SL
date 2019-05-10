@@ -1,8 +1,4 @@
-var s3 = angular.module('s3',['ui.router','ngStorage']);
-
-s3.constant('urls', {
-    S3_API: 'http://localhost:8080/app-rest/api/s3'
-});
+var s3 = angular.module('s3',['ui.router','ngStorage','app']);
 
 s3.config(['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {

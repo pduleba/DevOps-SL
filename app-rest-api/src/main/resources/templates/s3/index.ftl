@@ -12,6 +12,7 @@
         <script src="js/lib/angular-ui-router.min.js"></script>
         <script src="js/lib/localforage.min.js"></script>
         <script src="js/lib/ngStorage.min.js"></script>
+        <script src="js/app.js"></script>
         <script src="js/s3/s3.js"></script>
         <script src="js/s3/S3Service.js"></script>
         <script src="js/s3/S3Controller.js"></script>

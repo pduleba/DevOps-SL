@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bbdc0374-27a6-4903-af85-00a201c14aa2",
+		"_postman_id": "3f3dedc1-e955-4618-b0e7-6daf396cab0c",
 		"name": "DevOps",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -37,7 +37,7 @@
 			]
 		},
 		{
-			"name": "OrderController",
+			"name": "RDSController",
 			"item": [
 				{
 					"name": "/findAll",
@@ -49,7 +49,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:8080/app-rest/api/order/findAll",
+							"raw": "http://localhost:8080/app-rest/api/rds/findAll",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -58,7 +58,7 @@
 							"path": [
 								"app-rest",
 								"api",
-								"order",
+								"rds",
 								"findAll"
 							]
 						}
@@ -75,7 +75,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:8080/app-rest/api/order/findById/1",
+							"raw": "http://localhost:8080/app-rest/api/rds/findById/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -84,7 +84,7 @@
 							"path": [
 								"app-rest",
 								"api",
-								"order",
+								"rds",
 								"findById",
 								"1"
 							]
@@ -114,7 +114,7 @@
 							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Apple\",\r\n    \"amount\": 100\r\n}\r\n"
 						},
 						"url": {
-							"raw": "http://localhost:8080/app-rest/api/order/save",
+							"raw": "http://localhost:8080/app-rest/api/rds/save",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -123,7 +123,7 @@
 							"path": [
 								"app-rest",
 								"api",
-								"order",
+								"rds",
 								"save"
 							]
 						}
@@ -152,7 +152,7 @@
 							"raw": "{\n\t\"id\" : 5,\n\t\"name\" : \"Dog\",\n\t\"amount\" : 1\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/app-rest/api/order/delete/4",
+							"raw": "http://localhost:8080/app-rest/api/rds/delete/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -161,9 +161,9 @@
 							"path": [
 								"app-rest",
 								"api",
-								"order",
+								"rds",
 								"delete",
-								"4"
+								"3"
 							]
 						}
 					},
@@ -223,7 +223,7 @@
 							"file": {}
 						},
 						"url": {
-							"raw": "https://pduleba-us-east-1.s3.amazonaws.com/file.txt?x-amz-acl=private&x-amz-storage-class=STANDARD_IA&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190510T071452Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1799&X-Amz-Credential=AKIA46ZQGKPVQYMMBL7W%2F20190510%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=529536c18e1d3ebf4e823ece1a30f7c817d0bc7d3c394b3b43cc6c218e848643",
+							"raw": "https://pduleba-us-east-1.s3.amazonaws.com/text-file.txt?x-amz-acl=private&x-amz-storage-class=STANDARD_IA&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190510T134414Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1799&X-Amz-Credential=AKIA46ZQGKPVQYMMBL7W%2F20190510%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=19d0bed23606d1117d5ab9ac362ea8ef87a8b0d1e83d7baef7a4788ce09ba6e7",
 							"protocol": "https",
 							"host": [
 								"pduleba-us-east-1",
@@ -232,7 +232,7 @@
 								"com"
 							],
 							"path": [
-								"file.txt"
+								"text-file.txt"
 							],
 							"query": [
 								{
@@ -249,7 +249,7 @@
 								},
 								{
 									"key": "X-Amz-Date",
-									"value": "20190510T071452Z"
+									"value": "20190510T134414Z"
 								},
 								{
 									"key": "X-Amz-SignedHeaders",
@@ -265,7 +265,7 @@
 								},
 								{
 									"key": "X-Amz-Signature",
-									"value": "529536c18e1d3ebf4e823ece1a30f7c817d0bc7d3c394b3b43cc6c218e848643"
+									"value": "19d0bed23606d1117d5ab9ac362ea8ef87a8b0d1e83d7baef7a4788ce09ba6e7"
 								}
 							]
 						}
@@ -294,7 +294,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:8080/app-rest/api/s3/delete/file.txt",
+							"raw": "http://localhost:8080/app-rest/api/s3/delete/text-file.txt",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -305,7 +305,7 @@
 								"api",
 								"s3",
 								"delete",
-								"file.txt"
+								"text-file.txt"
 							]
 						}
 					},
@@ -325,7 +325,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"httpMethod\": \"PUT\",\n\t\"key\": \"file.txt\",\n\t\"params\" : {\n\t\t\"x-amz-acl\": \"private\",\n\t\t\"x-amz-storage-class\": \"STANDARD_IA\"\n\t}\n}"
+							"raw": "{\n\t\"httpMethod\": \"PUT\",\n\t\"key\": \"text-file.txt\",\n\t\"params\" : {\n\t\t\"x-amz-acl\": \"private\",\n\t\t\"x-amz-storage-class\": \"STANDARD_IA\"\n\t}\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8080/app-rest/api/s3/signedUrl",

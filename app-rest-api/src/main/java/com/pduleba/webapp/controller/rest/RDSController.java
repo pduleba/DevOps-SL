@@ -16,10 +16,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-@RequestMapping("/api/order")
-public class OrderController {
+@RequestMapping("/api/rds")
+public class RDSController {
 
-    private static final OrderController RESOURCE = methodOn(OrderController.class);
+    private static final RDSController RESOURCE = methodOn(RDSController.class);
 
     private OrderService orderService;
     private HateoasMapper hateoasMapper;
