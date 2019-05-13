@@ -18,8 +18,8 @@ public class ApplicationConfig {
     public final static String AMAZON_S3_CLIENT = "amazonS3Client";
 
     @Bean(AMAZON_S3_CLIENT)
-    public AmazonS3 getAmazonS3Client(@Value("${aws.signed.url.profile}") String profileName,
-                                      @Value("${aws.signed.url.region}") String region) {
+    public AmazonS3 getAmazonS3Client(@Value("${aws.signed.url.profile:N/A}") String profileName,
+                                      @Value("${aws.signed.url.region:N/A}") String region) {
         return AmazonS3ClientBuilder
                 .standard()
                 .withRegion(region)

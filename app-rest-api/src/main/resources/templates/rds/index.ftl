@@ -12,7 +12,7 @@
         <script src="js/lib/angular-ui-router.min.js"></script>
         <script src="js/lib/localforage.min.js"></script>
         <script src="js/lib/ngStorage.min.js"></script>
-        <script src="js/app.js"></script>
+        <script src="js/application.js"></script>
         <script src="js/rds/rds.js"></script>
         <script src="js/rds/RDSService.js"></script>
         <script src="js/rds/RDSController.js"></script>

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3f3dedc1-e955-4618-b0e7-6daf396cab0c",
+		"_postman_id": "c42bf437-27ee-457b-891e-db352656b063",
 		"name": "DevOps",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -223,7 +223,7 @@
 							"file": {}
 						},
 						"url": {
-							"raw": "https://pduleba-us-east-1.s3.amazonaws.com/text-file.txt?x-amz-acl=private&x-amz-storage-class=STANDARD_IA&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190510T134414Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1799&X-Amz-Credential=AKIA46ZQGKPVQYMMBL7W%2F20190510%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=19d0bed23606d1117d5ab9ac362ea8ef87a8b0d1e83d7baef7a4788ce09ba6e7",
+							"raw": "https://pduleba-us-east-1.s3.amazonaws.com/file.txt?x-amz-acl=private&x-amz-storage-class=STANDARD_IA&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20190513T083205Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1800&X-Amz-Credential=AKIA46ZQGKPVQYMMBL7W%2F20190513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=a8aa47814a853402d3b44833cbd19bae8a883c5741bc3d131b4547b1435535e2",
 							"protocol": "https",
 							"host": [
 								"pduleba-us-east-1",
@@ -232,7 +232,7 @@
 								"com"
 							],
 							"path": [
-								"text-file.txt"
+								"file.txt"
 							],
 							"query": [
 								{
@@ -249,7 +249,7 @@
 								},
 								{
 									"key": "X-Amz-Date",
-									"value": "20190510T134414Z"
+									"value": "20190513T083205Z"
 								},
 								{
 									"key": "X-Amz-SignedHeaders",
@@ -257,15 +257,15 @@
 								},
 								{
 									"key": "X-Amz-Expires",
-									"value": "1799"
+									"value": "1800"
 								},
 								{
 									"key": "X-Amz-Credential",
-									"value": "AKIA46ZQGKPVQYMMBL7W%2F20190510%2Fus-east-1%2Fs3%2Faws4_request"
+									"value": "AKIA46ZQGKPVQYMMBL7W%2F20190513%2Fus-east-1%2Fs3%2Faws4_request"
 								},
 								{
 									"key": "X-Amz-Signature",
-									"value": "19d0bed23606d1117d5ab9ac362ea8ef87a8b0d1e83d7baef7a4788ce09ba6e7"
+									"value": "a8aa47814a853402d3b44833cbd19bae8a883c5741bc3d131b4547b1435535e2"
 								}
 							]
 						}
@@ -325,7 +325,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"httpMethod\": \"PUT\",\n\t\"key\": \"text-file.txt\",\n\t\"params\" : {\n\t\t\"x-amz-acl\": \"private\",\n\t\t\"x-amz-storage-class\": \"STANDARD_IA\"\n\t}\n}"
+							"raw": "{\n\t\"httpMethod\": \"PUT\",\n\t\"key\": \"file.txt\",\n\t\"params\" : {\n\t\t\"x-amz-acl\": \"private\",\n\t\t\"x-amz-storage-class\": \"STANDARD_IA\"\n\t}\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8080/app-rest/api/s3/signedUrl",

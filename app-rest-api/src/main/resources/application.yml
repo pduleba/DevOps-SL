@@ -6,17 +6,17 @@ server:
 ---
 spring:
   profiles:
-    active: dev
+    active: @app-rest.spring.profile@
 ---
 spring:
-  profiles: dev
+  profiles: local,aws
   freemarker:
     template-loader-path: classpath:/templates
     suffix: .ftl
   datasource:
-    url: jdbc:mysql://localhost:3306/app-db
-    username: root
-    password: root
+    url: @app-rest.datasource.url@
+    username: @app-rest.datasource.user@
+    password: @app-rest.datasource.pass@
   jpa:
     hibernate:
       # Naming strategies for use with Hibernate entities

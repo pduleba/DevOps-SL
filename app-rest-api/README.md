@@ -2,7 +2,8 @@
 
 ### How to run
 * Make sure that `app-db` Docker container is running [See here for more](/app-db)
-* `exec-build.bat` - build `app-rest-api`
+* `exec-build-local.bat` - build `app-rest-api` using maven `local` profile
+* `exec-build-aws.bat` - build `app-rest-api` using maven `aws` profile
 * `exec-run.bat` - run `app-rest-api`
 
 ### How to use

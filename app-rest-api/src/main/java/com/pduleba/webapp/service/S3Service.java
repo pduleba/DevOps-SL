@@ -33,8 +33,8 @@ public class S3Service {
     private AmazonS3 s3Client;
 
     @Autowired
-    public S3Service(@Value("${aws.signed.url.bucket}") String bucketName,
-            @Value("${aws.signed.url.expiry}") Long expiry, @Qualifier(AMAZON_S3_CLIENT) AmazonS3 s3Client) {
+    public S3Service(@Value("${aws.signed.url.bucket:N/A}") String bucketName,
+            @Value("${aws.signed.url.expiry:0}") Long expiry, @Qualifier(AMAZON_S3_CLIENT) AmazonS3 s3Client) {
         this.bucketName = bucketName;
         this.expiry = expiry;
         this.s3Client = s3Client;

@@ -169,6 +169,54 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/application.js</include>
+                    <include>**/application.yml</include>
+                    <include>**/aws.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/application.js</exclude>
+                    <exclude>**/application.yml</exclude>
+                    <exclude>**/aws.yml</exclude>
+                </excludes>
+            </resource>
+        </resources>
     </build>
+
+    <profiles>
+        <!-- https://docs.spring.io/spring-boot/docs/current/reference/html/howto-properties-and-configuration.html -->
+        <profile>
+            <id>local</id>
+            <properties>
+                <app-rest.spring.profile>local</app-rest.spring.profile>
+                <app-rest.aws.profile>pduleba</app-rest.aws.profile>
+                <app-rest.api.url>http://localhost:8080/app-rest/api</app-rest.api.url>
+                <app-rest.datasource.url>jdbc:mysql://localhost:3306/app-db</app-rest.datasource.url>
+                <app-rest.datasource.user>user</app-rest.datasource.user>
+                <app-rest.datasource.pass>user</app-rest.datasource.pass>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>aws</id>
+            <properties>
+                <app-rest.spring.profile>aws</app-rest.spring.profile>
+                <app-rest.aws.profile>pduleba</app-rest.aws.profile>
+                <app-rest.api.url>http://localhost:8080/app-rest/api</app-rest.api.url>
+                <app-rest.datasource.url>jdbc:mysql://localhost:3306/app-db</app-rest.datasource.url>
+                <app-rest.datasource.user>user</app-rest.datasource.user>
+                <app-rest.datasource.pass>user</app-rest.datasource.pass>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>
