@@ -157,6 +157,16 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <!-- Skip artifact deployment to github during 'release:perform' -->
+                <!-- However it can be done via https://github.com/jutzig/github-release-plugin -->
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-maven-plugin.version}</version>
@@ -225,5 +235,12 @@
             </properties>
         </profile>
     </profiles>
+
+    <scm>
+        <connection>scm:git:https://github.com/pduleba/DevOps-SL.git</connection>
+        <developerConnection>scm:git:https://github.com/pduleba/DevOps-SL.git</developerConnection>
+        <url>https://github.com/pduleba/DevOps-SL/${project.scm.tag}</url>
+        <tag>master</tag>
+    </scm>
 
 </project>
