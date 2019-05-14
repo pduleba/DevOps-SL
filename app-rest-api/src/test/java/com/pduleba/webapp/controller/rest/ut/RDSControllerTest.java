@@ -2,6 +2,7 @@ package com.pduleba.webapp.controller.rest.ut;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pduleba.webapp.ApplicationConfigTest;
 import com.pduleba.webapp.controller.rest.RDSController;
 import com.pduleba.webapp.dto.order.Order;
 import com.pduleba.webapp.dto.util.RestResponse;
@@ -12,7 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -33,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // Start web layer only (not whole context like using @AutoConfigureMockMvc)
 @WebMvcTest(RDSController.class)
 // It is easier to inject some beans then mocking it via @MockBean
-@ComponentScan(basePackageClasses = {HateoasMapper.class})
+@Import(value = ApplicationConfigTest.class)
 // Control context caching during tests execution (clear after all tests execution complete)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class RDSControllerTest {
