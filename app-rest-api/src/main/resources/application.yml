@@ -8,6 +8,13 @@ spring:
   profiles:
     active: @app-rest.spring.profile@
 ---
+# Work around of https://github.com/spring-projects/spring-boot/issues/12510
+logging.file: app-rest-api.log
+logging:
+  file:
+    max-history: 5
+    max-size: 10MB
+---
 spring:
   profiles: local,aws
   freemarker:
