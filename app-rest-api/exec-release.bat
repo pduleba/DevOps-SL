@@ -1,1 +1,1 @@
-mvn clean deploy -Paws
+mvn release:clean release:prepare release:perform -Paws
