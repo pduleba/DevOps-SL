@@ -7,5 +7,6 @@ import lombok.Data;
 @Builder
 public class NullResponse {
 
+    @Builder.Default
     private String message = "Execution complete";
 }

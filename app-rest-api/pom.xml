@@ -197,8 +197,8 @@
         <profile>
             <id>local</id>
             <properties>
+                <app-rest.aws.profile>local</app-rest.aws.profile>
                 <app-rest.spring.profile>local</app-rest.spring.profile>
-                <app-rest.aws.profile>pduleba</app-rest.aws.profile>
                 <app-rest.api.url>http://localhost:8080/app-rest/api</app-rest.api.url>
                 <app-rest.datasource.url>jdbc:mysql://localhost:3306/app-db</app-rest.datasource.url>
                 <app-rest.datasource.user>user</app-rest.datasource.user>
@@ -209,8 +209,8 @@
         <profile>
             <id>aws</id>
             <properties>
+                <app-rest.aws.profile>aws</app-rest.aws.profile>
                 <app-rest.spring.profile>aws</app-rest.spring.profile>
-                <app-rest.aws.profile>pduleba</app-rest.aws.profile>
                 <app-rest.api.url>http://localhost:8080/app-rest/api</app-rest.api.url>
                 <app-rest.datasource.url>jdbc:mysql://localhost:3306/app-db</app-rest.datasource.url>
                 <app-rest.datasource.user>user</app-rest.datasource.user>

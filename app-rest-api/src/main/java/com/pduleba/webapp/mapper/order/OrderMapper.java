@@ -3,6 +3,7 @@ package com.pduleba.webapp.mapper.order;
 import com.pduleba.webapp.bo.order.OrderEntity;
 import com.pduleba.webapp.dto.order.Order;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +24,7 @@ public interface OrderMapper {
                 .collect(Collectors.toList());
     }
 
+    @Mapping(target = "path", ignore = true)
     OrderEntity fromDto(Order dto);
 
     default

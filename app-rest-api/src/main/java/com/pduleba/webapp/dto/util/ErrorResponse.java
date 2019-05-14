@@ -2,7 +2,6 @@ package com.pduleba.webapp.dto.util;
 
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -14,6 +13,7 @@ public class ErrorResponse {
 
     private int code;
     private String codeReason;
+    @Builder.Default
     private List<String> errors = new LinkedList<>();
 
     public static class ErrorResponseBuilder {
