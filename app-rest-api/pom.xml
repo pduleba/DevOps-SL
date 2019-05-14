@@ -230,7 +230,7 @@
                 <app-rest.spring.profile>aws</app-rest.spring.profile>
                 <app-rest.api.url>http://34.205.15.2:8080/app-rest/api</app-rest.api.url>
                 <app-rest.datasource.url>jdbc:mysql://appdb.cluster-cgf1hknohtf8.us-east-1.rds.amazonaws.com:3306/appdb</app-rest.datasource.url>
-                <app-rest.datasource.user>user1234</app-rest.datasource.user>
+                <app-rest.datasource.user>user</app-rest.datasource.user>
                 <app-rest.datasource.pass>user1234</app-rest.datasource.pass>
             </properties>
         </profile>
