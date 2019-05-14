@@ -1,4 +1,4 @@
-# App-db layer :: MySQL 8
+# App-db layer :: MySQL 5.6
 
 ### How to run
 * `exec-build.bat` - build Docker image 

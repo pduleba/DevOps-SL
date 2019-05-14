@@ -1,4 +1,4 @@
-FROM mysql:8
+FROM mysql:5.6
 
 ENV MYSQL_DATABASE app-db
 ENV MYSQL_ROOT_PASSWORD root
