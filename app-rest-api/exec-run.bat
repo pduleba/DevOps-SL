@@ -1,1 +1,0 @@
-java -jar target/app-rest-api.jar
