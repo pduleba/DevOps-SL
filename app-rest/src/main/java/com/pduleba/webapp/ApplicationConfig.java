@@ -3,6 +3,7 @@ package com.pduleba.webapp;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.pduleba.webapp.dao.JpaRepositories;
@@ -37,7 +38,7 @@ public class ApplicationConfig {
             AWSCredentialsProvider awsCredentialsProvider) {
         return AmazonS3ClientBuilder
                 .standard()
-                .withRegion(region)
+                .withRegion(Regions.fromName(region))
                 .withCredentials(awsCredentialsProvider)
                 .build();
     }
