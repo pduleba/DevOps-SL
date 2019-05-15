@@ -18,14 +18,14 @@
 ### use `app-rest`
 * RESTful API
   * Import [DevOps.postman_collection.json](/util-postman/DevOps.postman_collection.json) Postman collection, where
-    * `StatusController` contains API status (for monitoring)
-      * http `ping` returns server status for health check purposes
     * `RDSController` contains API for RDS/MySQL
+      * http `ping` returns server status for health check purposes
       * http `findAll` all entries in DB
       * http `findById` entry by id in DB
       * http `save` create/update by id from DB
       * http `delete` entry by id from DB
     * `S3Controller` contains API for AWS S3
+      * http `ping` returns server status for health check purposes
       * http `findAll` all objects in S3
       * http `save` create/update object by key in S3
       * http `delete` object by key from S3

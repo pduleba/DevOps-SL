@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "StatusController",
+			"name": "RDSController",
 			"item": [
 				{
 					"name": "/ping",
@@ -18,7 +18,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:8080/app-rest/api/status/ping",
+							"raw": "http://localhost:8080/app-rest/api/rds/ping",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -27,18 +27,13 @@
 							"path": [
 								"app-rest",
 								"api",
-								"status",
+								"rds",
 								"ping"
 							]
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "RDSController",
-			"item": [
+				},
 				{
 					"name": "/findAll",
 					"request": {
@@ -174,6 +169,32 @@
 		{
 			"name": "S3Controller",
 			"item": [
+				{
+					"name": "/ping",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/app-rest/api/s3/ping",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app-rest",
+								"api",
+								"s3",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "/findAll",
 					"request": {
