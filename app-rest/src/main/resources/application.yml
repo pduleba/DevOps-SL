@@ -8,7 +8,8 @@ spring:
   profiles:
     active: @app-rest.spring.profile@
 ---
-# Work around of https://github.com/spring-projects/spring-boot/issues/12510
+# INFO : File appender disabled due to `app-rest` installation as `init.d` Service (see `deployment-install` under README.md for more)
+# BUG  :  Work around of https://github.com/spring-projects/spring-boot/issues/12510
 logging.file: app-rest.log
 logging:
   file:

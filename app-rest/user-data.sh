@@ -8,9 +8,6 @@ sudo mkdir /var/app-rest
 sudo wget https://github.com/pduleba/DevOps-SL/releases/download/app-rest-0.0.1/app-rest-0.0.1.jar -O /var/app-rest/app-rest-0.0.1.jar
 sudo chmod +x /var/app-rest/app-rest-0.0.1.jar
 sudo chown ec2-user:ec2-user /var/app-rest/app-rest-0.0.1.jar
-sudo touch /var/log/app-rest.log
-sudo chmod +w /var/log/app-rest.log
-sudo chown ec2-user:ec2-user /var/log/app-rest.log
 sudo ln -s /var/app-rest/app-rest-0.0.1.jar /etc/init.d/app-rest
 sudo chkconfig app-rest on
 sudo service app-rest start
