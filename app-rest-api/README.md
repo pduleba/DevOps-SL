@@ -1,21 +1,21 @@
-# App-rest-api layer :: Spring (Backend) + Angular (Frontend)
+# app-rest layer :: Spring (Backend) + Angular (Frontend)
 
 ## How to
 
 ### build `Local` package
 * Make sure that `app-db` Docker container is running [See here for more](/app-db)
-* `exec-build-local.bat` - build `app-rest-api` using maven `local` profile
+* `exec-build-local.bat` - build `app-rest` using maven `local` profile
 * run executable application ([See deployment-install for more](https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html))
 ### build `aws` package
 * Make sure that AWS MySQL/AWS Aurora is running (version 5.6/8 compatible suggested)
-* `exec-build-aws.bat` - build `app-rest-api` using maven `aws` profile
+* `exec-build-aws.bat` - build `app-rest` using maven `aws` profile
 * run executable application ([See deployment-install for more](https://docs.spring.io/spring-boot/docs/current/reference/html/deployment-install.html))
 ### release package
-* `exec-release.bat` - release `app-rest-api` using maven `aws` profile which includes
+* `exec-release.bat` - release `app-rest` using maven `aws` profile which includes
   * version update
   * create tag with sources on GitHub
   * executable `is not` released
-### use `app-rest-api`
+### use `app-rest`
 * RESTful API
   * Import [DevOps.postman_collection.json](/util-postman/DevOps.postman_collection.json) Postman collection, where
     * `StatusController` contains API status (for monitoring)

@@ -9,7 +9,7 @@ spring:
     active: @app-rest.spring.profile@
 ---
 # Work around of https://github.com/spring-projects/spring-boot/issues/12510
-logging.file: app-rest-api.log
+logging.file: app-rest.log
 logging:
   file:
     max-history: 5
