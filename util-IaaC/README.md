@@ -2,16 +2,28 @@
 
 ## Usage
 
-* `exec-init.bat` - Initialize Terraform
-* `exec-apply.bat` - Deploy infrastructure into **AWS**
-* `exec-destroy.bat` - Destroy infrastructure in **AWS**
+* `exec\init-backend.bat` - Initialize Terraform `backend`
+  * i.e. `call exec\init-backend.bat`
+* `exec\init.bat MODULE ENV` - Initialize Terraform `MODULE` module using `ENV` environment specific configuration 
+                                                                    with **initialized** Terraform backend
+  * i.e. `call exec\init.bat vpc dev`
+* `exec\apply.bat MODULE ENV` - Apply Terraform `MODULE` into **AWS** using `ENV` environment specific configuration 
+                                                                      with **initialized** Terraform backend
+  * i.e. `call exec\apply.bat vpc dev`
+* `exec\destroy.bat MODULE ENV` - Destroy infrastructure in **AWS** using `ENV` environment specific configuration 
+                                                                    with **initialized** Terraform backend
+  * i.e. `call exec\destroy.bat vpc dev`
 
 ## Utils
 
-* `utils/exec-plan-apply.bat` - Calculate plan for `terraform apply` using available available state 
-* `utils/exec-plan-destroy.bat` - Calculate plan for `terraform destroy` using available available state 
-* `utils/exec-refresh.bat` - Refresh Terraform state file
-* `utils/exec-cleanup.bat` - Removes non project files
+* `exec\apply-plan.bat MODULE ENV` - Provides apply plan file
+  * i.e. `call exec\apply-plan.bat vpc dev`
+* `exec\destroy-plan.bat MODULE ENV` - Provides destroy plan file
+  * i.e. `call exec\destroy-plan.bat vpc dev`
+
+* `exec\session\start.bat LOG_FILE_NAME` - Utility :: Starts execution recording
+* `exec\session\stop.bat` - Utility :: Stops execution recording
+
 
 ## Documentation
 * [Terraform](https://www.terraform.io/docs/index.html)

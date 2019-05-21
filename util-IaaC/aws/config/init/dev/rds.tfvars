@@ -2,6 +2,4 @@
 # VARIABLES
 ##################################################################################
 
-aws_region = "us-east-1"
-
-cli_profile = "pduleba-admin-cli-profile"
+key = "dev/rds.tfstate"

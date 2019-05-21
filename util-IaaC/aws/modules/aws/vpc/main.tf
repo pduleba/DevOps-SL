@@ -1,63 +1,12 @@
 ##################################################################################
-# PROVIDERS
+# TERRAFORM
 ##################################################################################
 
-provider "aws" {
-  profile = "${var.cli_profile}"
-  region  = "${var.aws_region}"
-}
-
-##################################################################################
-# LOCALS
-##################################################################################
-
-locals {
-  VPC_CIDR                = "192.168.0.0/16"
-  SUBNET_COUNT            = 6
-  SUBNET_PUBLIC_COUNT     = 3
-  RESOURCE_NAME_PREFIX    = "pduleba-app"
-  SG_PUBLIC_INGRESS_CIDRs = ["188.114.87.10/32"]
-}
-
-##################################################################################
-# DATA
-##################################################################################
-
-data "aws_availability_zones" "available_zones" {}
-
-# https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-cwl.html
-# https://www.terraform.io/docs/providers/aws/guides/iam-policy-documents.html
-data "aws_iam_policy_document" "vpc_flowlog_policy" {
-  statement {
-    actions = [
-      "logs:CreateLogGroup",
-      "logs:CreateLogStream",
-      "logs:PutLogEvents",
-      "logs:DescribeLogGroups",
-      "logs:DescribeLogStreams",
-    ]
-
-    effect    = "Allow"
-    resources = ["*"]
-  }
-}
-
-data "aws_iam_policy_document" "vpc_flowlog_assume_role_policy" {
-  statement {
-    effect = "Allow"
-
-    principals {
-      type = "Service"
-
-      identifiers = [
-        "vpc-flow-logs.amazonaws.com",
-      ]
-    }
-
-    actions = [
-      "sts:AssumeRole",
-    ]
-  }
+terraform {
+  # values injected by `name` from file specied on `init` using -backend-config
+  # not in use once i.e. 'plan'/'apply'/'destroy'
+  # for locking use 'lock_table' of AWS DynamoDB - see https://www.terraform.io/docs/backends/types/s3.html#lock_table
+  backend "s3" {}
 }
 
 ##################################################################################
