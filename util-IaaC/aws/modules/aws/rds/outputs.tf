@@ -21,3 +21,7 @@ output "security_group_public_id" {
 output "security_group_private_id" {
   value = "${data.aws_security_group.security_group_private.id}"
 }
+
+output "tags" {
+  value = "${module.commons.tags}"
+}

@@ -3,8 +3,8 @@
 ##################################################################################
 
 terraform {
-  # values injected by `name` from file specied on `init` using -backend-config
-  # not in use once i.e. 'plan'/'apply'/'destroy'
+  # values injected by `name` from file specied on `init` via `-backend-config` parameter
+  # not in use by 'plan'/'apply'/'destroy' once initialized
   # for locking use 'lock_table' of AWS DynamoDB - see https://www.terraform.io/docs/backends/types/s3.html#lock_table
   backend "s3" {}
 }
@@ -26,7 +26,7 @@ resource "aws_cloudwatch_log_group" "log_group" {
       format(
         "%s/%s",
         "/aws/vpc/flowlogs",
-        local.RESOURCE_NAME_PREFIX
+        module.commons.resource_name_prefix
       )
     }"
 
@@ -35,11 +35,11 @@ resource "aws_cloudwatch_log_group" "log_group" {
       "Name",
       format(
         "%s_%s",
-        local.RESOURCE_NAME_PREFIX,
+        module.commons.resource_name_prefix,
         "log_group"
       )
     ),
-    var.tags
+    module.commons.tags
   )}"
 }
 
@@ -47,7 +47,7 @@ resource "aws_iam_role_policy" "vpc_flowlog_role_policy" {
   name = "${
     format(
       "%s_%s",
-      local.RESOURCE_NAME_PREFIX,
+      module.commons.resource_name_prefix,
       "vpc_flowlog_role_policy"
     )
   }"
@@ -60,12 +60,12 @@ resource "aws_iam_role" "vpc_flowlog_role" {
   name = "${
     format(
       "%s_%s",
-      local.RESOURCE_NAME_PREFIX,
+      module.commons.resource_name_prefix,
       "vpc_flowlog_role"
     )
   }"
 
-  description        = "${format("%s :: %s", local.RESOURCE_NAME_PREFIX, "Allows VPC to call CloudWatchFlowLogs service on your behalf.")}"
+  description        = "${format("%s :: %s", module.commons.resource_name_prefix, "Allows VPC to call CloudWatchFlowLogs service on your behalf.")}"
   assume_role_policy = "${data.aws_iam_policy_document.vpc_flowlog_assume_role_policy.json}"
 
   tags = "${merge(
@@ -73,11 +73,11 @@ resource "aws_iam_role" "vpc_flowlog_role" {
       "Name",
       format(
         "%s_%s",
-        local.RESOURCE_NAME_PREFIX,
+        module.commons.resource_name_prefix,
         "vpc_flowlog_role"
       )
     ),
-    var.tags
+    module.commons.tags
   )}"
 }
 
@@ -89,11 +89,11 @@ resource "aws_vpc" "vpc" {
       "Name",
       format(
         "%s_%s",
-        local.RESOURCE_NAME_PREFIX,
+        module.commons.resource_name_prefix,
         "vpc"
       )
     ),
-    var.tags
+    module.commons.tags
   )}"
 }
 
@@ -111,12 +111,12 @@ resource "aws_subnet" "subnets" {
       "Name",
       format(
         "%s_%s_%s",
-        local.RESOURCE_NAME_PREFIX,
+        module.commons.resource_name_prefix,
         count.index < local.SUBNET_PUBLIC_COUNT ? "public_subnet" : "private_subnet",
         data.aws_availability_zones.available_zones.names[count.index]
       )
     ),
-    var.tags
+    module.commons.tags
   )}"
 }
 
@@ -128,11 +128,11 @@ resource "aws_internet_gateway" "igw" {
       "Name",
       format(
         "%s_%s",
-        local.RESOURCE_NAME_PREFIX,
+        module.commons.resource_name_prefix,
         "igw"
       )
     ),
-    var.tags
+    module.commons.tags
   )}"
 }
 
@@ -145,11 +145,11 @@ resource "aws_eip" "ngw_eip" {
       "Name",
       format(
         "%s_%s",
-        local.RESOURCE_NAME_PREFIX,
+        module.commons.resource_name_prefix,
         "ngw_eip"
       )
     ),
-    var.tags
+    module.commons.tags
   )}"
 }
 
@@ -164,11 +164,11 @@ resource "aws_nat_gateway" "ngw" {
       "Name",
       format(
         "%s_%s",
-        local.RESOURCE_NAME_PREFIX,
+        module.commons.resource_name_prefix,
         "ngw"
       )
     ),
-    var.tags
+    module.commons.tags
   )}"
 }
 
@@ -188,11 +188,11 @@ resource "aws_route_table" "rts" {
       "Name",
       format(
         "%s_%s",
-        local.RESOURCE_NAME_PREFIX,
+        module.commons.resource_name_prefix,
         count.index < 1 ? "public_rt" : "private_rt"
       )
     ),
-    var.tags
+    module.commons.tags
   )}"
 }
 
@@ -243,18 +243,18 @@ resource "aws_network_acl" "nacls" {
       "Name",
       format(
         "%s_%s",
-        local.RESOURCE_NAME_PREFIX,
+        module.commons.resource_name_prefix,
         count.index < 1 ? "public_acl" : "private_acl"
       )
     ),
-    var.tags
+    module.commons.tags
   )}"
 }
 
 resource "aws_security_group" "public" {
-  name        = "${format("%s_%s", local.RESOURCE_NAME_PREFIX, "public_sg")}"
+  name        = "${format("%s_%s", module.commons.resource_name_prefix, "public_sg")}"
   vpc_id      = "${aws_vpc.vpc.id}"
-  description = "${format("%s :: %s", local.RESOURCE_NAME_PREFIX, "Public network security group")}"
+  description = "${format("%s :: %s", module.commons.resource_name_prefix, "Public network security group")}"
 
   ingress {
     protocol    = "tcp"
@@ -296,17 +296,17 @@ resource "aws_security_group" "public" {
       "Name",
       format(
         "%s_%s",
-        local.RESOURCE_NAME_PREFIX, "public_sg"
+        module.commons.resource_name_prefix, "public_sg"
       )
     ),
-    var.tags
+    module.commons.tags
   )}"
 }
 
 resource "aws_security_group" "private" {
-  name        = "${format("%s_%s", local.RESOURCE_NAME_PREFIX, "private_sg")}"
+  name        = "${format("%s_%s", module.commons.resource_name_prefix, "private_sg")}"
   vpc_id      = "${aws_vpc.vpc.id}"
-  description = "${format("%s :: %s", local.RESOURCE_NAME_PREFIX, "Private network security group")}"
+  description = "${format("%s :: %s", module.commons.resource_name_prefix, "Private network security group")}"
 
   ingress {
     protocol        = "tcp"
@@ -327,9 +327,9 @@ resource "aws_security_group" "private" {
       "Name",
       format(
         "%s_%s",
-        local.RESOURCE_NAME_PREFIX, "private_sg"
+        module.commons.resource_name_prefix, "private_sg"
       )
     ),
-    var.tags
+    module.commons.tags
   )}"
 }

@@ -6,6 +6,5 @@ locals {
   VPC_CIDR                = "192.168.0.0/16"
   SUBNET_COUNT            = 6
   SUBNET_PUBLIC_COUNT     = 3
-  RESOURCE_NAME_PREFIX    = "pduleba-app"
   SG_PUBLIC_INGRESS_CIDRs = ["188.114.87.10/32"]
 }

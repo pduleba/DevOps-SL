@@ -10,12 +10,3 @@ variable "profile" {
 variable "region" {
   description = "An AWS region of application infrastructure (including Terraform state)"
 }
-
-variable "tags" {
-  description = "A map of common tags to add to all resources"
-  type        = "map"
-
-  default = {
-    Owner = "pduleba"
-  }
-}
