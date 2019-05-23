@@ -22,13 +22,11 @@ resource "aws_flow_log" "flow_log" {
 }
 
 resource "aws_cloudwatch_log_group" "log_group" {
-  name = "${
-      format(
-        "%s/%s",
-        "/aws/vpc/flowlogs",
-        module.commons.resource_name_prefix
-      )
-    }"
+  name = "${format(
+    "%s/%s",
+    "/aws/vpc/flowlogs",
+    module.commons.resource_name_prefix
+  )}"
 
   tags = "${merge(
     map(
@@ -44,28 +42,28 @@ resource "aws_cloudwatch_log_group" "log_group" {
 }
 
 resource "aws_iam_role_policy" "vpc_flowlog_role_policy" {
-  name = "${
-    format(
-      "%s_%s",
-      module.commons.resource_name_prefix,
-      "vpc_flowlog_role_policy"
-    )
-  }"
+  name = "${format(
+    "%s_%s",
+    module.commons.resource_name_prefix,
+    "vpc_flowlog_role_policy"
+  )}"
 
   role   = "${aws_iam_role.vpc_flowlog_role.id}"
   policy = "${data.aws_iam_policy_document.vpc_flowlog_policy.json}"
 }
 
 resource "aws_iam_role" "vpc_flowlog_role" {
-  name = "${
-    format(
-      "%s_%s",
-      module.commons.resource_name_prefix,
-      "vpc_flowlog_role"
-    )
-  }"
+  name = "${format(
+    "%s_%s",
+    module.commons.resource_name_prefix,
+    "vpc_flowlog_role"
+  )}"
 
-  description        = "${format("%s :: %s", module.commons.resource_name_prefix, "Allows VPC to call CloudWatchFlowLogs service on your behalf.")}"
+  description = "${format(
+    "%s :: %s",
+    module.commons.resource_name_prefix,
+    "DevOps upskill role allowing VPC to call CloudWatchFlowLogs service on your behalf."
+  )}"
   assume_role_policy = "${data.aws_iam_policy_document.vpc_flowlog_assume_role_policy.json}"
 
   tags = "${merge(
@@ -103,7 +101,7 @@ resource "aws_subnet" "subnets" {
 
   vpc_id                  = "${aws_vpc.vpc.id}"
   cidr_block              = "${cidrsubnet(local.VPC_CIDR, 4, count.index)}"
-  availability_zone       = "${data.aws_availability_zones.available_zones.names[count.index]}"
+  availability_zone       = "${data.aws_availability_zones.azs.names[count.index]}"
   map_public_ip_on_launch = "${count.index < local.SUBNET_PUBLIC_COUNT}"
 
   tags = "${merge(
@@ -113,7 +111,7 @@ resource "aws_subnet" "subnets" {
         "%s_%s_%s",
         module.commons.resource_name_prefix,
         count.index < local.SUBNET_PUBLIC_COUNT ? "public_subnet" : "private_subnet",
-        data.aws_availability_zones.available_zones.names[count.index]
+        data.aws_availability_zones.azs.names[count.index]
       )
     ),
     module.commons.tags
@@ -213,12 +211,12 @@ resource "aws_network_acl" "nacls" {
 
   vpc_id = "${aws_vpc.vpc.id}"
 
-  subnet_ids = ["${
+  subnet_ids = "${
     slice(
-        aws_subnet.subnets.*.id,
-        count.index < 1 ? 0                         : local.SUBNET_PUBLIC_COUNT,
-        count.index < 1 ? local.SUBNET_PUBLIC_COUNT : local.SUBNET_COUNT)
-  }"]
+      aws_subnet.subnets.*.id,
+      count.index < 1 ? 0 : local.SUBNET_PUBLIC_COUNT,
+    count.index < 1 ? local.SUBNET_PUBLIC_COUNT : local.SUBNET_COUNT)
+  }"
 
   ingress {
     protocol   = "-1"
@@ -251,10 +249,18 @@ resource "aws_network_acl" "nacls" {
   )}"
 }
 
-resource "aws_security_group" "public" {
-  name        = "${format("%s_%s", module.commons.resource_name_prefix, "public_sg")}"
-  vpc_id      = "${aws_vpc.vpc.id}"
-  description = "${format("%s :: %s", module.commons.resource_name_prefix, "Public network security group")}"
+resource "aws_security_group" "public_alb" {
+  name = "${format(
+    "%s_%s",
+    module.commons.resource_name_prefix,
+    "public_alb_sg"
+  )}"
+  vpc_id = "${aws_vpc.vpc.id}"
+  description = "${format(
+    "%s :: %s",
+    module.commons.resource_name_prefix,
+    "DevOps upskill public security group ALB intended"
+  )}"
 
   ingress {
     protocol    = "tcp"
@@ -272,18 +278,12 @@ resource "aws_security_group" "public" {
 
   ingress {
     protocol    = "tcp"
-    from_port   = 22
-    to_port     = 22
-    cidr_blocks = "${local.SG_PUBLIC_INGRESS_CIDRs}"
-  }
-
-  ingress {
-    protocol    = "tcp"
     from_port   = 443
     to_port     = 443
     cidr_blocks = "${local.SG_PUBLIC_INGRESS_CIDRs}"
   }
 
+  // TODO :: Is is needed?
   egress {
     protocol    = "-1"
     from_port   = 0
@@ -296,30 +296,40 @@ resource "aws_security_group" "public" {
       "Name",
       format(
         "%s_%s",
-        module.commons.resource_name_prefix, "public_sg"
+        module.commons.resource_name_prefix,
+        "public_alb_sg"
       )
     ),
     module.commons.tags
   )}"
 }
 
-resource "aws_security_group" "private" {
-  name        = "${format("%s_%s", module.commons.resource_name_prefix, "private_sg")}"
-  vpc_id      = "${aws_vpc.vpc.id}"
-  description = "${format("%s :: %s", module.commons.resource_name_prefix, "Private network security group")}"
+resource "aws_security_group" "public_bastion" {
+  name = "${format(
+    "%s_%s",
+    module.commons.resource_name_prefix,
+    "public_bastion_sg"
+  )}"
+  vpc_id = "${aws_vpc.vpc.id}"
+  description = "${format(
+    "%s :: %s",
+    module.commons.resource_name_prefix,
+    "DevOps upskill public security group BASTION intended"
+  )}"
 
   ingress {
-    protocol        = "tcp"
-    from_port       = 3306
-    to_port         = 3306
-    security_groups = ["${aws_security_group.public.id}"]
+    protocol    = "tcp"
+    from_port   = 22
+    to_port     = 22
+    cidr_blocks = "${local.SG_PUBLIC_INGRESS_CIDRs}"
   }
 
+  // TODO :: Is is needed?
   egress {
-    protocol        = "-1"
-    from_port       = 0
-    to_port         = 0
-    security_groups = ["${aws_security_group.public.id}"]
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = "${merge(
@@ -327,7 +337,90 @@ resource "aws_security_group" "private" {
       "Name",
       format(
         "%s_%s",
-        module.commons.resource_name_prefix, "private_sg"
+        module.commons.resource_name_prefix,
+        "public_bastion_sg"
+      )
+    ),
+    module.commons.tags
+  )}"
+}
+
+resource "aws_security_group" "private_ec2" {
+  name = "${format(
+    "%s_%s",
+    module.commons.resource_name_prefix,
+    "private_ec2_sg"
+  )}"
+  vpc_id = "${aws_vpc.vpc.id}"
+  description = "${format(
+    "%s :: %s",
+    module.commons.resource_name_prefix,
+    "DevOps upskill private security group EC2 intended"
+  )}"
+
+  ingress {
+    protocol        = "tcp"
+    from_port       = 3306
+    to_port         = 3306
+    security_groups = "${list(aws_security_group.public_alb.id, aws_security_group.public_bastion.id)}"
+  }
+
+  // TODO :: Is is needed?
+  egress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = "${merge(
+    map(
+      "Name",
+      format(
+        "%s_%s",
+        module.commons.resource_name_prefix,
+        "private_ec2_sg"
+      )
+    ),
+    module.commons.tags
+  )}"
+}
+
+resource "aws_security_group" "private_rds" {
+  name = "${format(
+    "%s_%s",
+    module.commons.resource_name_prefix,
+    "private_rds_sg"
+  )}"
+  vpc_id = "${aws_vpc.vpc.id}"
+  description = "${format(
+    "%s :: %s",
+    module.commons.resource_name_prefix,
+    "DevOps upskill private security group RDS intended"
+  )}"
+
+  ingress {
+    protocol        = "tcp"
+    from_port       = 3306
+    to_port         = 3306
+    security_groups = "${list(aws_security_group.private_ec2.id, aws_security_group.public_bastion.id)}"
+  }
+
+  // TODO :: Is is needed?
+  egress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = "${merge(
+    map(
+      "Name",
+      format(
+        "%s_%s",
+        module.commons.resource_name_prefix,
+        "private_rds_sg"
       )
     ),
     module.commons.tags

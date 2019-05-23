@@ -2,26 +2,27 @@
 # OUTPUT
 ##################################################################################
 
-output "vpc_id" {
-  value = "${data.aws_vpc.vpc.id}"
+output "database_id" {
+  value = "${aws_rds_cluster.aurora_cluster.id}"
 }
 
-output "subnets_public_ids" {
-  value = "${data.aws_subnet.subnets_public.*.id}"
+output "database_endpoint" {
+  value = "${aws_rds_cluster.aurora_cluster.endpoint}"
 }
 
-output "subnets_private_ids" {
-  value = "${data.aws_subnet.subnets_private.*.id}"
+output "database_port" {
+  value = "${aws_rds_cluster.aurora_cluster.port}"
 }
 
-output "security_group_public_id" {
-  value = "${data.aws_security_group.security_group_public.id}"
+output "database_name" {
+  value = "${aws_rds_cluster.aurora_cluster.database_name}"
 }
 
-output "security_group_private_id" {
-  value = "${data.aws_security_group.security_group_private.id}"
+output "database_username" {
+  value = "${aws_rds_cluster.aurora_cluster.master_username}"
 }
 
-output "tags" {
-  value = "${module.commons.tags}"
+output "database_password" {
+  value     = "${aws_rds_cluster.aurora_cluster.master_password}"
+  sensitive = true
 }

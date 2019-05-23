@@ -2,7 +2,7 @@
 # DATA
 ##################################################################################
 
-data "aws_availability_zones" "available_zones" {}
+data "aws_availability_zones" "azs" {}
 
 # https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-cwl.html
 # https://www.terraform.io/docs/providers/aws/guides/iam-policy-documents.html

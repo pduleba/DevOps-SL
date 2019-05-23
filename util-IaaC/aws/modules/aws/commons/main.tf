@@ -12,7 +12,7 @@ variable "tags" {
 }
 
 variable "resource_name_prefix" {
-  description = ""
+  description = "A common resource prefix allowing to identify resource ownership"
   type = "string"
 
   default = "pduleba-app"
