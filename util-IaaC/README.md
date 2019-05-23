@@ -16,6 +16,9 @@
 
 ## Utils
 
+* `exec\output.bat NAME` - Provides module output value by `NAME` or `all` module output values if not specified
+  * i.e. `call exec\output.bat database_endpoint`
+
 * `exec\apply-plan.bat MODULE ENV` - Provides apply plan file
   * i.e. `call exec\apply-plan.bat vpc dev`
 * `exec\destroy-plan.bat MODULE ENV` - Provides destroy plan file

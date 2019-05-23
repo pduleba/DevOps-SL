@@ -1,6 +1,8 @@
 @if not exist out mkdir out\log out\plan out\state
-@if "%2"=="stateful" (
-	@echo "WARNING :: Preserving current state of .terraform"
+@if "%2" EQU "stateful" (
+    @if "%3" NEQ "quiet" (
+	    @echo "WARNING :: Preserving current state of .terraform"
+    )
 ) ELSE (
     @rm -rf .terraform
 )
