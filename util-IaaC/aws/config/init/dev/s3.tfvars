@@ -2,8 +2,4 @@
 # VARIABLES
 ##################################################################################
 
-profile = "pduleba-admin-cli-profile"
-
-region = "us-east-1"
-
-bucket = "pduleba-app-terraform"
+key = "dev/s3.tfstate"

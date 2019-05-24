@@ -3,9 +3,9 @@
 ##################################################################################
 
 # Relates to init->global.tfvars->bucket
-bucket_vpc_state = "pduleba-terraform"
+state_bucket = "pduleba-app-terraform"
 # Relates to init->test->vpc.tfvars->key
-key_vpc_state = "test/vpc.tfstate"
+state_bucket_vpc_key = "test/vpc.tfstate"
 
 # Aurora MySQL 1.x - https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Updates.20180206.html
 rds_engine = "aurora"
@@ -16,5 +16,5 @@ rds_parameter_group = "aurora5.6"
 rds_cluster_parameter_group = "aurora5.6"
 
 database_name = "appdb"
-master_username = "user"
+database_username = "user"
 database_port = "3306"

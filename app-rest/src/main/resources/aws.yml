@@ -1,9 +1,9 @@
 ---
 aws:
   # Signed URL region name to be used
-  region: us-east-1
+  region: @app-rest.aws.region@
   # Signed URL bucket name to be used
-  bucket: pduleba-us-east-1
+  bucket: @app-rest.aws.bucket@
   # Signed URL expiration timout in milliseconds (1000 * 60 * 30)
   expiry: 1800000
   # AWS Profile (required configuration via `aws configure`)

@@ -4,6 +4,10 @@
 
 data "aws_availability_zones" "azs" {}
 
+data "aws_s3_bucket" "flowlog_s3_bucket" {
+  bucket = "${local.VPC_FLOWLOG_BUCKET}"
+}
+
 # https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-cwl.html
 # https://www.terraform.io/docs/providers/aws/guides/iam-policy-documents.html
 data "aws_iam_policy_document" "vpc_flowlog_policy" {

@@ -27,12 +27,12 @@ variable "bucket" {
 # DATA
 ##################################################################################
 
-# https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-cwl.html
 # https://www.terraform.io/docs/providers/aws/guides/iam-policy-documents.html
-data "aws_iam_policy_document" "s3_policy" {
+data "aws_iam_policy_document" "backend_policy_document" {
   statement {
     actions = ["s3:*"]
     effect    = "Allow"
+    // TODO restrict access for specific user
     principals {
       identifiers = ["*"]
       type = "AWS"
@@ -44,28 +44,41 @@ data "aws_iam_policy_document" "s3_policy" {
 }
 
 ##################################################################################
+# MODULES
+##################################################################################
+
+module "commons" {
+  source = "../commons"
+}
+
+##################################################################################
 # RESOURCES
 ##################################################################################
 
-resource "aws_s3_bucket" "bucket" {
+resource "aws_s3_bucket" "backend_bucket" {
   bucket        = "${var.bucket}"
 
   acl           = "private"
   force_destroy = "true"
-  policy = "${data.aws_iam_policy_document.s3_policy.json}"
+  policy = "${data.aws_iam_policy_document.backend_policy_document.json}"
 
-  tags = "${
-    merge(
-      map("Name", "pduleba_s3_bucket"),
-      map("Owner", "pduleba")
-    )
-  }"
+  tags = "${merge(
+    map(
+      "Name",
+      format(
+        "%s_%s",
+        module.commons.resource_name_prefix,
+        "backend_bucket"
+      )
+    ),
+    module.commons.tags
+  )}"
 }
 
 ##################################################################################
 # OUTPUT
 ##################################################################################
 
-output "bucket" {
-  value = "State bucket ARN = ${aws_s3_bucket.bucket.arn}"
+output "backend_bucket" {
+  value = "Backend bucket = ${aws_s3_bucket.backend_bucket.bucket}"
 }

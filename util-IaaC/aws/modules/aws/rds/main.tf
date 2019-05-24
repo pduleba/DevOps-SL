@@ -13,7 +13,8 @@ terraform {
 # RESOURCES
 ##################################################################################
 
-# TODO : Add custom replica autoscaling
+# TODO : Add custom aws_db_option_group
+# TODO : Add custom aws_appautoscaling_target
 # TODO : See example https://github.com/terraform-aws-modules/terraform-aws-rds-aurora/blob/master/main.tf
 
 resource "aws_rds_cluster" "aurora_cluster" {
@@ -31,10 +32,10 @@ resource "aws_rds_cluster" "aurora_cluster" {
   engine_version = "${var.rds_engine_version}"
 
   # Configuration
-  database_name                   = "${var.database_name}"
-  master_username                 = "${var.master_username}"
-  master_password                 = "${local.MASTER_PASSWORD}"
   port                            = "${var.database_port}"
+  database_name                   = "${var.database_name}"
+  master_username                 = "${var.database_username}"
+  master_password                 = "${local.MASTER_PASSWORD}"
   db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.aurora_cluster_parameter_group.name}"
 
   # Network & Security

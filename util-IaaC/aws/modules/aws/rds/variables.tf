@@ -2,6 +2,15 @@
 # VARIABLES
 ##################################################################################
 
+/* *************** STATE FILES CONFIGURATION *************** */
+variable "state_bucket" {
+  description = "A state file S3 bucket name"
+}
+
+variable "state_bucket_vpc_key" {
+  description = "A state file S3 bucket VPC key"
+}
+
 /* *************** RDS CONFIGURATION *************** */
 variable "profile" {
   description = "A AWS CLI profile to be used by Terraform as source of credentials for AWS API calls"
@@ -39,19 +48,10 @@ variable "database_name" {
   description = "An AWS RDS database name"
 }
 
-variable "master_username" {
+variable "database_username" {
   description = "An AWS RDS database master user name"
 }
 
 variable "database_port" {
   description = "An AWS RDS database port number"
-}
-
-/* *************** VPC STATE CONFIGURATION *************** */
-variable "bucket_vpc_state" {
-  description = "An AWS S3 dependant VPC state file bucket name"
-}
-
-variable "key_vpc_state" {
-  description = "An AWS S3 dependant VPC state file key name"
 }

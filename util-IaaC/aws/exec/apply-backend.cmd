@@ -1,9 +1,10 @@
 @call exec/session/start ^
-    init-backend.log
+    apply-backend.log
+    stateful
 @terraform init ^
-    modules/terraform
+    modules/backend
 @terraform apply ^
     -var-file="config/init/global.tfvars" ^
-    -state="out/state/init-backend.tfstate" ^
-    modules/terraform
+    -state="out/state/backend.tfstate" ^
+    modules/backend
 @call exec/session/stop

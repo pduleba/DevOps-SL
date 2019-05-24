@@ -1,5 +1,5 @@
 @call exec/session/start ^
-    init.log
+    init-%1.log
 @terraform init ^
     -backend-config="config/init/global.tfvars" ^
     -backend-config="config/init/%2/%1.tfvars" ^

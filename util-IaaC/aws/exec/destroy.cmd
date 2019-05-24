@@ -1,9 +1,10 @@
 @call exec/session/start ^
-    apply-plan.log ^
+    destroy-%1.log ^
     stateful
-@terraform plan ^
+@terraform fmt ^
+    modules/aws/%1 > out/log/fmt.log
+@terraform destroy ^
     -var-file="config/modify/global.tfvars" ^
     -var-file="config/modify/%2/%1.tfvars" ^
-    -out="out/plan/apply-plan.tfplan" ^
     modules/aws/%1
 @call exec/session/stop

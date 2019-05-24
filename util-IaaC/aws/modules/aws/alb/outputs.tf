@@ -1,9 +1,11 @@
 ##################################################################################
-# VARIABLES
+# OUTPUT
 ##################################################################################
 
-profile = "pduleba-admin-cli-profile"
+output "alb_id" {
+  value = "${aws_alb.alb.id}"
+}
 
-region = "us-east-1"
-
-bucket = "pduleba-app-terraform"
+output "alb_endpoint" {
+  value = "${aws_alb.alb.dns_name}"
+}

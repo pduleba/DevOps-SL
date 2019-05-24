@@ -13,34 +13,6 @@ terraform {
 # RESOURCES
 ##################################################################################
 
-resource "aws_flow_log" "flow_log" {
-  vpc_id = "${aws_vpc.vpc.id}"
-
-  log_destination = "${aws_cloudwatch_log_group.log_group.arn}"
-  traffic_type    = "ALL"
-  iam_role_arn    = "${aws_iam_role.vpc_flowlog_role.arn}"
-}
-
-resource "aws_cloudwatch_log_group" "log_group" {
-  name = "${format(
-    "%s/%s",
-    "/aws/vpc/flowlogs",
-    module.commons.resource_name_prefix
-  )}"
-
-  tags = "${merge(
-    map(
-      "Name",
-      format(
-        "%s_%s",
-        module.commons.resource_name_prefix,
-        "log_group"
-      )
-    ),
-    module.commons.tags
-  )}"
-}
-
 resource "aws_iam_role_policy" "vpc_flowlog_role_policy" {
   name = "${format(
     "%s_%s",
@@ -77,6 +49,43 @@ resource "aws_iam_role" "vpc_flowlog_role" {
     ),
     module.commons.tags
   )}"
+}
+
+resource "aws_cloudwatch_log_group" "cloudwatch_log_group" {
+  name = "${format(
+    "%s/%s",
+    "/aws/vpc/flowlogs",
+    module.commons.resource_name_prefix
+  )}"
+
+  tags = "${merge(
+    map(
+      "Name",
+      format(
+        "%s_%s",
+        module.commons.resource_name_prefix,
+        "log_group"
+      )
+    ),
+    module.commons.tags
+  )}"
+}
+
+resource "aws_flow_log" "cloudwatch_flowlog" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  traffic_type         = "ALL"
+  log_destination_type = "cloud-watch-logs"
+  log_destination      = "${aws_cloudwatch_log_group.cloudwatch_log_group.arn}"
+  iam_role_arn         = "${aws_iam_role.vpc_flowlog_role.arn}"
+}
+
+resource "aws_flow_log" "s3_flowlog" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  traffic_type         = "ALL"
+  log_destination_type = "s3"
+  log_destination      = "${data.aws_s3_bucket.flowlog_s3_bucket.arn}"
 }
 
 resource "aws_vpc" "vpc" {

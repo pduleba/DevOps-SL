@@ -2,15 +2,15 @@
 # LOCALS
 ##################################################################################
 
-# Intentionally moved here as source fo local variavles interpolation
+# Intentionally moved here as source of local variavles interpolation
 data "terraform_remote_state" "vpc_remote_state" {
   backend = "s3"
 
   config = {
     profile = "${var.profile}"
     region  = "${var.region}"
-    bucket  = "${var.bucket_vpc_state}"
-    key     = "${var.key_vpc_state}"
+    bucket  = "${var.state_bucket}"
+    key     = "${var.state_bucket_vpc_key}"
   }
 }
 

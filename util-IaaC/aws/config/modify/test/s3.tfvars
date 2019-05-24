@@ -2,8 +2,8 @@
 # VARIABLES
 ##################################################################################
 
-profile = "pduleba-admin-cli-profile"
+vpc_bucket_postfix = "vpc_bucket"
 
-region = "us-east-1"
+alb_bucket_postfix = "alb_bucket"
 
-bucket = "pduleba-app-terraform"
+app_bucket_postfix = "app_bucket"

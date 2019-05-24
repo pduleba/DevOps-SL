@@ -214,8 +214,10 @@
         <profile>
             <id>local</id>
             <properties>
-                <app-rest.aws.profile>local</app-rest.aws.profile>
                 <app-rest.spring.profile>local</app-rest.spring.profile>
+                <app-rest.aws.profile>local</app-rest.aws.profile>
+                <app-rest.aws.region>us-east-1</app-rest.aws.region>
+                <app-rest.aws.bucket>pduleba-us-east-1</app-rest.aws.bucket>
                 <app-rest.api.url>http://localhost:8080/app-rest/api</app-rest.api.url>
                 <app-rest.datasource.url>jdbc:mysql://localhost:3306/app-db</app-rest.datasource.url>
                 <app-rest.datasource.user>user</app-rest.datasource.user>
@@ -226,8 +228,10 @@
         <profile>
             <id>aws</id>
             <properties>
-                <app-rest.aws.profile>aws</app-rest.aws.profile>
                 <app-rest.spring.profile>aws</app-rest.spring.profile>
+                <app-rest.aws.profile>aws</app-rest.aws.profile>
+                <app-rest.aws.region>us-east-1</app-rest.aws.region>
+                <app-rest.aws.bucket>pduleba-us-east-1</app-rest.aws.bucket>
                 <app-rest.api.url>http://pduleba-alb-484647850.us-east-1.elb.amazonaws.com:8080/app-rest/api</app-rest.api.url>
                 <app-rest.datasource.url>jdbc:mysql://appdb.cluster-cgf1hknohtf8.us-east-1.rds.amazonaws.com:3306/appdb</app-rest.datasource.url>
                 <app-rest.datasource.user>user</app-rest.datasource.user>

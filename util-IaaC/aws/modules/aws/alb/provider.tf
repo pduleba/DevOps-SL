@@ -1,9 +1,8 @@
 ##################################################################################
-# VARIABLES
+# PROVIDERS
 ##################################################################################
 
-profile = "pduleba-admin-cli-profile"
-
-region = "us-east-1"
-
-bucket = "pduleba-app-terraform"
+provider "aws" {
+  profile = "${var.profile}"
+  region  = "${var.region}"
+}
