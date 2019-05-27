@@ -13,22 +13,22 @@ terraform {
 # RESOURCES
 ##################################################################################
 
-resource "aws_iam_role_policy" "vpc_flowlog_role_policy" {
+resource "aws_iam_role_policy" "flowlog_cloudwatch_role_policy" {
   name = "${format(
     "%s_%s",
     module.commons.resource_name_prefix,
-    "vpc_flowlog_role_policy"
+    "flowlog_cloudwatch_role_policy"
   )}"
 
-  role   = "${aws_iam_role.vpc_flowlog_role.id}"
-  policy = "${data.aws_iam_policy_document.vpc_flowlog_policy.json}"
+  role   = "${aws_iam_role.flowlog_cloudwatch_role.id}"
+  policy = "${data.aws_iam_policy_document.flowlog_policy.json}"
 }
 
-resource "aws_iam_role" "vpc_flowlog_role" {
+resource "aws_iam_role" "flowlog_cloudwatch_role" {
   name = "${format(
     "%s_%s",
     module.commons.resource_name_prefix,
-    "vpc_flowlog_role"
+    "flowlog_s3_role"
   )}"
 
   description = "${format(
@@ -36,7 +36,7 @@ resource "aws_iam_role" "vpc_flowlog_role" {
     module.commons.resource_name_prefix,
     "DevOps upskill role allowing VPC to call CloudWatchFlowLogs service on your behalf."
   )}"
-  assume_role_policy = "${data.aws_iam_policy_document.vpc_flowlog_assume_role_policy.json}"
+  assume_role_policy = "${data.aws_iam_policy_document.flowlog_assume_role_policy_document.json}"
 
   tags = "${merge(
     map(
@@ -64,7 +64,7 @@ resource "aws_cloudwatch_log_group" "cloudwatch_log_group" {
       format(
         "%s_%s",
         module.commons.resource_name_prefix,
-        "log_group"
+        "cloudwatch_log_group"
       )
     ),
     module.commons.tags
@@ -77,7 +77,7 @@ resource "aws_flow_log" "cloudwatch_flowlog" {
   traffic_type         = "ALL"
   log_destination_type = "cloud-watch-logs"
   log_destination      = "${aws_cloudwatch_log_group.cloudwatch_log_group.arn}"
-  iam_role_arn         = "${aws_iam_role.vpc_flowlog_role.arn}"
+  iam_role_arn         = "${aws_iam_role.flowlog_cloudwatch_role.arn}"
 }
 
 resource "aws_flow_log" "s3_flowlog" {
@@ -85,11 +85,14 @@ resource "aws_flow_log" "s3_flowlog" {
 
   traffic_type         = "ALL"
   log_destination_type = "s3"
-  log_destination      = "${data.aws_s3_bucket.flowlog_s3_bucket.arn}"
+  log_destination      = "${aws_s3_bucket.flowlog_s3_bucket.arn}"
 }
 
 resource "aws_vpc" "vpc" {
   cidr_block = "${local.VPC_CIDR}"
+
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags = "${merge(
     map(
@@ -292,7 +295,6 @@ resource "aws_security_group" "public_alb" {
     cidr_blocks = "${local.SG_PUBLIC_INGRESS_CIDRs}"
   }
 
-  // TODO :: Is is needed?
   egress {
     protocol    = "-1"
     from_port   = 0
@@ -333,7 +335,6 @@ resource "aws_security_group" "public_bastion" {
     cidr_blocks = "${local.SG_PUBLIC_INGRESS_CIDRs}"
   }
 
-  // TODO :: Is is needed?
   egress {
     protocol    = "-1"
     from_port   = 0
@@ -374,7 +375,6 @@ resource "aws_security_group" "private_ec2" {
     security_groups = "${list(aws_security_group.public_alb.id, aws_security_group.public_bastion.id)}"
   }
 
-  // TODO :: Is is needed?
   egress {
     protocol    = "-1"
     from_port   = 0
@@ -415,7 +415,6 @@ resource "aws_security_group" "private_rds" {
     security_groups = "${list(aws_security_group.private_ec2.id, aws_security_group.public_bastion.id)}"
   }
 
-  // TODO :: Is is needed?
   egress {
     protocol    = "-1"
     from_port   = 0
@@ -431,6 +430,22 @@ resource "aws_security_group" "private_rds" {
         module.commons.resource_name_prefix,
         "private_rds_sg"
       )
+    ),
+    module.commons.tags
+  )}"
+}
+
+resource "aws_s3_bucket" "flowlog_s3_bucket" {
+
+  bucket = "${local.FLOWLOG_S3_BUCKET}"
+
+  acl           = "private"
+  force_destroy = "true"
+
+  tags = "${merge(
+    map(
+      "Name",
+      local.FLOWLOG_S3_BUCKET
     ),
     module.commons.tags
   )}"

@@ -11,10 +11,6 @@ variable "state_bucket_vpc_key" {
   description = "A state file S3 bucket VPC key"
 }
 
-variable "state_bucket_s3_key" {
-  description = "A state file S3 bucket S3 key"
-}
-
 /* *************** ALB CONFIGURATION *************** */
 variable "profile" {
   description = "A AWS CLI profile to be used by Terraform as source of credentials for AWS API calls"
@@ -22,10 +18,6 @@ variable "profile" {
 
 variable "region" {
   description = "An AWS region of application infrastructure (including Terraform state)"
-}
-
-variable "state_bucket_access_log_prefix" {
-  description = "An AWS S3 bucket key prefix to store access logs"
 }
 
 variable "protocol" {
@@ -57,3 +49,20 @@ variable "listener_rule_rds_condition_values" {
   description = "A RDS API listener roule conditions"
   type        = "list"
 }
+
+variable "access_log_s3_bucket_log_prefix" {
+  description = "An AWS S3 bucket key prefix to store access logs"
+}
+
+variable "access_log_s3_bucket_name_postfix" {
+  description = "An AWS S3 bucket name postfix to grant access to the access log S3 bucket"
+}
+
+variable "access_log_s3_bucket_owner_account_id" {
+  description = "A AWS S3 bucket owner id"
+}
+
+variable "access_log_alb_owner_account_id" {
+  description = "An AWS account ID to grant access to the access log S3 bucket"
+}
+

@@ -23,6 +23,11 @@ variable "bucket" {
   description = "An AWS S3 bucket for storing Terraform state"
 }
 
+variable "bucket_policy_principals_identifiers" {
+  description = "An AWS S3 bucket access granted IAM users ARN list"
+  type = "list"
+}
+
 ##################################################################################
 # DATA
 ##################################################################################
@@ -30,13 +35,17 @@ variable "bucket" {
 # https://www.terraform.io/docs/providers/aws/guides/iam-policy-documents.html
 data "aws_iam_policy_document" "backend_policy_document" {
   statement {
-    actions = ["s3:*"]
+
     effect    = "Allow"
-    // TODO restrict access for specific user
+
+    // principals - bucket creator access only by default
     principals {
-      identifiers = ["*"]
       type = "AWS"
+      identifiers = "${var.bucket_policy_principals_identifiers}"
     }
+
+    actions = ["s3:*"]
+
     resources = [
       "arn:aws:s3:::${var.bucket}/*"
     ]

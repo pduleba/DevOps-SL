@@ -2,7 +2,5 @@
 # VARIABLES
 ##################################################################################
 
-# Relates to init->global.tfvars->bucket
-state_bucket = "pduleba-app-terraform"
-
-flowlog_s3_bucket_postfix = "vpc-bucket"
+# Relates to modify->bastion.tfvars->app_bucket_postfix
+app_bucket_postfix = "app-bucket"

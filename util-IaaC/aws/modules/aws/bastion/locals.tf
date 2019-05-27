@@ -19,17 +19,15 @@ locals {
   VPC_ID = "${data.terraform_remote_state.vpc_remote_state.outputs.vpc_id}"
 
   # Subnet
-  SUBNETS_PRIVATE_IDS = "${data.terraform_remote_state.vpc_remote_state.outputs.subnets_private_ids}"
-  SUBNETS_PUBLIC_IDS  = "${data.terraform_remote_state.vpc_remote_state.outputs.subnets_public_ids}"
+  SUBNETS_PUBLIC_IDS = "${data.terraform_remote_state.vpc_remote_state.outputs.subnets_public_ids}"
 
   # Security group
-  SECURITY_GROUP_PUBLIC_ALB_ID = "${data.terraform_remote_state.vpc_remote_state.outputs.security_group_public_alb_id}"
+  SECURITY_GROUP_PUBLIC_BASTION_ID = "${data.terraform_remote_state.vpc_remote_state.outputs.security_group_public_bastion_id}"
 
-  # ALB
-  ACCESS_LOG_S3_BUCKET = "${format(
+  # BASTION
+  APP_BUCKET = "${format(
     "%s-%s",
     module.commons.resource_name_prefix,
-    var.access_log_s3_bucket_name_postfix
+    var.app_bucket_postfix
   )}"
-
 }

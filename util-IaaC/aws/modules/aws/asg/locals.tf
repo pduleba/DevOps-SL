@@ -1,8 +1,7 @@
 ##################################################################################
-# VARIABLES
+# LOCALS
 ##################################################################################
 
-# Relates to init->global.tfvars->bucket
-state_bucket = "pduleba-app-terraform"
+locals {
 
-flowlog_s3_bucket_postfix = "vpc-bucket"
+}

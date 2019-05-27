@@ -25,7 +25,7 @@ resource "aws_alb" "alb" {
   load_balancer_type = "application"
   internal           = false
   ip_address_type    = "ipv4"
-  // TODO :: Why is it needed?
+  // TODO :: This is not needed here - FIX ME
   subnets = "${concat(
     data.aws_subnet.subnets_private.*.id,
     data.aws_subnet.subnets_public.*.id
@@ -40,8 +40,8 @@ resource "aws_alb" "alb" {
   enable_http2               = true
   access_logs {
     enabled = true
-    bucket  = "${data.aws_s3_bucket.access_log_s3_bucket.bucket}"
-    prefix  = "${var.state_bucket_access_log_prefix}"
+    bucket  = "${aws_s3_bucket.access_log_s3_bucket.bucket}"
+    prefix  = "${var.access_log_s3_bucket_log_prefix}"
   }
 
   # Listeners
@@ -143,6 +143,22 @@ resource "aws_alb_target_group" "alb_target_groups" {
         module.commons.resource_name_prefix,
         count.index < 1 ? "alb_target_group_rds" : "alb_target_group_s3"
       )
+    ),
+    module.commons.tags
+  )}"
+}
+
+resource "aws_s3_bucket" "access_log_s3_bucket" {
+  bucket = "${local.ACCESS_LOG_S3_BUCKET}"
+
+  acl           = "private"
+  force_destroy = "true"
+  policy        = "${data.aws_iam_policy_document.access_log_s3_bucket_policy_document.json}"
+
+  tags = "${merge(
+    map(
+      "Name",
+      local.ACCESS_LOG_S3_BUCKET
     ),
     module.commons.tags
   )}"

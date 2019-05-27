@@ -2,8 +2,5 @@
 # VARIABLES
 ##################################################################################
 
-vpc_bucket_postfix = "vpc-bucket"
-
-alb_bucket_postfix = "alb-bucket"
-
+# Relates to modify->bastion.tfvars->app_bucket_postfix
 app_bucket_postfix = "app-bucket"

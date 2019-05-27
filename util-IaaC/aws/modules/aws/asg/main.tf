@@ -13,35 +13,7 @@ terraform {
 # RESOURCES
 ##################################################################################
 
-data "aws_iam_policy_document" "bucket_policies" {
-  # Loop
-  count = "${length(local.BUCKETS)}"
-
-  statement {
-    actions = ["s3:*"]
-    effect  = "Allow"
-    // TODO restrict access for specific user
-    principals {
-      identifiers = ["*"]
-      type        = "AWS"
-    }
-    resources = "${list(
-      format(
-        "%s%s%s",
-        "arn:aws:s3:::",
-        element(
-          local.BUCKETS,
-          count.index
-        ),
-        "/*"
-      )
-    )}"
-  }
-}
-
 resource "aws_s3_bucket" "buckets" {
-  # Loop
-  count = "${length(local.BUCKETS)}"
 
   bucket = "${element(
     local.BUCKETS,
@@ -50,10 +22,8 @@ resource "aws_s3_bucket" "buckets" {
 
   acl           = "private"
   force_destroy = "true"
-  policy = "${element(
-    data.aws_iam_policy_document.bucket_policies.*.json,
-    count.index
-  )}"
+
+  // TODO add CORS rule for app-bucket
 
   tags = "${merge(
     map(

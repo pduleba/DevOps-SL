@@ -6,10 +6,6 @@
 state_bucket = "pduleba-app-terraform"
 # Relates to init->test->vpc.tfvars->key
 state_bucket_vpc_key = "test/vpc.tfstate"
-# Relates to init->test->s3.tfvars->key
-state_bucket_s3_key = "test/s3.tfstate"
-
-state_bucket_access_log_prefix = "alb_access_logs"
 
 protocol = "HTTP"
 port = "8080"
@@ -26,3 +22,10 @@ listener_rule_rds_condition_values = [
   "/app-rest/api/rds/*",
   "/app-rest/rds/*"
 ]
+
+# https://docs.aws.amazon.com/console/elasticloadbalancing/access-logs
+# https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html
+access_log_s3_bucket_log_prefix = "dev"
+access_log_s3_bucket_name_postfix = "alb-bucket"
+access_log_s3_bucket_owner_account_id = "890769921003"
+access_log_alb_owner_account_id = "127311923021"  // region related

@@ -1,9 +1,11 @@
 ##################################################################################
-# VARIABLES
+# OUTPUT
 ##################################################################################
 
-vpc_bucket_postfix = "vpc_bucket"
+output "bastion_public_ip" {
+  value = "${aws_instance.bastion.public_ip}"
+}
 
-alb_bucket_postfix = "alb_bucket"
-
-app_bucket_postfix = "app_bucket"
+output "bastion_public_dns" {
+  value = "${aws_instance.bastion.public_dns}"
+}
