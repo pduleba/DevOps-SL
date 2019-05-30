@@ -2,6 +2,6 @@
 # OUTPUT
 ##################################################################################
 
-output "alb_endpoint" {
+output "alb_host" {
   value = "${aws_alb.alb.dns_name}"
 }

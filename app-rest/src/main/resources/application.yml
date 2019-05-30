@@ -1,8 +1,8 @@
 ---
 server:
-  port: 8080
+  port: @app-rest.http.port@
   servlet:
-    context-path: /app-rest
+    context-path: @app-rest.http.context.path@
 ---
 spring:
   profiles:
@@ -16,17 +16,31 @@ logging:
     max-history: 5
     max-size: 10MB
 ---
+# https://docs.spring.io/spring-boot/docs/current/reference/html/howto-database-initialization.html#howto-execute-flyway-database-migrations-on-startup
 spring:
-  profiles: local,aws
+  flyway:
+    locations: classpath:migration/{vendor}
+    # Available properties listed in FlywayProperties.java
+    installedBy: @app-rest.flayway.installedBy@
+    #
+    url: @app-rest.datasource.url@
+    user: @app-rest.datasource.username@
+    password: @app-rest.datasource.password@
+---
+spring:
   freemarker:
     template-loader-path: classpath:/templates
     suffix: .ftl
   datasource:
+    # Use MySQL dialect
+    platform: mysql
+    #
     url: @app-rest.datasource.url@
-    username: @app-rest.datasource.user@
-    password: @app-rest.datasource.pass@
+    username: @app-rest.datasource.username@
+    password: @app-rest.datasource.password@
   jpa:
     hibernate:
+      ddl-auto: none
       # Naming strategies for use with Hibernate entities
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
@@ -38,10 +52,11 @@ spring:
         # Do not initialize the schema on startup
         hbm2ddl:
           auto: none
-        # Show each sql query
+        # Show each migration query
         show_sql: true
-        # Format each sql query
-        format_sql: false
-        # The SQL dialect makes Hibernate generate better SQL for the chosen database
+        # Format each migration query
+        format_sql: true
+        # The SQL dialect makes Hibernate generate better SQL
         dialect: org.hibernate.dialect.MySQL5Dialect
+        dialect.storage_engine: innodb
 ...

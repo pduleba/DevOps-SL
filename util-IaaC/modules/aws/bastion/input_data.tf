@@ -34,6 +34,10 @@ data "aws_iam_policy" "ssm_policy" {
   arn = "${var.instance_ssm_service_role_arn}"
 }
 
+data "aws_s3_bucket" "app_bucket" {
+  bucket = "${module.app-bucket.name}"
+}
+
 # Location relative to exec/* scripts
 data "template_file" "bastion_script" {
   template = "${file("./config/scripts/bastion.tpl")}"
@@ -50,7 +54,7 @@ data "aws_iam_policy_document" "bastion_s3_policy" {
       "s3:ListObject"
     ]
 
-    resources = ["arn:aws:s3:::${module.app-bucket.name}/*"]
+    resources = ["arn:aws:s3:::${data.aws_s3_bucket.app_bucket.bucket}/*"]
   }
 }
 

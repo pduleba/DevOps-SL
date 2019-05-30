@@ -8,22 +8,59 @@ spring:
   profiles:
     active: test
 ---
-# Work around of https://github.com/spring-projects/spring-boot/issues/12510
+# INFO : File appender disabled due to `app-rest` installation as `init.d` Service (see `deployment-install` under README.md for more)
+# BUG  :  Work around of https://github.com/spring-projects/spring-boot/issues/12510
 logging.file: app-rest.log
 logging:
   file:
-    max-history: 0
+    max-history: 5
     max-size: 10MB
 ---
+# https://docs.spring.io/spring-boot/docs/current/reference/html/howto-database-initialization.html#howto-execute-flyway-database-migrations-on-startup
 spring:
-  profiles: test
+  flyway:
+    locations: classpath:migration/{vendor}
+    # Available properties listed in FlywayProperties.java
+    installedBy: test
+    # http://www.h2database.com/html/features.html
+    url: jdbc:h2:mem:app-db-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    user: sa
+    password:
+---
+spring:
+  freemarker:
+    template-loader-path: classpath:/templates
+    suffix: .ftl
+  datasource:
+    # Use MySQL dialect thanks H2 MODE
+    platform: mysql
+    # http://www.h2database.com/html/features.html
+    url: jdbc:h2:mem:app-db-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+      # Naming strategies for use with Hibernate entities
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    # Use spring.jpa.properties.* for Hibernate native properties (the prefix is
+    # stripped before adding them to the entity manager)
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-  datasource:
-    url: jdbc:h2:mem:app-db-test
-    platform: h2
+        # Do not initialize the schema on startup
+        hbm2ddl:
+          auto: none
+        # Show each migration query
+        show_sql: true
+        # Format each migration query
+        format_sql: true
+        # The SQL dialect makes Hibernate generate better SQL, use MySQL dialect thanks H2 MODE
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        dialect.storage_engine: innodb
+---
+h2:
+  console:
+    enabled: true # http://localhost:8080/app-rest/h2-console
 ...

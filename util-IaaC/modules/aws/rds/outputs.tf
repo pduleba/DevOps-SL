@@ -2,7 +2,7 @@
 # OUTPUT
 ##################################################################################
 
-output "database_endpoint" {
+output "database_host" {
   value = "${aws_rds_cluster.aurora_cluster.endpoint}"
 }
 

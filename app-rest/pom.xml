@@ -21,8 +21,22 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
 
-        <!-- Project dependencies versions -->
+        <!-- Project properties -->
+        <app-rest.spring.profile>${spring.profile}</app-rest.spring.profile>
+        <app-rest.aws.profile>${aws.profile}</app-rest.aws.profile>
+        <app-rest.aws.region>${aws.region}</app-rest.aws.region>
+        <app-rest.aws.bucket>${aws.bucket}</app-rest.aws.bucket>
+        <app-rest.http.port>${http.port}</app-rest.http.port>
+        <app-rest.http.context.path>/${http.context.path}</app-rest.http.context.path>
+        <app-rest.http.url>${http.protocol}://${http.host}:${http.port}/${http.context.path}/${http.api.path}</app-rest.http.url>
+        <app-rest.datasource.url>jdbc:mysql://${database.host}:${database.port}/${database.name}</app-rest.datasource.url>
+        <app-rest.datasource.username>${database.username}</app-rest.datasource.username>
+        <app-rest.datasource.password>${database.password}</app-rest.datasource.password>
+        <app-rest.flayway.installedBy>${project.artifactId}</app-rest.flayway.installedBy>
+
+        <!-- Dependencies versions -->
         <aws.java.bom.version>1.11.327</aws.java.bom.version>
+        <flyway.core.version>5.2.4</flyway.core.version>
         <mapstruct.version>1.3.0.Final</mapstruct.version>
 
         <!-- Plugins versions -->
@@ -44,7 +58,7 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Main -->
+        <!-- Amazon SDK -->
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
@@ -80,6 +94,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.core.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -214,28 +233,46 @@
         <profile>
             <id>local</id>
             <properties>
-                <app-rest.spring.profile>local</app-rest.spring.profile>
-                <app-rest.aws.profile>local</app-rest.aws.profile>
-                <app-rest.aws.region>us-east-1</app-rest.aws.region>
-                <app-rest.aws.bucket>pduleba-us-east-1</app-rest.aws.bucket>
-                <app-rest.api.url>http://localhost:8080/app-rest/api</app-rest.api.url>
-                <app-rest.datasource.url>jdbc:mysql://localhost:3306/app-db</app-rest.datasource.url>
-                <app-rest.datasource.user>user</app-rest.datasource.user>
-                <app-rest.datasource.pass>user</app-rest.datasource.pass>
+                <spring.profile>local</spring.profile>
+
+                <aws.profile>local</aws.profile>
+                <aws.region>us-east-1</aws.region>
+                <aws.bucket>pduleba-us-east-1</aws.bucket>
+
+                <http.protocol>http</http.protocol>
+                <http.host>localhost</http.host>
+                <http.port>8080</http.port>
+                <http.context.path>app-rest</http.context.path>
+                <http.api.path>api</http.api.path>
+
+                <database.host>localhost</database.host>
+                <database.port>3306</database.port>
+                <database.name>app-db</database.name>
+                <database.username>user</database.username>
+                <database.password>user</database.password>
             </properties>
         </profile>
 
         <profile>
             <id>aws</id>
             <properties>
-                <app-rest.spring.profile>aws</app-rest.spring.profile>
-                <app-rest.aws.profile>aws</app-rest.aws.profile>
-                <app-rest.aws.region>us-east-1</app-rest.aws.region>
-                <app-rest.aws.bucket>pduleba-us-east-1</app-rest.aws.bucket>
-                <app-rest.api.url>http://pduleba-alb-484647850.us-east-1.elb.amazonaws.com:8080/app-rest/api</app-rest.api.url>
-                <app-rest.datasource.url>jdbc:mysql://appdb.cluster-cgf1hknohtf8.us-east-1.rds.amazonaws.com:3306/appdb</app-rest.datasource.url>
-                <app-rest.datasource.user>user</app-rest.datasource.user>
-                <app-rest.datasource.pass>user1234</app-rest.datasource.pass>
+                <spring.profile>aws</spring.profile>
+
+                <aws.profile>aws</aws.profile>
+                <aws.region>us-east-1</aws.region>
+                <aws.bucket></aws.bucket>
+
+                <http.protocol>http</http.protocol>
+                <http.host></http.host>
+                <http.port>8080</http.port>
+                <http.context.path>app-rest</http.context.path>
+                <http.api.path>api</http.api.path>
+
+                <database.host></database.host>
+                <database.port></database.port>
+                <database.name></database.name>
+                <database.username></database.username>
+                <database.password></database.password>
             </properties>
         </profile>
     </profiles>

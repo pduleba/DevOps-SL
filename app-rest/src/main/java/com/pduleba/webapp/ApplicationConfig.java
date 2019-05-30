@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.pduleba.webapp.dao.JpaRepositories;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -31,6 +32,13 @@ public class ApplicationConfig {
     @Bean
     public AWSCredentialsProvider awsCredentialsProvider() {
         return new InstanceProfileCredentialsProvider(false);
+    }
+
+    @Bean // the way of customizing Flyway database migration
+    public FlywayMigrationStrategy flywayMigrationStrategy() {
+        return (flyway) -> {
+            flyway.migrate();
+        };
     }
 
     @Bean(AMAZON_S3_CLIENT)
