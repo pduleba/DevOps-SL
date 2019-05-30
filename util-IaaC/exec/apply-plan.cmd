@@ -5,5 +5,5 @@
     -var-file="config/global.tfvars" ^
     -var-file="config/env/%2/%1.tfvars" ^
     -out="out/plan/apply-plan-%1.tfplan" ^
-    modules/aws/%1
+    modules/%1
 @call exec/session/stop

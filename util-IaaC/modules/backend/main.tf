@@ -1,30 +1,13 @@
 ##################################################################################
-# PROVIDERS
-##################################################################################
-
-provider "aws" {
-  profile = "${var.profile}"
-  region  = "${var.region}"
-}
-
-##################################################################################
 # VARIABLES
 ##################################################################################
 
-variable "profile" {
-}
+variable "profile" {}
+variable "region" {}
+variable "bucket" {}
 
-variable "region" {
-}
-
-variable "bucket" {
-}
-
-variable "owner" {
-}
-
-variable "resource_name_prefix" {
-}
+variable "owner" {}
+variable "resource_name_prefix" {}
 
 variable "bucket_policy_principals" {
   type = "list"
@@ -58,7 +41,7 @@ data "aws_iam_policy_document" "backend_policy_document" {
 ##################################################################################
 
 module "backend-bucket" {
-  source      = "../commons/resource"
+  source      = "../utils/resource"
   name_prefix = "${var.resource_name_prefix}"
 
   // Due to limitation of Terraform init, name of bucket needs to be provided via variable

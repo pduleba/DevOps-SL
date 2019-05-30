@@ -4,5 +4,5 @@
 @terraform init ^
     -backend-config="config/global.tfvars" ^
     -backend-config="key=%2/%1.tfstate" ^
-    modules/aws/%1
+    modules/%1
 @call exec/session/stop
