@@ -11,7 +11,7 @@
 
     <groupId>com.pduleba</groupId>
     <artifactId>app-rest</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
     <packaging>jar</packaging>
 
     <name>app-rest</name>
@@ -260,19 +260,19 @@
 
                 <aws.profile>aws</aws.profile>
                 <aws.region>us-east-1</aws.region>
-                <aws.bucket></aws.bucket>
+                <aws.bucket />
 
                 <http.protocol>http</http.protocol>
-                <http.host></http.host>
+                <http.host />
                 <http.port>8080</http.port>
                 <http.context.path>app-rest</http.context.path>
                 <http.api.path>api</http.api.path>
 
-                <database.host></database.host>
-                <database.port></database.port>
-                <database.name></database.name>
-                <database.username></database.username>
-                <database.password></database.password>
+                <database.host />
+                <database.port />
+                <database.name />
+                <database.username />
+                <database.password />
             </properties>
         </profile>
     </profiles>
@@ -281,7 +281,7 @@
         <connection>scm:git:https://github.com/pduleba/DevOps-SL.git</connection>
         <developerConnection>scm:git:https://github.com/pduleba/DevOps-SL.git</developerConnection>
         <url>https://github.com/pduleba/DevOps-SL/${project.scm.tag}</url>
-        <tag>master</tag>
+        <tag>app-rest-0.0.2</tag>
     </scm>
 
 </project>
