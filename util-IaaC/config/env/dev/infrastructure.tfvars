@@ -36,15 +36,19 @@ listener_rule_s3_condition_values = [
 access_log_bucket_name_postfix = "alb-bucket"
 access_log_bucket_log_prefix = "dev"
 
-instance_ami = "ami-0c6b1d09930fac512"
-instance_type = "t2.micro"
-instance_key_pair_name = "pduleba_ec2_linux_us-east-1_key"
-instance_ssm_service_role_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+launch_configuration_image_id = "ami-0c6b1d09930fac512"
+launch_configuration_instance_type = "t2.micro"
+launch_configuration_key_name = "pduleba_ec2_linux_us-east-1_key"
+launch_configuration_user_data_script_path = "config/scripts/launch_configuration_user_data.tpl"
+
+ssm_policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 
 autoscaling_serivce_role_arn = "arn:aws:iam::890769921003:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
 autoscaling_min_size = 1
 autoscaling_desired_size = 1
 autoscaling_max_size = 1
+
+ssm_parameter_alb_host_key_postfix = "dev/alb/host"
 
 # Relates to storage.tfvars
 app_bucket_postfix = "app-bucket"

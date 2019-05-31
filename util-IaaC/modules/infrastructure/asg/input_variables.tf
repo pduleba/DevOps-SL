@@ -18,14 +18,18 @@ variable "ec2_security_group_name_postfix" {}
 variable "target_group_rds_name_postfix" {}
 variable "target_group_s3_name_postfix" {}
 
-variable "instance_ami" {}
-variable "instance_type" {}
-variable "instance_key_pair_name" {}
-variable "instance_ssm_service_role_arn" {}
+variable "launch_configuration_image_id" {}
+variable "launch_configuration_instance_type" {}
+variable "launch_configuration_key_name" {}
+variable "launch_configuration_user_data_script_path" {}
+
+variable "ssm_policy_arn" {}
 
 variable "autoscaling_serivce_role_arn" {}
 variable "autoscaling_min_size" {}
 variable "autoscaling_desired_size" {}
 variable "autoscaling_max_size" {}
+
+variable "ssm_parameter_alb_host_key_postfix" {}
 
 variable "app_bucket_postfix" {}

@@ -26,25 +26,24 @@ data "aws_subnet" "private" {
   count = "${length(data.aws_subnet_ids.private.ids)}"
 }
 
-data "aws_security_group" "bastion" {
-  tags = "${module.bastion-sg.tags}"
+data "aws_security_group" "ec2" {
+  tags = "${module.ec2-sg.tags}"
 }
 
 data "aws_iam_policy" "ssm_policy" {
-  arn = "${var.instance_ssm_service_role_arn}"
+  arn = "${var.ssm_policy_arn}"
 }
 
 data "aws_s3_bucket" "app_bucket" {
   bucket = "${module.app-bucket.name}"
 }
 
-# Location relative to exec/* scripts
-data "template_file" "bastion_script" {
-  template = "${file("./config/scripts/bastion.tpl")}"
+data "template_file" "user_data" {
+  template = "${file(var.instance_user_data_script_path)}"
 }
 
 # https://www.terraform.io/docs/providers/aws/guides/iam-policy-documents.html
-data "aws_iam_policy_document" "bastion_s3_policy" {
+data "aws_iam_policy_document" "ec2_s3_policy" {
   statement {
 
     effect = "Allow"
@@ -58,7 +57,7 @@ data "aws_iam_policy_document" "bastion_s3_policy" {
   }
 }
 
-data "aws_iam_policy_document" "bastion_assume_role_policy" {
+data "aws_iam_policy_document" "ec2_assume_role_policy" {
   statement {
 
     effect = "Allow"

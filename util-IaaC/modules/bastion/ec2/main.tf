@@ -2,9 +2,9 @@
 # RESOURCES
 ##################################################################################
 
-resource "aws_instance" "bastion" {
+resource "aws_instance" "ec2" {
   # AMI
-  ami = "${var.instance_ami}"
+  ami = "${var.instance_image_id}"
 
   # Instance type
   instance_type = "${var.instance_type}"
@@ -16,13 +16,13 @@ resource "aws_instance" "bastion" {
   credit_specification {
     cpu_credits = "standard"
   }
-  iam_instance_profile                 = "${aws_iam_instance_profile.bastion_instance_profile.name}"
+  iam_instance_profile                 = "${aws_iam_instance_profile.ec2_instance_profile.name}"
   instance_initiated_shutdown_behavior = "terminate"
   disable_api_termination              = false
   monitoring                           = false
   tenancy                              = "default"
   source_dest_check                    = true
-  user_data                            = "${data.template_file.bastion_script.rendered}"
+  user_data                            = "${data.template_file.user_data.rendered}"
 
   # Storage
   root_block_device {
@@ -32,39 +32,39 @@ resource "aws_instance" "bastion" {
   }
 
   # Security groups
-  vpc_security_group_ids = "${list(data.aws_security_group.bastion.id)}"
+  vpc_security_group_ids = "${list(data.aws_security_group.ec2.id)}"
 
   # Review
-  key_name = "${var.instance_key_pair_name}"
+  key_name = "${var.instance_key_name}"
 
   # Tags
-  volume_tags = "${module.bastion-ebs.tags}"
-  tags        = "${module.bastion.tags}"
+  volume_tags = "${module.ec2-ebs.tags}"
+  tags        = "${module.ec2.tags}"
 }
 
-resource "aws_iam_instance_profile" "bastion_instance_profile" {
-  name = "${module.bastion-instance-profile.name}"
-  role = "${aws_iam_role.bastion_role.name}"
+resource "aws_iam_instance_profile" "ec2_instance_profile" {
+  name = "${module.ec2-instance-profile.name}"
+  role = "${aws_iam_role.ec2_role.name}"
 }
 
-resource "aws_iam_role" "bastion_role" {
-  name = "${module.bastion-role.name}"
+resource "aws_iam_role" "ec2_role" {
+  name = "${module.ec2-role.name}"
 
-  description        = "${module.bastion-role.description}"
-  assume_role_policy = "${data.aws_iam_policy_document.bastion_assume_role_policy.json}"
+  description        = "${module.ec2-role.description}"
+  assume_role_policy = "${data.aws_iam_policy_document.ec2_assume_role_policy.json}"
 
-  tags = "${module.bastion-role.tags}"
+  tags = "${module.ec2-role.tags}"
 }
 
-resource "aws_iam_role_policy" "bastion_s3_inline_policy" {
-  name = "${module.bastion-s3-inline-policy.name}"
+resource "aws_iam_role_policy" "ec2_s3_inline_policy" {
+  name = "${module.ec2-s3-inline-policy.name}"
 
 
-  role   = "${aws_iam_role.bastion_role.id}"
-  policy = "${data.aws_iam_policy_document.bastion_s3_policy.json}"
+  role   = "${aws_iam_role.ec2_role.id}"
+  policy = "${data.aws_iam_policy_document.ec2_s3_policy.json}"
 }
 
-resource "aws_iam_role_policy_attachment" "bastion_attach_amazon_ssm_policy" {
-  role       = "${aws_iam_role.bastion_role.id}"
+resource "aws_iam_role_policy_attachment" "ec2_attach_amazon_ssm_policy" {
+  role       = "${aws_iam_role.ec2_role.id}"
   policy_arn = "${data.aws_iam_policy.ssm_policy.arn}"
 }

@@ -21,6 +21,13 @@ database_name = "appdb"
 database_username = "user"
 database_port = "3306"
 
+ssm_parameter_database_host_key_postfix = "dev/database/host"
+ssm_parameter_database_port_key_postfix = "dev/database/port"
+ssm_parameter_database_name_key_postfix = "dev/database/name"
+ssm_parameter_database_username_key_postfix = "dev/database/username"
+ssm_parameter_database_password_key_postfix = "dev/database/password"
+ssm_parameter_app_bucket_key_postfix = "dev/s3/app-bucket"
+
 app_bucket_postfix = "app-bucket"
 
 # https://docs.aws.amazon.com/console/elasticloadbalancing/access-logs

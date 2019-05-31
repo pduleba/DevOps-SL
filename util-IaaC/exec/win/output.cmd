@@ -1,8 +1,8 @@
-@call exec/session/start ^
+@call exec/win/session/start ^
     output.log ^
     stateful ^
     quiet
 @terraform output ^
     %1
-@call exec/session/stop ^
+@call exec/win/session/stop ^
     quiet

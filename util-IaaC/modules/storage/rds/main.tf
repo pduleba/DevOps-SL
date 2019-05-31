@@ -2,7 +2,7 @@
 # RESOURCES
 ##################################################################################
 
-# TODO : Add custom aws_db_option_group & custom aws_appautoscaling_target
+# TODO :: Add custom aws_db_option_group & custom aws_appautoscaling_target
 # See for more details https://github.com/terraform-aws-modules/terraform-aws-rds-aurora/blob/master/main.tf
 
 resource "aws_rds_cluster" "aurora_cluster" {
@@ -123,4 +123,59 @@ resource "aws_db_parameter_group" "aurora_parameter_group" {
   family      = "${var.rds_parameter_group}"
 
   tags = "${module.aurora-parameter-group.tags}"
+}
+
+resource "aws_ssm_parameter" "database_host" {
+  name  = "${module.ssm-parameter-database-host.name}"
+
+  description = "${module.ssm-parameter-database-host.description}"
+  value = "${aws_rds_cluster.aurora_cluster.endpoint}"
+  type  = "SecureString"
+  overwrite = true
+
+  tags = "${module.ssm-parameter-database-host.tags}"
+}
+
+resource "aws_ssm_parameter" "database_port" {
+  name  = "${module.ssm-parameter-database-port.name}"
+
+  description = "${module.ssm-parameter-database-port.description}"
+  value = "${aws_rds_cluster.aurora_cluster.endpoint}"
+  type  = "SecureString"
+  overwrite = true
+
+  tags = "${module.ssm-parameter-database-port.tags}"
+}
+
+resource "aws_ssm_parameter" "database_name" {
+  name  = "${module.ssm-parameter-database-name.name}"
+
+  description = "${module.ssm-parameter-database-name.description}"
+  value = "${aws_rds_cluster.aurora_cluster.endpoint}"
+  type  = "SecureString"
+  overwrite = true
+
+  tags = "${module.ssm-parameter-database-name.tags}"
+}
+
+resource "aws_ssm_parameter" "database_username" {
+  name  = "${module.ssm-parameter-database-username.name}"
+
+  description = "${module.ssm-parameter-database-username.description}"
+  value = "${aws_rds_cluster.aurora_cluster.endpoint}"
+  type  = "SecureString"
+  overwrite = true
+
+  tags = "${module.ssm-parameter-database-username.tags}"
+}
+
+resource "aws_ssm_parameter" "database_password" {
+  name  = "${module.ssm-parameter-database-password.name}"
+
+  description = "${module.ssm-parameter-database-password.description}"
+  value = "${aws_rds_cluster.aurora_cluster.endpoint}"
+  type  = "SecureString"
+  overwrite = true
+
+  tags = "${module.ssm-parameter-database-password.tags}"
 }

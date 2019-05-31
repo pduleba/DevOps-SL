@@ -15,7 +15,7 @@ resource "aws_autoscaling_group" "autoscaling_groups" {
   desired_capacity = "${var.autoscaling_desired_size}" // can be replaced by 'aws_autoscaling_policy'
   max_size         = "${var.autoscaling_max_size}"
   min_size         = "${var.autoscaling_min_size}"
-  // TODO - use all AZs in region ?
+  // TODO :: Use all AZs in region ?
   vpc_zone_identifier = "${data.aws_subnet.private.*.id}"
   availability_zones  = "${data.aws_subnet.private.*.availability_zone_id}"
   target_group_arns = "${list(
@@ -82,16 +82,16 @@ resource "aws_launch_configuration" "launch_configurations" {
   count = 2
 
   # AMI
-  image_id = "${var.instance_ami}"
+  image_id = "${var.launch_configuration_image_id}"
 
   # Instance type
-  instance_type = "${var.instance_type}"
+  instance_type = "${var.launch_configuration_instance_type}"
 
   # Configure instance
   name                        = "${count.index % 2 < 1 ? module.launch-configuration-rds.name : module.launch-configuration-s3.name}"
   iam_instance_profile        = "${aws_iam_instance_profile.ec2_instance_profile.name}"
   enable_monitoring           = false
-  user_data                   = "${data.template_file.ec2_script.rendered}"
+  user_data                   = "${data.template_file.user_data.rendered}"
   associate_public_ip_address = false
 
   # Storage
@@ -105,7 +105,7 @@ resource "aws_launch_configuration" "launch_configurations" {
   security_groups = "${list(data.aws_security_group.ec2.id)}"
 
   # Review
-  key_name = "${var.instance_key_pair_name}"
+  key_name = "${var.launch_configuration_key_name}"
 }
 
 resource "aws_iam_instance_profile" "ec2_instance_profile" {

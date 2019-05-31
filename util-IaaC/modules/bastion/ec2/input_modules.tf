@@ -26,53 +26,53 @@ module "private-subnet" {
   name_postfix = "${var.private_subnet_name_postfix}"
 }
 
-module "bastion-sg" {
+module "ec2-sg" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "${var.bastion_security_group_name_postfix}"
+  name_postfix = "${var.ec2_security_group_name_postfix}"
 }
 
-module "bastion" {
+module "ec2" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "bastion"
+  name_postfix = "${var.resource_name_postfix}"
 }
 
-module "bastion-ebs" {
+module "ec2-ebs" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "bastion-ebs"
+  name_postfix = "ec2-ebs"
 }
 
-module "bastion-instance-profile" {
+module "ec2-instance-profile" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "bastion-instance-profile"
+  name_postfix = "ec2-instance-profile"
 }
 
-module "bastion-role" {
+module "ec2-role" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "bastion-role"
-  description  = "DevOps upskill role allowing BASTION to access infrastructure private resources on your behalf."
+  name_postfix = "${var.resource_name_postfix}"
+  description  = "DevOps upskill role allowing EC2 to access infrastructure private resources on your behalf."
 }
 
-module "bastion-s3-inline-policy" {
+module "ec2-s3-inline-policy" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "bastion-s3-inline-policy"
+  name_postfix = "ec2-s3-inline-policy"
 }
 
 module "app-bucket" {

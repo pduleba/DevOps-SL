@@ -5,29 +5,17 @@
 variable "owner" {}
 
 variable "name_prefix" {}
-variable "name_delimiter" {
-  default = "-"
-}
+variable "name_delimiter" {default = "-"}
 variable "name_postfix" {}
 
 # By default use resource related parameters if not provided
-variable "tag_name_prefix" {
-  default = ""
-}
-variable "tag_name_delimiter" {
-  default = ""
-}
-variable "tag_name_postfix" {
-  default = ""
-}
+variable "tag_name_prefix" {default = ""}
+variable "tag_name_delimiter" {default = ""}
+variable "tag_name_postfix" {default = ""}
 
-variable "description" {
-  default = ""
-}
+variable "description" {default = ""}
 
-variable "path" {
-  default = ""
-}
+variable "path" {default = ""}
 
 ##################################################################################
 # LOCALS

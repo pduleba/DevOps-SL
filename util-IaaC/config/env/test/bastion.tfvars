@@ -9,11 +9,12 @@ private_subnet_name_postfix = "private-subnet"
 
 bastion_security_group_name_postfix = "bastion-sg"
 
-instance_ami = "ami-0c6b1d09930fac512"
+instance_image_id = "ami-0c6b1d09930fac512"
 instance_type = "t2.micro"
+instance_key_name = "pduleba_ec2_linux_us-east-1_key"
+instance_user_data_script_path = "./config/scripts/ec2_bastion_user_data.tpl"
 
-instance_ssm_service_role_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
-instance_key_pair_name = "pduleba_ec2_linux_us-east-1_key"
+ssm_policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 
 # Relates to storage.tfvars
 app_bucket_postfix = "app-bucket"

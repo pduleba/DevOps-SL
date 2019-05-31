@@ -39,16 +39,15 @@ data "aws_alb_target_group" "s3_target_group" {
 }
 
 data "aws_iam_policy" "ssm_policy" {
-  arn = "${var.instance_ssm_service_role_arn}"
+  arn = "${var.ssm_policy_arn}"
 }
 
 data "aws_s3_bucket" "app_bucket" {
   bucket = "${module.app-bucket.name}"
 }
 
-# Location relative to exec/* scripts
-data "template_file" "ec2_script" {
-  template = "${file("./config/scripts/ec2.tpl")}"
+data "template_file" "user_data" {
+  template = "${file(var.launch_configuration_user_data_script_path)}"
 }
 
 # https://www.terraform.io/docs/providers/aws/guides/iam-policy-documents.html
