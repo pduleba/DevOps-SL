@@ -26,8 +26,8 @@ data "aws_subnet" "private" {
   count = "${length(data.aws_subnet_ids.private.ids)}"
 }
 
-data "aws_security_group" "ec2" {
-  tags = "${module.ec2-sg.tags}"
+data "aws_security_group" "instance" {
+  tags = "${module.instance-security-group.tags}"
 }
 
 data "aws_iam_policy" "ssm_policy" {
@@ -43,7 +43,7 @@ data "template_file" "user_data" {
 }
 
 # https://www.terraform.io/docs/providers/aws/guides/iam-policy-documents.html
-data "aws_iam_policy_document" "ec2_s3_policy" {
+data "aws_iam_policy_document" "instance_s3_policy" {
   statement {
 
     effect = "Allow"
@@ -57,7 +57,7 @@ data "aws_iam_policy_document" "ec2_s3_policy" {
   }
 }
 
-data "aws_iam_policy_document" "ec2_assume_role_policy" {
+data "aws_iam_policy_document" "instance_assume_role_policy" {
   statement {
 
     effect = "Allow"

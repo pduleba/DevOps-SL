@@ -20,8 +20,8 @@ resource "aws_autoscaling_group" "autoscaling_groups" {
   availability_zones  = "${data.aws_subnet.private.*.availability_zone_id}"
   target_group_arns = "${list(
     count.index % 2 < 1 ?
-    data.aws_alb_target_group.rds_target_group.arn :
-    data.aws_alb_target_group.s3_target_group.arn
+    data.aws_alb_target_group.target_group_rds.arn :
+    data.aws_alb_target_group.target_group_s3.arn
   )}"
   health_check_type         = "ELB"
   health_check_grace_period = 300
@@ -102,32 +102,32 @@ resource "aws_launch_configuration" "launch_configurations" {
   }
 
   # Security groups
-  security_groups = "${list(data.aws_security_group.ec2.id)}"
+  security_groups = "${list(data.aws_security_group.instance.id)}"
 
   # Review
   key_name = "${var.launch_configuration_key_name}"
 }
 
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
-  name = "${module.ec2-instance-profile.name}"
+  name = "${module.instance-profile.name}"
   role = "${aws_iam_role.ec2_role.name}"
 }
 
 resource "aws_iam_role" "ec2_role" {
-  name = "${module.ec2-role.name}"
+  name = "${module.instance-role.name}"
 
-  description        = "${module.ec2-role.description}"
-  assume_role_policy = "${data.aws_iam_policy_document.ec2_assume_role_policy.json}"
+  description        = "${module.instance-role.description}"
+  assume_role_policy = "${data.aws_iam_policy_document.instance_assume_role_policy.json}"
 
-  tags = "${module.ec2-role.tags}"
+  tags = "${module.instance-role.tags}"
 }
 
-resource "aws_iam_role_policy" "ec2_role_policy" {
-  name = "${module.ec2-role-policy.name}"
+resource "aws_iam_role_policy" "ec2_s3_inline_policy" {
+  name = "${module.instance-s3-inline-policy.name}"
 
 
   role   = "${aws_iam_role.ec2_role.id}"
-  policy = "${data.aws_iam_policy_document.ec2_s3_policy.json}"
+  policy = "${data.aws_iam_policy_document.instance_s3_policy.json}"
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_attach_amazon_ssm_policy" {

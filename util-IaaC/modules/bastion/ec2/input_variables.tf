@@ -14,7 +14,7 @@ variable "vpc_name_postfix" {}
 variable "public_subnet_name_postfix" {}
 variable "private_subnet_name_postfix" {}
 
-variable "ec2_security_group_name_postfix" {}
+variable "instance_security_group_name_postfix" {}
 
 variable "instance_image_id" {}
 variable "instance_type" {}

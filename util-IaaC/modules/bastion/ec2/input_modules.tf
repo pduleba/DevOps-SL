@@ -26,15 +26,15 @@ module "private-subnet" {
   name_postfix = "${var.private_subnet_name_postfix}"
 }
 
-module "ec2-sg" {
+module "instance-security-group" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "${var.ec2_security_group_name_postfix}"
+  name_postfix = "${var.instance_security_group_name_postfix}"
 }
 
-module "ec2" {
+module "instance" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"
@@ -42,37 +42,37 @@ module "ec2" {
   name_postfix = "${var.resource_name_postfix}"
 }
 
-module "ec2-ebs" {
+module "instance-ebs" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "ec2-ebs"
+  name_postfix = "${var.resource_name_postfix}-ebs"
 }
 
-module "ec2-instance-profile" {
+module "instance-profile" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "ec2-instance-profile"
+  name_postfix = "${var.resource_name_postfix}-instance-profile"
 }
 
-module "ec2-role" {
+module "instance-role" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "${var.resource_name_postfix}"
+  name_postfix = "${var.resource_name_postfix}-role"
   description  = "DevOps upskill role allowing EC2 to access infrastructure private resources on your behalf."
 }
 
-module "ec2-s3-inline-policy" {
+module "instance-s3-inline-policy" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "ec2-s3-inline-policy"
+  name_postfix = "${var.resource_name_postfix}-inline-policy"
 }
 
 module "app-bucket" {

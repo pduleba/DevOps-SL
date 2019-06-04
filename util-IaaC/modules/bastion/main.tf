@@ -8,7 +8,6 @@ variable "bucket" {}
 
 variable "owner" {}
 variable "resource_name_prefix" {}
-variable "resource_name_postfix" { default = "bastion" }
 
 variable "vpc_name_postfix" {}
 variable "public_subnet_name_postfix" {}
@@ -38,13 +37,13 @@ module "bastion" {
 
   owner                 = "${var.owner}"
   resource_name_prefix  = "${var.resource_name_prefix}"
-  resource_name_postfix = "${var.resource_name_postfix}"
+  resource_name_postfix = "bastion"
 
   vpc_name_postfix            = "${var.vpc_name_postfix}"
   public_subnet_name_postfix  = "${var.public_subnet_name_postfix}"
   private_subnet_name_postfix = "${var.private_subnet_name_postfix}"
 
-  ec2_security_group_name_postfix = "${var.bastion_security_group_name_postfix}"
+  instance_security_group_name_postfix = "${var.bastion_security_group_name_postfix}"
 
   instance_image_id              = "${var.instance_image_id}"
   instance_type                  = "${var.instance_type}"

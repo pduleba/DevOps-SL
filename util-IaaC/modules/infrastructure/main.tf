@@ -38,14 +38,14 @@ variable "launch_configuration_instance_type" {}
 variable "launch_configuration_key_name" {}
 variable "launch_configuration_user_data_script_path" {}
 
-variable "ssm_policy_arn" {}
-
 variable "autoscaling_serivce_role_arn" {}
 variable "autoscaling_min_size" {}
 variable "autoscaling_desired_size" {}
 variable "autoscaling_max_size" {}
 
 variable "ssm_parameter_alb_host_key_postfix" {}
+
+variable "ssm_policy_arn" {}
 
 variable "app_bucket_postfix" {}
 
@@ -90,29 +90,27 @@ module "alb" {
 module "asg" {
   source = "./asg"
 
-
   profile = "${var.profile}"
   region  = "${var.region}"
   bucket  = "${var.bucket}"
 
-  owner                = "${var.owner}"
-  resource_name_prefix = "${var.resource_name_prefix}"
+  owner                 = "${var.owner}"
+  resource_name_prefix  = "${var.resource_name_prefix}"
+  resource_name_postfix = "server"
 
   vpc_name_postfix            = "${var.vpc_name_postfix}"
   public_subnet_name_postfix  = "${var.public_subnet_name_postfix}"
   private_subnet_name_postfix = "${var.private_subnet_name_postfix}"
 
-  ec2_security_group_name_postfix = "${var.ec2_security_group_name_postfix}"
+  instance_security_group_name_postfix = "${var.ec2_security_group_name_postfix}"
 
-  target_group_rds_name_postfix = "${var.target_group_rds_name_postfix}"
-  target_group_s3_name_postfix  = "${var.target_group_s3_name_postfix}"
+  target_group_rds_arn = "${module.alb.target-groups-rds-arn}"
+  target_group_s3_arn  = "${module.alb.target-groups-s3-arn}"
 
   launch_configuration_image_id              = "${var.launch_configuration_image_id}"
   launch_configuration_instance_type         = "${var.launch_configuration_instance_type}"
   launch_configuration_key_name              = "${var.launch_configuration_key_name}"
   launch_configuration_user_data_script_path = "${var.launch_configuration_user_data_script_path}"
-
-  ssm_policy_arn = "${var.ssm_policy_arn}"
 
   autoscaling_serivce_role_arn = "${var.autoscaling_serivce_role_arn}"
   autoscaling_min_size         = "${var.autoscaling_min_size}"
@@ -120,6 +118,8 @@ module "asg" {
   autoscaling_max_size         = "${var.autoscaling_max_size}"
 
   ssm_parameter_alb_host_key_postfix = "${var.ssm_parameter_alb_host_key_postfix}"
+
+  ssm_policy_arn = "${var.ssm_policy_arn}"
 
   app_bucket_postfix = "${var.app_bucket_postfix}"
 }

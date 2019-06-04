@@ -140,7 +140,7 @@ resource "aws_ssm_parameter" "database_port" {
   name  = "${module.ssm-parameter-database-port.name}"
 
   description = "${module.ssm-parameter-database-port.description}"
-  value = "${aws_rds_cluster.aurora_cluster.endpoint}"
+  value = "${aws_rds_cluster.aurora_cluster.port}"
   type  = "SecureString"
   overwrite = true
 
@@ -151,7 +151,7 @@ resource "aws_ssm_parameter" "database_name" {
   name  = "${module.ssm-parameter-database-name.name}"
 
   description = "${module.ssm-parameter-database-name.description}"
-  value = "${aws_rds_cluster.aurora_cluster.endpoint}"
+  value = "${aws_rds_cluster.aurora_cluster.database_name}"
   type  = "SecureString"
   overwrite = true
 
@@ -162,7 +162,7 @@ resource "aws_ssm_parameter" "database_username" {
   name  = "${module.ssm-parameter-database-username.name}"
 
   description = "${module.ssm-parameter-database-username.description}"
-  value = "${aws_rds_cluster.aurora_cluster.endpoint}"
+  value = "${aws_rds_cluster.aurora_cluster.master_username}"
   type  = "SecureString"
   overwrite = true
 
@@ -173,7 +173,7 @@ resource "aws_ssm_parameter" "database_password" {
   name  = "${module.ssm-parameter-database-password.name}"
 
   description = "${module.ssm-parameter-database-password.description}"
-  value = "${aws_rds_cluster.aurora_cluster.endpoint}"
+  value = "${aws_rds_cluster.aurora_cluster.master_password}"
   type  = "SecureString"
   overwrite = true
 

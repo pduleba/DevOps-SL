@@ -2,7 +2,7 @@
 # RESOURCES
 ##################################################################################
 
-resource "aws_instance" "ec2" {
+resource "aws_instance" "instance" {
   # AMI
   ami = "${var.instance_image_id}"
 
@@ -16,7 +16,7 @@ resource "aws_instance" "ec2" {
   credit_specification {
     cpu_credits = "standard"
   }
-  iam_instance_profile                 = "${aws_iam_instance_profile.ec2_instance_profile.name}"
+  iam_instance_profile                 = "${aws_iam_instance_profile.instance_profile.name}"
   instance_initiated_shutdown_behavior = "terminate"
   disable_api_termination              = false
   monitoring                           = false
@@ -32,39 +32,39 @@ resource "aws_instance" "ec2" {
   }
 
   # Security groups
-  vpc_security_group_ids = "${list(data.aws_security_group.ec2.id)}"
+  vpc_security_group_ids = "${list(data.aws_security_group.instance.id)}"
 
   # Review
   key_name = "${var.instance_key_name}"
 
   # Tags
-  volume_tags = "${module.ec2-ebs.tags}"
-  tags        = "${module.ec2.tags}"
+  volume_tags = "${module.instance-ebs.tags}"
+  tags        = "${module.instance.tags}"
 }
 
-resource "aws_iam_instance_profile" "ec2_instance_profile" {
-  name = "${module.ec2-instance-profile.name}"
-  role = "${aws_iam_role.ec2_role.name}"
+resource "aws_iam_instance_profile" "instance_profile" {
+  name = "${module.instance-profile.name}"
+  role = "${aws_iam_role.instance_role.name}"
 }
 
-resource "aws_iam_role" "ec2_role" {
-  name = "${module.ec2-role.name}"
+resource "aws_iam_role" "instance_role" {
+  name = "${module.instance-role.name}"
 
-  description        = "${module.ec2-role.description}"
-  assume_role_policy = "${data.aws_iam_policy_document.ec2_assume_role_policy.json}"
+  description        = "${module.instance-role.description}"
+  assume_role_policy = "${data.aws_iam_policy_document.instance_assume_role_policy.json}"
 
-  tags = "${module.ec2-role.tags}"
+  tags = "${module.instance-role.tags}"
 }
 
-resource "aws_iam_role_policy" "ec2_s3_inline_policy" {
-  name = "${module.ec2-s3-inline-policy.name}"
+resource "aws_iam_role_policy" "instance_s3_inline_policy" {
+  name = "${module.instance-s3-inline-policy.name}"
 
 
-  role   = "${aws_iam_role.ec2_role.id}"
-  policy = "${data.aws_iam_policy_document.ec2_s3_policy.json}"
+  role   = "${aws_iam_role.instance_role.id}"
+  policy = "${data.aws_iam_policy_document.instance_s3_policy.json}"
 }
 
-resource "aws_iam_role_policy_attachment" "ec2_attach_amazon_ssm_policy" {
-  role       = "${aws_iam_role.ec2_role.id}"
+resource "aws_iam_role_policy_attachment" "instance_attach_amazon_ssm_policy" {
+  role       = "${aws_iam_role.instance_role.id}"
   policy_arn = "${data.aws_iam_policy.ssm_policy.arn}"
 }
