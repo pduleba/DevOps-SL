@@ -1,4 +1,4 @@
-@call exec/win/session/start ^
+@call exec/win/utils/session-start ^
     destroy-%1.log ^
     stateful
 @set options=
@@ -10,4 +10,4 @@
     -var-file="config/env/%2/%1.tfvars" ^
     %options% ^
     modules/%1
-@call exec/win/session/stop
+@call exec/win/utils/session-stop

@@ -1,4 +1,4 @@
-@call exec/win/session/start ^
+@call exec/win/utils/session-start ^
     destroy-plan-%1.log ^
     stateful
 @set options=
@@ -14,4 +14,4 @@
     %options% ^
     -destroy ^
     modules/%1
-@call exec/win/session/stop
+@call exec/win/utils/session-stop

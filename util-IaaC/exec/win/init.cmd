@@ -1,4 +1,4 @@
-@call exec/win/session/start ^
+@call exec/win/utils/session-start ^
     init-%1.log
 @set options=
 @if "%1" NEQ "backend" (
@@ -8,4 +8,4 @@
 @terraform init ^
     %options% ^
     modules/%1
-@call exec/win/session/stop
+@call exec/win/utils/session-stop

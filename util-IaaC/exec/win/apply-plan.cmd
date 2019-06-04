@@ -1,4 +1,4 @@
-@call exec/win/session/start ^
+@call exec/win/utils/session-start ^
     apply-plan-%1.log ^
     stateful
 @set options=
@@ -13,4 +13,4 @@
     -out="out/plan/apply-plan-%1.tfplan" ^
     %options% ^
     modules/%1
-@call exec/win/session/stop
+@call exec/win/utils/session-stop
