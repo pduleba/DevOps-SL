@@ -1,0 +1,1 @@
+docker build -t util-jenkins:latest .
