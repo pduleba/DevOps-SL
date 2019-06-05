@@ -1,0 +1,159 @@
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - usernamePassword:
+          id: "109104bf-611d-4e16-a03f-bff44611c5de"
+          password: "{AQAAABAAAAAQ2qMqX/EXPNcVB8U/gxB+1M0wGOrspUd8Ylt07XcZFqY=}"
+          scope: GLOBAL
+          username: "pduleba"
+jenkins:
+  agentProtocols:
+  - "JNLP4-connect"
+  - "Ping"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: false
+  disableRememberMe: false
+  markupFormatter: "plainText"
+  mode: NORMAL
+  myViewsTabBar: "standard"
+  numExecutors: 2
+  primaryView:
+    all:
+      name: "all"
+  projectNamingStrategy: "standard"
+  quietPeriod: 5
+  remotingSecurity:
+    enabled: true
+  scmCheckoutRetryCount: 0
+  securityRealm:
+    local:
+      allowsSignup: false
+      enableCaptcha: false
+      users:
+      - id: "pduleba"
+  slaveAgentPort: 50000
+  updateCenter:
+    sites:
+    - id: "default"
+      url: "https://updates.jenkins.io/update-center.json"
+  views:
+  - all:
+      name: "all"
+  viewsTabBar: "standard"
+aws:
+  awsCredentials:
+    credentialsId: "aws-credentials"
+    region: "us-east-1"
+security:
+  apiToken:
+    creationOfLegacyTokenEnabled: false
+    tokenGenerationOnCreationEnabled: false
+    usageStatisticsEnabled: true
+  downloadSettings:
+    useBrowser: false
+  remotingCLI:
+    enabled: false
+  sSHD:
+    port: -1
+unclassified:
+  aWSCodeDeployPublisher:
+    externalId: "2e17c4f2-ff65-42ab-9133-5fd2cb95016b"
+    proxyPort: 0
+  bitbucketEndpointConfiguration:
+    endpoints:
+    - bitbucketCloudEndpoint:
+        enableCache: false
+        manageHooks: false
+        repositoriesCacheDuration: 0
+        teamCacheDuration: 0
+  buildStepOperation:
+    enabled: false
+  contentFilters:
+    enabled: false
+  extendedEmailPublisher:
+    adminRequiredForTemplateTesting: false
+    allowUnregisteredEnabled: false
+    charset: "UTF-8"
+    debugMode: false
+    defaultBody: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:\n\nCheck\
+      \ console output at $BUILD_URL to view the results."
+    defaultSubject: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!"
+    maxAttachmentSize: -1
+    maxAttachmentSizeMb: 0
+    precedenceBulk: false
+    useSsl: false
+    watchingEnabled: false
+  gitHubPluginConfig:
+    hookUrl: "http://localhost:8181/github-webhook/"
+  gitSCM:
+    createAccountBasedOnEmail: false
+  location:
+    adminAddress: "adres jeszcze nie jest skonfigurowany <nobody@nowhere>"
+    url: "http://localhost:8181/"
+  mailer:
+    adminAddress: "adres jeszcze nie jest skonfigurowany <nobody@nowhere>"
+    charset: "UTF-8"
+    useSsl: false
+  mavenModuleSet:
+    localRepository: "default"
+  pollSCM:
+    pollingThreadCount: 10
+  timestamperConfig:
+    allPipelines: false
+    elapsedTimeFormat: "'<b>'HH:mm:ss.S'</b> '"
+    systemTimeFormat: "'<b>'HH:mm:ss'</b> '"
+  upstream:
+    globalUpstreamFilterStrategy: UseOldest
+tool:
+  ansibleInstallation:
+    installations:
+    - home: "/usr/bin"
+      name: "2.8.0"
+  ant:
+    defaultProperties:
+    - installSource:
+        installers:
+        - "antFromApache"
+  dockerTool:
+    installations:
+    - home: "/usr/bin"
+      name: "18.09.6-ce"
+  git:
+    installations:
+    - home: "/usr/bin/git"
+      name: "2.21.0"
+  gradle:
+    defaultProperties:
+    - installSource:
+        installers:
+        - "gradleInstaller"
+  jdk:
+    defaultProperties:
+    - installSource:
+        installers:
+        - jdkInstaller:
+            acceptLicense: false
+    installations:
+    - home: "/usr/lib/jvm/java-1.8-openjdk"
+      name: "OpenJDK-1.8.0_212"
+  maven:
+    defaultProperties:
+    - installSource:
+        installers:
+        - "maven"
+    installations:
+    - home: "/usr/share/java/maven-3"
+      name: "3.6.1"
+  terraformInstallation:
+    defaultProperties:
+    - installSource:
+        installers:
+        - "terraformInstaller"
+    installations:
+    - home: "/usr/bin"
+      name: "0.12"

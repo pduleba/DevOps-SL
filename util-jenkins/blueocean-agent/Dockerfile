@@ -28,6 +28,7 @@ RUN apk add git
 
 # Install Maven
 RUN apk add maven
+ENV MAVEN_HOME /usr/share/java/maven-3
 
 # Install JQ
 RUN apk add jq
@@ -37,6 +38,12 @@ RUN apk add python3
 RUN ln -s python3 /usr/bin/python
 RUN pip3 install --upgrade pip
 RUN pip install awscli
+
+# Install docker
+RUN apk add docker
+
+# Install ansible
+RUN apk add ansible
 
 # Install terraform
 RUN apk add terraform
