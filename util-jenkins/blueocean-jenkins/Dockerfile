@@ -1,5 +1,8 @@
 FROM pduleba/blueocean-edge:latest
 
+# Update bash
+ENV PS1 '\u@\h:\W \$ '
+
 # Install git
 RUN apk add git
 

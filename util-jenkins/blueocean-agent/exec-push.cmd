@@ -1,0 +1,1 @@
+docker push pduleba/blueocean-agent:latest

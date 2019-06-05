@@ -1,0 +1,1 @@
+docker build -t pduleba/blueocean-edge:latest .

@@ -1,1 +1,1 @@
-docker build -t app-db:latest .
+docker build -t pduleba/app-db:latest .
