@@ -1,13 +1,12 @@
-@call exec/win/utils/session-start ^
-    destroy-%1.log ^
-    stateful
-@set options=
-@if "%1" EQU "backend" (
-    set options=-state="out/state/backend.tfstate"
-)
+:: Win Script
+@cd ./modules/%1
+@call ./../../exec/win/utils/session-start %1 %2 destroy
 @terraform destroy ^
-    -var-file="config/global.tfvars" ^
-    -var-file="config/env/%2/%1.tfvars" ^
-    %options% ^
-    modules/%1
-@call exec/win/utils/session-stop
+    -auto-approve ^
+    -input=false ^
+    -state="out/%2/%1/state.tfstate" ^
+    -var-file="./../../config/global.tfvars" ^
+    -var-file="./../../config/env/%2/%1.tfvars" ^
+    .
+@call ./../../exec/win/utils/session-stop
+@cd ./../..

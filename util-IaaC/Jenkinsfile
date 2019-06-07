@@ -1,0 +1,100 @@
+pipeline {
+
+    //-----------------------------------------
+    // Declarative Pipeline Syntax Reference :: https://jenkins.io/doc/book/pipeline/syntax/#declarative-pipeline
+    // Declarative Pipeline Steps Reference  :: https://jenkins.io/doc/pipeline/steps/
+    //-----------------------------------------
+
+    // default agent - docker container
+    agent {
+        docker {
+            image "pduleba/blueocean-agent:latest"
+        }
+    }
+
+    environment {
+        // Access to AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY via "CloudBees AWS Credentials Plugin"
+        AWS                 = credentials('aws-credentials')
+        AWS_DEFAULT_REGION  = credentials('aws-default-region')
+        AWS_DEFAULT_OUTPUT  = credentials('aws-default-output')
+
+        ROOT_PATH           = "util-IaaC"
+    }
+
+    options {
+        disableConcurrentBuilds()
+    }
+
+    parameters {
+        choice choices: ['backend', 'bastion', 'infrastructure', 'network', 'storage'], description: 'Target Terraform module', name: 'module'
+        choice choices: ['dev', 'test'], description: 'Target environment', name: 'environment'
+    }
+
+    tools {
+        "org.jenkinsci.plugins.terraform.TerraformInstallation" "2.8.0"
+    }
+
+    stages {
+        stage("Runtime configuration") {
+            steps {
+                sh "echo MODULE                 = ${params.module}"
+                sh "echo ENVIRONMENT            = ${params.environment}"
+
+                sh 'echo "AWS_ACCESS_KEY_ID     = $AWS_ACCESS_KEY_ID"'
+                sh 'echo "AWS_SECRET_ACCESS_KEY = $AWS_SECRET_ACCESS_KEY"'
+                sh 'echo "AWS_DEFAULT_REGION    = $AWS_DEFAULT_REGION"'
+                sh 'echo "AWS_DEFAULT_OUTPUT    = $AWS_DEFAULT_OUTPUT"'
+
+                sh 'terraform --version'
+                sh 'aws --version'
+            }
+        }
+
+        stage("Terraform plan") {
+            steps {
+                dir("$ROOT_PATH") {
+                    sh "exec/ux/init.sh ${params.module} ${params.environment}"
+                    sh "exec/ux/apply-plan.sh ${params.module} ${params.environment}"
+                }
+            }
+        }
+
+        stage("Is plan valid?") {
+            steps {
+                script {
+                    try {
+                        timeout(time: 1, unit: "MINUTES") {
+                            input message: 'Is plan valid?', ok: 'Yes'
+                        }
+                        echo "Plan has been approved"
+                    } catch (err) {
+                        echo "Plan has not been approved"
+                        throw err
+                    }
+                }
+            }
+        }
+
+        stage("Terraform apply") {
+            when {
+                expression {
+                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                }
+            }
+            steps {
+                dir("$ROOT_PATH") {
+                    sh "exec/ux/apply.sh ${params.module} ${params.environment}"
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'tfplan.txt', fingerprint: true
+        }
+        cleanup {
+            echo "Complete"
+        }
+    }
+}

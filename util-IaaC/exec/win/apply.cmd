@@ -1,13 +1,9 @@
-@call exec/win/utils/session-start ^
-    apply-%1.log ^
-    stateful
-@set options=
-@if "%1" EQU "backend" (
-    set options=-state="out/state/backend.tfstate"
-)
+:: Win Script
+@cd ./modules/%1
+@call ./../../exec/win/utils/session-start %1 %2 apply
 @terraform apply ^
-    -var-file="config/global.tfvars" ^
-    -var-file="config/env/%2/%1.tfvars" ^
-    %options% ^
-    modules/%1
-@call exec/win/utils/session-stop
+    -input=false ^
+    -state="out/%2/%1/state.tfstate" ^
+    out/%2/%1/apply-plan.tfplan
+@call ./../../exec/win/utils/session-stop
+@cd ./../..

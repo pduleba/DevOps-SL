@@ -1,16 +1,13 @@
-@call exec/win/utils/session-start ^
-    apply-plan-%1.log ^
-    stateful
-@set options=
-@if "%1" EQU "backend" (
-    set options=-state="out/state/backend.tfstate"
-)
-@terraform fmt ^
-    modules/%1 > out/log/fmt-%1.log
+:: Win Script
+@cd ./modules/%1
+@call ./../../exec/win/utils/session-start %1 %2 apply-plan
+@terraform fmt . > out/%2/%1/log/fmt.log
 @terraform plan ^
-    -var-file="config/global.tfvars" ^
-    -var-file="config/env/%2/%1.tfvars" ^
-    -out="out/plan/apply-plan-%1.tfplan" ^
-    %options% ^
-    modules/%1
-@call exec/win/utils/session-stop
+    -input=false ^
+    -state="out/%2/%1/state.tfstate" ^
+    -var-file="./../../config/global.tfvars" ^
+    -var-file="./../../config/env/%2/%1.tfvars" ^
+    -out="out/%2/%1/apply-plan.tfplan" ^
+    .
+@call ./../../exec/win/utils/session-stop
+@cd ./../..

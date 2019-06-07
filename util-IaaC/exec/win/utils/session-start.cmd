@@ -1,10 +1,4 @@
-@if not exist out mkdir out\log out\plan out\state
-@if "%2" EQU "stateful" (
-    @if "%3" NEQ "quiet" (
-	    @echo WARNING :: Preserving current state of .terraform
-    )
-) ELSE (
-    @rm -rf .terraform
-)
-@set TF_LOG_PATH=out/log/%1
+:: Win Script
+@mkdir out\%2\%1\log
+@set TF_LOG_PATH=out/%2/%1/log/%3.log
 @set TF_LOG=DEBUG

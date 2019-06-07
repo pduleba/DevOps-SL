@@ -1,4 +1,5 @@
+:: Win Script
 @aws ssm get-parameter ^
-    --name "/pduleba-app/%2/%1" ^
+    --name "/pduleba/%2/%1" ^
     --with-decryption ^
-    --profile pduleba-admin-cli-profile | jq -r ".Parameter.Value"
+    | jq -r ".Parameter.Value"

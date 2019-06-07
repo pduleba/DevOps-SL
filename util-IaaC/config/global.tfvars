@@ -4,7 +4,7 @@
 
 profile = "pduleba-admin-cli-profile"
 region = "us-east-1"
-bucket = "pduleba-app-terraform"
+bucket = "pduleba-terraform"
 
 owner = "pduleba"
-resource_name_prefix = "pduleba-app"
+resource_name_prefix = "pduleba"
