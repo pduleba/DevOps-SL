@@ -136,7 +136,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts allowEmptyArchive: true, artifacts: '$MODULE_PLAN_PATH/*.tfplan', fingerprint: true
+            archiveArtifacts allowEmptyArchive: true, artifacts: "$MODULE_PLAN_PATH/*.tfplan", fingerprint: true
         }
         cleanup {
             sh "rm -rf $MODULE_PLAN_PATH/*.tfplan"
