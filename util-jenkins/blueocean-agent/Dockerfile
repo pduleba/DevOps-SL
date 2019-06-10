@@ -6,6 +6,11 @@ USER root
 
 WORKDIR /
 
+# UTF-8 encoding
+ENV JAVA_TOOL_OPTIONS -Dfile.encoding=UTF-8
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+
 # Update repos (https://wiki.alpinelinux.org/wiki/Enable_Community_Repository)
 RUN sed -i 's/v3.9/edge/g' /etc/apk/repositories
 

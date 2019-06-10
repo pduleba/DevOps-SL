@@ -4,6 +4,7 @@
 @terraform fmt . > out/%2/%1/log/fmt.log
 @terraform plan ^
     -input=false ^
+    -no-color ^
     -state="out/%2/%1/state.tfstate" ^
     -var-file="./../../config/global.tfvars" ^
     -var-file="./../../config/env/%2/%1.tfvars" ^
