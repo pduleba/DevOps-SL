@@ -19,8 +19,8 @@ pipeline {
         AWS_DEFAULT_OUTPUT  = credentials('aws-default-output')
 
         ROOT_PATH           = "util-IaaC"
-        MODULE_PATH         = "modules/${params.TERRAFORM_MODULE}"
-        MODULE_PLAN_PATH    = "${env.MODULE_PATH}/out/${params.TARGET_ENVIRONMENT}/${params.TERRAFORM_MODULE}/plan"
+        MODULE_PATH         = "${env.ROOT_PATH}/modules/${params.TERRAFORM_MODULE}"
+        BUILD_OUTPUT_PATH   = "${env.MODULE_PATH}/out/${params.TARGET_ENVIRONMENT}/${params.TERRAFORM_MODULE}"
     }
 
     options {
@@ -44,8 +44,9 @@ pipeline {
                 sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
                 sh "echo EXECUTION_MODE         = ${params.EXECUTION_MODE}"
 
+                sh "echo ROOT_PATH              = $ROOT_PATH"
                 sh "echo MODULE_PATH            = $MODULE_PATH"
-                sh "echo MODULE_PLAN_PATH       = $MODULE_PLAN_PATH"
+                sh "echo BUILD_OUTPUT_PATH      = $BUILD_OUTPUT_PATH"
 
                 sh 'echo "AWS_ACCESS_KEY_ID     = $AWS_ACCESS_KEY_ID"'
                 sh 'echo "AWS_SECRET_ACCESS_KEY = $AWS_SECRET_ACCESS_KEY"'
@@ -136,10 +137,13 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts allowEmptyArchive: true, artifacts: "$MODULE_PLAN_PATH/*.tfplan", fingerprint: true
+            archiveArtifacts artifacts: "$BUILD_OUTPUT_PATH/*.tfplan",
+                    allowEmptyArchive: true,
+                    caseSensitive: false,
+                    fingerprint: true
         }
         cleanup {
-            sh "rm -rf $MODULE_PLAN_PATH/*.tfplan"
+            sh "rm -rf $BUILD_OUTPUT_PATH/*.tfplan"
         }
     }
 }
