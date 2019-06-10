@@ -19,6 +19,8 @@ pipeline {
         AWS_DEFAULT_OUTPUT  = credentials('aws-default-output')
 
         ROOT_PATH           = "util-IaaC"
+        MODULE_PATH         = "modules/${params.TERRAFORM_MODULE}"
+        MODULE_PLAN_PATH    = "${env.MODULE_PATH}/out/${params.TARGET_ENVIRONMENT}/${params.TERRAFORM_MODULE}/plan"
     }
 
     options {
@@ -26,8 +28,9 @@ pipeline {
     }
 
     parameters {
-        choice choices: ['backend', 'bastion', 'infrastructure', 'network', 'storage'], description: 'Target Terraform module', name: 'module'
-        choice choices: ['dev', 'test'], description: 'Target environment', name: 'environment'
+        choice choices: ['backend', 'bastion', 'infrastructure', 'network', 'storage'], description: 'Target Terraform module', name: 'TERRAFORM_MODULE'
+        choice choices: ['dev', 'test'], description: 'Target environment', name: 'TARGET_ENVIRONMENT'
+        choice choices: ['create', 'destroy'], description: 'Execution mode', name: 'EXECUTION_MODE'
     }
 
     tools {
@@ -37,8 +40,12 @@ pipeline {
     stages {
         stage("Runtime configuration") {
             steps {
-                sh "echo MODULE                 = ${params.module}"
-                sh "echo ENVIRONMENT            = ${params.environment}"
+                sh "echo TERRAFORM_MODULE       = ${params.TERRAFORM_MODULE}"
+                sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
+                sh "echo EXECUTION_MODE         = ${params.EXECUTION_MODE}"
+
+                sh "echo MODULE_PATH            = $MODULE_PATH"
+                sh "echo MODULE_PLAN_PATH       = $MODULE_PLAN_PATH"
 
                 sh 'echo "AWS_ACCESS_KEY_ID     = $AWS_ACCESS_KEY_ID"'
                 sh 'echo "AWS_SECRET_ACCESS_KEY = $AWS_SECRET_ACCESS_KEY"'
@@ -50,11 +57,36 @@ pipeline {
             }
         }
 
-        stage("Terraform plan") {
+        stage("Terraform init") {
             steps {
                 dir("$ROOT_PATH") {
-                    sh "exec/ux/init.sh ${params.module} ${params.environment}"
-                    sh "exec/ux/apply-plan.sh ${params.module} ${params.environment}"
+                    sh "exec/ux/init.sh ${params.TERRAFORM_MODULE} ${params.TARGET_ENVIRONMENT}"
+                }
+            }
+        }
+
+        stage("Terraform plan") {
+            failFast true
+            parallel {
+                stage("Prepare create plan") {
+                    when {
+                        expression { params.EXECUTION_MODE == 'create' }
+                    }
+                    steps {
+                        dir("$ROOT_PATH") {
+                            sh "exec/ux/apply-plan.sh ${params.TERRAFORM_MODULE} ${params.TARGET_ENVIRONMENT}"
+                        }
+                    }
+                }
+                stage("Prepare destroy plan") {
+                    when {
+                        expression { params.EXECUTION_MODE == 'destroy' }
+                    }
+                    steps {
+                        dir("$ROOT_PATH") {
+                            sh "exec/ux/destroy-plan.sh ${params.TERRAFORM_MODULE} ${params.TARGET_ENVIRONMENT}"
+                        }
+                    }
                 }
             }
         }
@@ -76,14 +108,27 @@ pipeline {
         }
 
         stage("Terraform apply") {
-            when {
-                expression {
-                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
+            failFast true
+            parallel {
+                stage("Apply create") {
+                    when {
+                        expression { params.EXECUTION_MODE == 'create' }
+                    }
+                    steps {
+                        dir("$ROOT_PATH") {
+                            sh "exec/ux/apply.sh ${params.TERRAFORM_MODULE} ${params.TARGET_ENVIRONMENT}"
+                        }
+                    }
                 }
-            }
-            steps {
-                dir("$ROOT_PATH") {
-                    sh "exec/ux/apply.sh ${params.module} ${params.environment}"
+                stage("Apply destroy") {
+                    when {
+                        expression { params.EXECUTION_MODE == 'destroy' }
+                    }
+                    steps {
+                        dir("$ROOT_PATH") {
+                            sh "exec/ux/destroy.sh ${params.TERRAFORM_MODULE} ${params.TARGET_ENVIRONMENT}"
+                        }
+                    }
                 }
             }
         }
@@ -91,10 +136,10 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts allowEmptyArchive: true, artifacts: 'tfplan.txt', fingerprint: true
+            archiveArtifacts allowEmptyArchive: true, artifacts: '$MODULE_PLAN_PATH/*.tfplan', fingerprint: true
         }
         cleanup {
-            echo "Complete"
+            sh "rm -rf $MODULE_PLAN_PATH/*.tfplan"
         }
     }
 }
