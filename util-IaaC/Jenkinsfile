@@ -107,7 +107,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        timeout(time: 1, unit: "MINUTES") {
+                        timeout(time: 5, unit: "MINUTES") {
                             input message: 'Is plan valid?', ok: 'Yes'
                         }
                         echo "Plan has been approved"
