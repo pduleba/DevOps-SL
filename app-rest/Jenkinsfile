@@ -9,7 +9,7 @@ pipeline {
     agent {
         docker {
             image "pduleba/blueocean-agent:latest"
-            args '-v D:/docker/.m2:$HOME/.m2'
+            args '-v /D/docker/agent/.m2:$HOME/.m2'
         }
     }
 
@@ -53,7 +53,7 @@ pipeline {
 
                 sh "echo MAVEN_PROFILE          = ${params.MAVEN_PROFILE}"
 
-                sh "mvn --version"
+                sh "mvn -B --version"
                 sh "echo ${env.MAVEN_HOME}"
                 sh "aws --version"
             }
@@ -62,8 +62,7 @@ pipeline {
         stage("Maven clean") {
             steps {
                 dir("$ROOT_PATH") {
-                    sh "mvn clean"
-                    sh "mvn release:clean"
+                    sh "mvn -B clean"
                 }
             }
         }
@@ -71,7 +70,7 @@ pipeline {
         stage("Maven install") {
             steps {
                 dir("$ROOT_PATH") {
-                    sh "mvn install -P${params.MAVEN_PROFILE}"
+                    sh "mvn -B install -P${params.MAVEN_PROFILE}"
                 }
             }
         }
@@ -95,7 +94,7 @@ pipeline {
         stage("Maven release") {
             steps {
                 dir("$ROOT_PATH") {
-                    sh "mvn clean"
+                    sh "mvn -B release:clean release:prepare release:perform -DdryRun=true"
                 }
             }
         }
