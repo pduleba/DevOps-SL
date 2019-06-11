@@ -1,12 +1,12 @@
 ---
 server:
-  port: @app-rest.http.port@
+  port: @project.http.port@
   servlet:
-    context-path: @app-rest.http.context.path@
+    context-path: @project.http.context.path@
 ---
 spring:
   profiles:
-    active: @app-rest.spring.profile@
+    active: @project.spring.profile@
 ---
 # INFO : File appender disabled due to `app-rest` installation as `init.d` Service (see `deployment-install` under README.md for more)
 # BUG  :  Work around of https://github.com/spring-projects/spring-boot/issues/12510
@@ -21,11 +21,11 @@ spring:
   flyway:
     locations: classpath:migration/{vendor}
     # Available properties listed in FlywayProperties.java
-    installedBy: @app-rest.flayway.installedBy@
+    installedBy: @project.flayway.installedBy@
     #
-    url: @app-rest.datasource.url@
-    user: @app-rest.datasource.username@
-    password: @app-rest.datasource.password@
+    url: @project.datasource.url@
+    user: @project.datasource.username@
+    password: @project.datasource.password@
 ---
 spring:
   freemarker:
@@ -35,9 +35,9 @@ spring:
     # Use MySQL dialect
     platform: mysql
     #
-    url: @app-rest.datasource.url@
-    username: @app-rest.datasource.username@
-    password: @app-rest.datasource.password@
+    url: @project.datasource.url@
+    username: @project.datasource.username@
+    password: @project.datasource.password@
   jpa:
     hibernate:
       ddl-auto: none

@@ -94,7 +94,7 @@ pipeline {
         stage("Maven release") {
             steps {
                 dir("$ROOT_PATH") {
-                    sh "mvn -B release:clean release:prepare release:perform -DdryRun=true"
+                    sh "mvn -B release:clean release:prepare release:perform -DdryRun=true -P${params.MAVEN_PROFILE}"
                 }
             }
         }

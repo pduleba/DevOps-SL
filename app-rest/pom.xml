@@ -22,17 +22,13 @@
         <java.version>1.8</java.version>
 
         <!-- Project properties -->
-        <app-rest.spring.profile>${spring.profile}</app-rest.spring.profile>
-        <app-rest.aws.profile>${aws.profile}</app-rest.aws.profile>
-        <app-rest.aws.region>${aws.region}</app-rest.aws.region>
-        <app-rest.aws.bucket>${aws.bucket}</app-rest.aws.bucket>
-        <app-rest.http.port>${http.port}</app-rest.http.port>
-        <app-rest.http.context.path>/${http.context.path}</app-rest.http.context.path>
-        <app-rest.http.url>${http.protocol}://${http.host}:${http.port}/${http.context.path}/${http.api.path}</app-rest.http.url>
-        <app-rest.datasource.url>jdbc:mysql://${database.host}:${database.port}/${database.name}</app-rest.datasource.url>
-        <app-rest.datasource.username>${database.username}</app-rest.datasource.username>
-        <app-rest.datasource.password>${database.password}</app-rest.datasource.password>
-        <app-rest.flayway.installedBy>${project.artifactId}</app-rest.flayway.installedBy>
+        <project.http.protocol>http</project.http.protocol>
+        <project.http.port>8080</project.http.port>
+        <project.http.context.path>/app-rest</project.http.context.path>
+        <project.http.api.path>api</project.http.api.path>
+        <project.http.url>${project.http.protocol}://${project.http.host}:${project.http.port}/${project.http.context.path}/${project.http.api.path}</project.http.url>
+        <project.datasource.url>jdbc:mysql://${project.database.host}:${project.database.port}/${project.database.name}</project.datasource.url>
+        <project.flayway.installedBy>${project.artifactId}</project.flayway.installedBy>
 
         <!-- Dependencies versions -->
         <aws.java.bom.version>1.11.327</aws.java.bom.version>
@@ -233,46 +229,40 @@
         <profile>
             <id>local</id>
             <properties>
-                <spring.profile>local</spring.profile>
+                <!-- Project properties -->
+                <project.spring.profile>local</project.spring.profile>
 
-                <aws.profile>local</aws.profile>
-                <aws.region>us-east-1</aws.region>
-                <aws.bucket>pduleba-us-east-1</aws.bucket>
+                <project.aws.profile>local</project.aws.profile>
+                <project.aws.region>us-east-1</project.aws.region>
+                <project.aws.bucket>pduleba-us-east-1</project.aws.bucket>
 
-                <http.protocol>http</http.protocol>
-                <http.host>localhost</http.host>
-                <http.port>8080</http.port>
-                <http.context.path>app-rest</http.context.path>
-                <http.api.path>api</http.api.path>
+                <project.http.host>localhost</project.http.host>
 
-                <database.host>localhost</database.host>
-                <database.port>3306</database.port>
-                <database.name>app-db</database.name>
-                <database.username>user</database.username>
-                <database.password>user</database.password>
+                <project.database.host>localhost</project.database.host>
+                <project.database.port>3306</project.database.port>
+                <project.database.name>app-db</project.database.name>
+                <project.database.username>user</project.database.username>
+                <project.database.password>user</project.database.password>
             </properties>
         </profile>
 
         <profile>
             <id>aws</id>
             <properties>
-                <spring.profile>aws</spring.profile>
+                <!-- Project properties -->
+                <project.spring.profile>aws</project.spring.profile>
 
-                <aws.profile>aws</aws.profile>
-                <aws.region>us-east-1</aws.region>
-                <aws.bucket />
+                <project.aws.profile>aws</project.aws.profile>
+                <project.aws.region>us-east-1</project.aws.region>
+                <project.aws.bucket />
 
-                <http.protocol>http</http.protocol>
-                <http.host />
-                <http.port>8080</http.port>
-                <http.context.path>app-rest</http.context.path>
-                <http.api.path>api</http.api.path>
+                <project.http.host />
 
-                <database.host />
-                <database.port />
-                <database.name />
-                <database.username />
-                <database.password />
+                <project.database.host />
+                <project.database.port />
+                <project.database.name />
+                <project.database.username />
+                <project.database.password />
             </properties>
         </profile>
     </profiles>
