@@ -1,0 +1,115 @@
+pipeline {
+
+    //-----------------------------------------
+    // Declarative Pipeline Syntax Reference :: https://jenkins.io/doc/book/pipeline/syntax/#declarative-pipeline
+    // Declarative Pipeline Steps Reference  :: https://jenkins.io/doc/pipeline/steps/
+    //-----------------------------------------
+
+    // default agent - docker container
+    agent {
+        docker {
+            image "pduleba/blueocean-agent:latest"
+            args '-v $HOME/.m2:$HOME/.m2'
+        }
+    }
+
+    environment {
+        // Access to AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY via "CloudBees AWS Credentials Plugin"
+        AWS                 = credentials('aws-credentials')
+        AWS_DEFAULT_REGION  = credentials('aws-default-region')
+        AWS_DEFAULT_OUTPUT  = credentials('aws-default-output')
+
+        ROOT_PATH           = "app-rest"
+        BUILD_OUTPUT_PATH   = "${env.ROOT_PATH}/target"
+        ARTIFACT_ID         = readMavenPom("${env.ROOT_PATH}/pom.xml").getArtifactId()
+        VERSION             = readMavenPom("${env.ROOT_PATH}/pom.xml").getVersion()
+    }
+
+    options {
+        disableConcurrentBuilds()
+    }
+
+    parameters {
+        choice choices: ['aws', 'local'], description: 'Maven profile', name: 'MAVEN_PROFILE'
+    }
+
+    tools {
+        "maven" "3.6.1"
+    }
+
+    stages {
+        stage("Configuration review") {
+            steps {
+                sh "echo AWS_ACCESS_KEY_ID      = $AWS_ACCESS_KEY_ID"
+                sh "echo AWS_SECRET_ACCESS_KEY  = $AWS_SECRET_ACCESS_KEY"
+                sh "echo AWS_DEFAULT_REGION     = $AWS_DEFAULT_REGION"
+                sh "echo AWS_DEFAULT_OUTPUT     = $AWS_DEFAULT_OUTPUT"
+
+                sh "echo ROOT_PATH              = $ROOT_PATH"
+                sh "echo BUILD_OUTPUT_PATH      = $BUILD_OUTPUT_PATH"
+                sh "echo ARTIFACT_ID            = $ARTIFACT_ID"
+                sh "echo VERSION                = $VERSION"
+
+                sh "echo MAVEN_PROFILE          = ${params.MAVEN_PROFILE}"
+
+                sh "mvn --version"
+                sh "echo ${env.MAVEN_HOME}"
+                sh "aws --version"
+            }
+        }
+
+        stage("Maven clean") {
+            steps {
+                dir("$ROOT_PATH") {
+                    sh "mvn clean"
+                }
+            }
+        }
+
+        stage("Maven install") {
+            steps {
+                dir("$ROOT_PATH") {
+                    sh "mvn clean"
+                }
+            }
+        }
+
+        stage("Is build valid?") {
+            steps {
+                script {
+                    try {
+                        timeout(time: 5, unit: "MINUTES") {
+                            input message: 'Is build valid?', ok: 'Yes'
+                        }
+                        echo "Build has been approved"
+                    } catch (err) {
+                        echo "Build has not been approved"
+                        throw err
+                    }
+                }
+            }
+        }
+
+        stage("Maven release") {
+            steps {
+                dir("$ROOT_PATH") {
+                    sh "mvn clean"
+                }
+            }
+        }
+
+        stage("Deploy to S3") {
+            steps {
+                dir("$ROOT_PATH") {
+                    sh "ls -alt"
+                }
+            }
+        }
+    }
+
+    post {
+        cleanup {
+            sh "rm -rf $BUILD_OUTPUT_PATH"
+        }
+    }
+}
