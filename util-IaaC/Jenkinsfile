@@ -38,7 +38,7 @@ pipeline {
     }
 
     stages {
-        stage("Runtime configuration") {
+        stage("Configuration review") {
             steps {
                 sh "echo TERRAFORM_MODULE       = ${params.TERRAFORM_MODULE}"
                 sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
@@ -66,10 +66,21 @@ pipeline {
             }
         }
 
+        stage("Terraform refresh backend") {
+            when {
+                expression { params.TERRAFORM_MODULE == 'backend' }
+            }
+            steps {
+                dir("$ROOT_PATH") {
+                    sh "exec/ux/refresh.sh ${params.TERRAFORM_MODULE} ${params.TARGET_ENVIRONMENT}"
+                }
+            }
+        }
+
         stage("Terraform plan") {
             failFast true
             parallel {
-                stage("Prepare create plan") {
+                stage("Create") {
                     when {
                         expression { params.EXECUTION_MODE == 'create' }
                     }
@@ -79,7 +90,7 @@ pipeline {
                         }
                     }
                 }
-                stage("Prepare destroy plan") {
+                stage("Destroy") {
                     when {
                         expression { params.EXECUTION_MODE == 'destroy' }
                     }
@@ -111,7 +122,7 @@ pipeline {
         stage("Terraform apply") {
             failFast true
             parallel {
-                stage("Apply create") {
+                stage("Create") {
                     when {
                         expression { params.EXECUTION_MODE == 'create' }
                     }
@@ -121,7 +132,7 @@ pipeline {
                         }
                     }
                 }
-                stage("Apply destroy") {
+                stage("Destroy") {
                     when {
                         expression { params.EXECUTION_MODE == 'destroy' }
                     }
