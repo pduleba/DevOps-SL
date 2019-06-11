@@ -63,6 +63,7 @@ pipeline {
             steps {
                 dir("$ROOT_PATH") {
                     sh "mvn clean"
+                    sh "mvn release:clean"
                 }
             }
         }
@@ -70,7 +71,7 @@ pipeline {
         stage("Maven install") {
             steps {
                 dir("$ROOT_PATH") {
-                    sh "mvn clean"
+                    sh "mvn install -P${params.MAVEN_PROFILE}"
                 }
             }
         }
