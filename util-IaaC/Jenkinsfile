@@ -40,21 +40,21 @@ pipeline {
     stages {
         stage("Configuration review") {
             steps {
-                sh 'echo "AWS_ACCESS_KEY_ID     = $AWS_ACCESS_KEY_ID"'
-                sh 'echo "AWS_SECRET_ACCESS_KEY = $AWS_SECRET_ACCESS_KEY"'
-                sh 'echo "AWS_DEFAULT_REGION    = $AWS_DEFAULT_REGION"'
-                sh 'echo "AWS_DEFAULT_OUTPUT    = $AWS_DEFAULT_OUTPUT"'
+                sh "echo AWS_ACCESS_KEY_ID      = $AWS_ACCESS_KEY_ID"
+                sh "echo AWS_SECRET_ACCESS_KEY  = $AWS_SECRET_ACCESS_KEY"
+                sh "echo AWS_DEFAULT_REGION     = $AWS_DEFAULT_REGION"
+                sh "echo AWS_DEFAULT_OUTPUT     = $AWS_DEFAULT_OUTPUT"
 
-                sh 'echo "ROOT_PATH              = $ROOT_PATH"'
-                sh 'echo "MODULE_PATH            = $MODULE_PATH"'
-                sh 'echo "BUILD_OUTPUT_PATH      = $BUILD_OUTPUT_PATH"'
+                sh "echo ROOT_PATH              = $ROOT_PATH"
+                sh "echo MODULE_PATH            = $MODULE_PATH"
+                sh "echo BUILD_OUTPUT_PATH      = $BUILD_OUTPUT_PATH"
 
-                sh 'echo "TERRAFORM_MODULE       = ${params.TERRAFORM_MODULE}"'
-                sh 'echo "TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"'
-                sh 'echo "EXECUTION_MODE         = ${params.EXECUTION_MODE}"'
+                sh "echo TERRAFORM_MODULE       = ${params.TERRAFORM_MODULE}"
+                sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
+                sh "echo EXECUTION_MODE         = ${params.EXECUTION_MODE}"
 
-                sh 'terraform --version'
-                sh 'aws --version'
+                sh "terraform --version"
+                sh "aws --version"
             }
         }
 
