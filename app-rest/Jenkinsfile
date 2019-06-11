@@ -9,7 +9,7 @@ pipeline {
     agent {
         docker {
             image "pduleba/blueocean-agent:latest"
-            args '-v $HOME/.m2:$HOME/.m2'
+            args '-v D:/docker/.m2:$HOME/.m2'
         }
     }
 
@@ -21,8 +21,9 @@ pipeline {
 
         ROOT_PATH           = "app-rest"
         BUILD_OUTPUT_PATH   = "${env.ROOT_PATH}/target"
-        ARTIFACT_ID         = readMavenPom("${env.ROOT_PATH}/pom.xml").getArtifactId()
-        VERSION             = readMavenPom("${env.ROOT_PATH}/pom.xml").getVersion()
+        // Following requires requires pipeline-utility-steps (https://wiki.jenkins.io/display/JENKINS/Pipeline+Utility+Steps+Plugin)
+        ARTIFACT_ID         = readMavenPom(file: "${env.ROOT_PATH}/pom.xml").getArtifactId()
+        VERSION             = readMavenPom(file: "${env.ROOT_PATH}/pom.xml").getVersion()
     }
 
     options {
