@@ -39,7 +39,7 @@ access_log_bucket_log_prefix = "dev"
 launch_configuration_image_id = "ami-0c6b1d09930fac512"
 launch_configuration_instance_type = "t2.micro"
 launch_configuration_key_name = "pduleba_ec2_linux_us-east-1_key"
-launch_configuration_user_data_script_path = "config/scripts/launch_configuration_user_data.tpl"
+launch_configuration_user_data_script_path = "./../../config/scripts/launch_configuration_user_data.tpl"
 
 autoscaling_serivce_role_arn = "arn:aws:iam::890769921003:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
 autoscaling_min_size = 1
