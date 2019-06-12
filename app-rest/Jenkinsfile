@@ -1,14 +1,3 @@
-def aws_region = ""
-def aws_bucket = ""
-
-def http_host = ""
-
-def database_host = ""
-def database_port = ""
-def database_name = ""
-def database_username = ""
-def database_password = ""
-
 pipeline {
 
     //-----------------------------------------
@@ -26,16 +15,18 @@ pipeline {
 
     environment {
         // Access to AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY via "CloudBees AWS Credentials Plugin"
-        AWS                 = credentials('aws-credentials')
-        AWS_DEFAULT_REGION  = credentials('aws-default-region')
-        AWS_DEFAULT_OUTPUT  = credentials('aws-default-output')
+        AWS_CREDENTIALS_ID      = "aws-credentials"
 
-        EXEC_ROOT_PATH      = "util-IaaC"
-        APP_ROOT_PATH       = "app-rest"
-        BUILD_OUTPUT_PATH   = "${env.APP_ROOT_PATH}/target"
+        AWS                     = credentials('aws-credentials')
+        AWS_DEFAULT_REGION      = credentials('aws-default-region')
+        AWS_DEFAULT_OUTPUT      = credentials('aws-default-output')
+
+        ROOT_PATH               = "app-rest"
+        POM_PATH                = "${env.ROOT_PATH}/pom.xml"
+        TARGET_PATH             = "${env.ROOT_PATH}/target"
+
         // Depends on pipeline-utility-steps (https://wiki.jenkins.io/display/JENKINS/Pipeline+Utility+Steps+Plugin)
-        ARTIFACT_ID         = readMavenPom(file: "${env.APP_ROOT_PATH}/pom.xml").getArtifactId()
-        VERSION             = readMavenPom(file: "${env.APP_ROOT_PATH}/pom.xml").getVersion()
+        VERSION                 = readMavenPom(file: "${env.POM_PATH}").getVersion()
     }
 
     options {
@@ -54,62 +45,43 @@ pipeline {
 
     stages {
 
-        stage("SSM parameter store") {
-            steps {
-                dir("$EXEC_ROOT_PATH") {
-                    script {
-                        def json = sh(returnStdout : true, script: "exec/ux/utils/get-parameters.sh " +
-                                "${params.TARGET_ENVIRONMENT}")
-
-                        aws_region  = "$AWS_DEFAULT_REGION"
-                        aws_bucket  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
-                                "http/host <<< ${json}").trim()
-
-                        http_host   = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
-                                "http/host <<< ${json}").trim()
-
-                        database_host  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
-                                "database/host <<< ${json}").trim()
-                        database_port  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
-                                "database/port <<< ${json}").trim()
-                        database_name  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
-                                "database/name <<< ${json}").trim()
-                        database_username  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
-                                "database/username <<< ${json}").trim()
-                        database_password  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
-                                "database/password <<< ${json}").trim()
-                    }
-                }
-            }
-        }
-
         stage("Configuration review") {
             steps {
-                sh "echo AWS_ACCESS_KEY_ID      = $AWS_ACCESS_KEY_ID"
-                sh "echo AWS_SECRET_ACCESS_KEY  = $AWS_SECRET_ACCESS_KEY"
-                sh "echo AWS_DEFAULT_REGION     = $AWS_DEFAULT_REGION"
-                sh "echo AWS_DEFAULT_OUTPUT     = $AWS_DEFAULT_OUTPUT"
+                sh "echo AWS_ACCESS_KEY_ID      = ${env.AWS_ACCESS_KEY_ID}"
+                sh "echo AWS_SECRET_ACCESS_KEY  = ${env.AWS_SECRET_ACCESS_KEY}"
+                sh "echo AWS_DEFAULT_REGION     = ${env.AWS_DEFAULT_REGION}"
+                sh "echo AWS_DEFAULT_OUTPUT     = ${env.AWS_DEFAULT_OUTPUT}"
 
-                sh "echo EXEC_ROOT_PATH         = $EXEC_ROOT_PATH"
-                sh "echo APP_ROOT_PATH          = $APP_ROOT_PATH"
-                sh "echo BUILD_OUTPUT_PATH      = $BUILD_OUTPUT_PATH"
-                sh "echo ARTIFACT_ID            = $ARTIFACT_ID"
-                sh "echo VERSION                = $VERSION"
+                sh "echo ROOT_PATH              = ${env.ROOT_PATH}"
+                sh "echo POM_PATH               = ${env.POM_PATH}"
+                sh "echo TARGET_PATH            = ${env.TARGET_PATH}"
+
+                sh "echo VERSION                = ${env.VERSION}"
 
                 sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
                 sh "echo MAVEN_PROFILE          = ${params.MAVEN_PROFILE}"
                 sh "echo DRY_RUN                = ${params.DRY_RUN}"
 
-                sh "echo aws_region             = ${aws_region}"
-                sh "echo aws_bucket             = ${aws_bucket}"
+                withAWSParameterStore(credentialsId: "${env.AWS_CREDENTIALS_ID}",
+                        path: "/pduleba/${params.TARGET_ENVIRONMENT}",
+                        regionName: "${env.AWS_DEFAULT_REGION}",
+                        naming: 'relative',
+                        recursive: true) {
 
-                sh "echo http_host              = ${http_host}"
+                    echo "MAVEN_PROFILE         = ${params.MAVEN_PROFILE}"
 
-                script {
-                    sh "echo database_host          = ${database_host}"
-                    sh "echo database_port          = ${database_port}"
-                    sh "echo database_name          = ${database_name}"
-                    sh "echo database_username      = ${database_username}"
+                    echo "AWS_REGION            = ${env.AWS_DEFAULT_REGION}"
+                    echo "AWS_BUCKET            = ${env.APP_BUCKET}"
+
+                    echo "HTTP_HOST             = ${env.HTTP_HOST}"
+
+                    script {
+                        echo "DATABASE_HOST         = ${maskValue(env.DATABASE_NAME)}"
+                        echo "DATABASE_PORT         = ${maskValue(env.DATABASE_PORT)}"
+                        echo "DATABASE_NAME         = ${maskValue(env.DATABASE_NAME)}"
+                        echo "DATABASE_USERNAME     = ${maskValue(env.DATABASE_USERNAME)}"
+                        echo "DATABASE_PASSWORD     = ${maskValue(env.DATABASE_PASSWORD)}"
+                    }
                 }
 
                 sh "mvn -B --version"
@@ -120,17 +92,37 @@ pipeline {
 
         stage("Maven clean") {
             steps {
-                dir("$APP_ROOT_PATH") {
+                dir("$ROOT_PATH") {
                     sh "mvn -B clean release:clean"
                 }
             }
         }
 
+        stage("Maven verify") {
+            steps {
+                dir("$ROOT_PATH") {
+                    sh "mvn -B clean test -P${params.MAVEN_PROFILE}"
+                }
+            }
+        }
 
         stage("Maven release") {
             steps {
-                dir("$APP_ROOT_PATH") {
-                    sh "mvn -B release:prepare release:perform -DdryRun=${params.DRY_RUN} -P${params.MAVEN_PROFILE}"
+                dir("$ROOT_PATH") {
+                    withAWSParameterStore(credentialsId: "${env.AWS_CREDENTIALS_ID}",
+                            path: "/pduleba/${params.TARGET_ENVIRONMENT}",
+                            regionName: "${env.AWS_DEFAULT_REGION}",
+                            naming: 'relative',
+                            recursive: true) {
+
+                        sh "mvn -B release:clean"
+                        sh "mvn -B release:prepare ${getReleaseParameters()}"
+                        script {
+                            env.VERSION = readMavenPom().getVersion()
+                        }
+                        sh "mvn -B release:perform ${getReleaseParameters()}"
+
+                    }
                 }
             }
         }
@@ -140,11 +132,11 @@ pipeline {
                 script {
                     try {
                         timeout(time: 5, unit: "MINUTES") {
-                            input message: 'Is release valid?', ok: 'Yes'
+                            input message: "Is release ${env.VERSION} valid?", ok: 'Yes'
                         }
-                        echo "Release has been approved"
+                        echo "Release ${env.VERSION} has been approved"
                     } catch (err) {
-                        echo "Release has not been approved"
+                        echo "Release ${env.VERSION} has not been approved"
                         throw err
                     }
                 }
@@ -152,8 +144,14 @@ pipeline {
         }
 
         stage("CodeDeploy") {
+            when {
+                expression {
+                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                }
+            }
             steps {
-                dir("$BUILD_OUTPUT_PATH") {
+                dir("$TARGET_PATH") {
+                    sh "echo EXECUTE CODE DEPLOY"
                     sh "ls -alt"
                 }
             }
@@ -162,11 +160,25 @@ pipeline {
 
     post {
         cleanup {
-            sh "rm -rf $BUILD_OUTPUT_PATH"
+            sh "rm -rf $TARGET_PATH"
         }
     }
 }
 
-def valueMasking(String value) {
-    return value?.trim() ? "*****" : "";
+def maskValue(String value) {
+    return value?.trim() ? "****" : ""
+}
+
+def getReleaseParameters() {
+    return "-DdryRun=${params.DRY_RUN} " +
+            "-DskipTests " +
+            "-P${params.MAVEN_PROFILE} " +
+            "-Dproject.aws.region=${env.AWS_DEFAULT_REGION} " +
+            "-Dproject.aws.bucket=${env.APP_BUCKET} " +
+            "-Dproject.http.host=${env.HTTP_HOST} " +
+            "-Dproject.database.host=${env.DATABASE_HOST} " +
+            "-Dproject.database.port=${env.DATABASE_PORT} " +
+            "-Dproject.database.name=${env.DATABASE_NAME} " +
+            "-Dproject.database.username=${env.DATABASE_USERNAME} " +
+            "-Dproject.database.password=${env.DATABASE_PASSWORD}"
 }

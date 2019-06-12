@@ -1,0 +1,75 @@
+def database_host = ""
+def database_port = ""
+
+pipeline {
+
+    //-----------------------------------------
+    // Declarative Pipeline Syntax Reference :: https://jenkins.io/doc/book/pipeline/syntax/#declarative-pipeline
+    // Declarative Pipeline Steps Reference  :: https://jenkins.io/doc/pipeline/steps/
+    //-----------------------------------------
+
+    // default agent - docker container
+    agent {
+        docker {
+            image "pduleba/blueocean-agent:latest"
+        }
+    }
+
+    environment {
+        // Access to AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY via "CloudBees AWS Credentials Plugin"
+        AWS_CREDENTIALS_ID = "aws-credentials"
+
+        AWS = credentials("${env.AWS_CREDENTIALS_ID}")
+        AWS_DEFAULT_REGION = credentials('aws-default-region')
+        AWS_DEFAULT_OUTPUT = credentials('aws-default-output')
+    }
+
+    options {
+        disableConcurrentBuilds()
+    }
+
+    parameters {
+        choice choices: ['dev', 'test'], description: 'Target environment', name: 'TARGET_ENVIRONMENT'
+    }
+
+    tools {
+        "maven" "3.6.1"
+    }
+
+    stages {
+
+        stage("withAWSParameterStore") {
+            steps {
+                withAWSParameterStore(credentialsId: "${env.AWS_CREDENTIALS_ID}",
+                        path: "/pduleba/${params.TARGET_ENVIRONMENT}",
+                        regionName: "$AWS_DEFAULT_REGION",
+                        naming: 'relative',
+                        recursive: true) {
+
+                    sh "echo $DATABASE_HOST"
+                    sh "echo $DATABASE_PORT"
+                }
+            }
+        }
+
+        stage("get-parameters.sh") {
+            steps {
+                script {
+                    try {
+                        sh(script: "exec/ux/utils/get-parameters.sh ${params.TARGET_ENVIRONMENT} > json")
+
+                        database_port  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
+                                "database/host < json").trim()
+                        database_host  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
+                                "database/host < json").trim()
+                    } finally {
+                        sh(script: "rm json")
+                    }
+
+                    sh "echo ${database_port}"
+                    sh "echo ${database_host}"
+                }
+            }
+        }
+    }
+}
