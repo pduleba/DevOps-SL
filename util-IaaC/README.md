@@ -24,8 +24,18 @@
 specified
   * i.e. `exec/ux/utils/output.sh backend backend_bucket`
   * i.e. `exec\win\utils\output backend backend_bucket`
-  
-* `exec\win\utils\get-parameter NAME ENV` - Read SSM parameter value by `NAME` under `ENV` environment
+
+* `exec\win\utils\get-parameters ENV` - Read SSM parameters value by `ENV` environment
+    **MANY PER REQUEST**
+  * i.e. on Linux
+    * `out=$(exec/ux/utils/get-parameters.sh dev)` - get all
+    * `exec/ux/utils/find-parameter.sh host <<< $out` - find specific value
+  * i.e. on Windows
+    * `exec\win\utils\get-parameters dev > json` - get all
+    * `exec\win\utils\find-parameter host < json` - find specific value
+
+* `exec\win\utils\get-parameter NAME ENV` - Read SSM parameter value by `NAME` under `ENV` environment, 
+    **ONE PER REQUEST**
   * i.e. `exec/ux/utils/get-parameter.sh database/host dev`
   * i.e. `exec\win\utils\get-parameter database/host dev`
   * available parameter can be found in `config\env\ENV\*.tfvars`

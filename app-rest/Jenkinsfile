@@ -58,25 +58,26 @@ pipeline {
             steps {
                 dir("$EXEC_ROOT_PATH") {
                     script {
+                        def json = sh(returnStdout : true, script: "exec/ux/utils/get-parameters.sh " +
+                                "${params.TARGET_ENVIRONMENT}")
+
                         aws_region  = "$AWS_DEFAULT_REGION"
-                        aws_bucket  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
-                                "app/bucket ${params.TARGET_ENVIRONMENT}").trim()
+                        aws_bucket  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
+                                "http/host <<< ${json}").trim()
 
-                        http_host   = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
-                                "http/host ${params.TARGET_ENVIRONMENT}").trim()
+                        http_host   = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
+                                "http/host <<< ${json}").trim()
 
-                        database_host  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
-                                "database/host ${params.TARGET_ENVIRONMENT}").trim()
-                        database_port  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
-                                "database/port ${params.TARGET_ENVIRONMENT}").trim()
-                        database_host  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
-                                "database/host ${params.TARGET_ENVIRONMENT}").trim()
-                        database_name  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
-                                "database/name ${params.TARGET_ENVIRONMENT}").trim()
-                        database_username  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
-                                "database/username ${params.TARGET_ENVIRONMENT}").trim()
-                        database_password  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
-                                "database/password ${params.TARGET_ENVIRONMENT}").trim()
+                        database_host  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
+                                "database/host <<< ${json}").trim()
+                        database_port  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
+                                "database/port <<< ${json}").trim()
+                        database_name  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
+                                "database/name <<< ${json}").trim()
+                        database_username  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
+                                "database/username <<< ${json}").trim()
+                        database_password  = sh(returnStdout : true, script: "exec/ux/utils/find-parameter.sh " +
+                                "database/password <<< ${json}").trim()
                     }
                 }
             }
@@ -104,13 +105,11 @@ pipeline {
 
                 sh "echo http_host              = ${http_host}"
 
-                sh "echo database_host          = ${database_host}"
-                sh "echo database_port          = ${database_port}"
-                sh "echo database_name          = ${database_name}"
-                sh "echo database_username      = ${database_username}"
-                wrap([$class: 'MaskPasswordsBuildWrapper', varPasswordPairs: [[password: "${database_password}", var: 'SECRET']]]) {
-                    sh "echo database_password      = ${database_password}"
-                    sh "echo SECRET      = ${SECRET}"
+                script {
+                    sh "echo database_host          = ${database_host}"
+                    sh "echo database_port          = ${database_port}"
+                    sh "echo database_name          = ${database_name}"
+                    sh "echo database_username      = ${database_username}"
                 }
 
                 sh "mvn -B --version"
@@ -168,6 +167,6 @@ pipeline {
     }
 }
 
-def call(String name = 'human') {
-    echo "Hello, ${name}."
+def valueMasking(String value) {
+    return value?.trim() ? "*****" : "";
 }
