@@ -28,8 +28,8 @@ pipeline {
     }
 
     parameters {
-        choice choices: ['backend', 'bastion', 'infrastructure', 'network', 'storage'], description: 'Target Terraform module', name: 'TERRAFORM_MODULE'
         choice choices: ['dev', 'test'], description: 'Target environment', name: 'TARGET_ENVIRONMENT'
+        choice choices: ['backend', 'bastion', 'infrastructure', 'network', 'storage'], description: 'Target Terraform module', name: 'TERRAFORM_MODULE'
         choice choices: ['create', 'destroy'], description: 'Execution mode', name: 'EXECUTION_MODE'
     }
 
@@ -49,8 +49,8 @@ pipeline {
                 sh "echo MODULE_PATH            = $MODULE_PATH"
                 sh "echo BUILD_OUTPUT_PATH      = $BUILD_OUTPUT_PATH"
 
-                sh "echo TERRAFORM_MODULE       = ${params.TERRAFORM_MODULE}"
                 sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
+                sh "echo TERRAFORM_MODULE       = ${params.TERRAFORM_MODULE}"
                 sh "echo EXECUTION_MODE         = ${params.EXECUTION_MODE}"
 
                 sh "terraform --version"

@@ -65,3 +65,18 @@ module "alb-access-log-bucket" {
   name_prefix  = "${var.resource_name_prefix}"
   name_postfix = "${var.access_log_bucket_name_postfix}"
 }
+
+module "ssm-parameter-http-host" {
+  source = "../../utils/resource"
+
+  owner        = "${var.owner}"
+  name_prefix  = "/${var.resource_name_prefix}"
+  name_delimiter = "/"
+  name_postfix  = "${var.ssm_parameter_http_host_key_postfix}"
+
+  tag_name_prefix = "${var.resource_name_prefix}"
+  tag_name_delimiter = "-"
+  tag_name_postfix = "ssm-parameter-http-host"
+
+  description  = "DevOps upskill http host parameter"
+}

@@ -31,3 +31,5 @@ variable "listener_rule_s3_condition_values" {type = "list"}
 
 variable "access_log_bucket_name_postfix" {}
 variable "access_log_bucket_log_prefix" {}
+
+variable "ssm_parameter_http_host_key_postfix" {}

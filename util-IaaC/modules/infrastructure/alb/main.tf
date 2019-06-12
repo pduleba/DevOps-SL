@@ -105,3 +105,14 @@ resource "aws_alb_target_group" "alb_target_groups" {
 
   tags = "${count.index % 2 < 1 ? module.target-group-rds.tags : module.target-group-s3.tags}"
 }
+
+resource "aws_ssm_parameter" "http_host" {
+  name  = "${module.ssm-parameter-http-host.name}"
+
+  description = "${module.ssm-parameter-http-host.description}"
+  value = "${aws_alb.alb.dns_name}"
+  type  = "SecureString"
+  overwrite = true
+
+  tags = "${module.ssm-parameter-http-host.tags}"
+}

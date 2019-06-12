@@ -43,7 +43,7 @@ variable "autoscaling_min_size" {}
 variable "autoscaling_desired_size" {}
 variable "autoscaling_max_size" {}
 
-variable "ssm_parameter_alb_host_key_postfix" {}
+variable "ssm_parameter_http_host_key_postfix" {}
 
 variable "ssm_policy_arn" {}
 
@@ -85,6 +85,8 @@ module "alb" {
 
   access_log_bucket_name_postfix = "${var.access_log_bucket_name_postfix}"
   access_log_bucket_log_prefix   = "${var.access_log_bucket_log_prefix}"
+
+  ssm_parameter_http_host_key_postfix = "${var.ssm_parameter_http_host_key_postfix}"
 }
 
 module "asg" {
@@ -116,8 +118,6 @@ module "asg" {
   autoscaling_min_size         = "${var.autoscaling_min_size}"
   autoscaling_desired_size     = "${var.autoscaling_desired_size}"
   autoscaling_max_size         = "${var.autoscaling_max_size}"
-
-  ssm_parameter_alb_host_key_postfix = "${var.ssm_parameter_alb_host_key_postfix}"
 
   ssm_policy_arn = "${var.ssm_policy_arn}"
 

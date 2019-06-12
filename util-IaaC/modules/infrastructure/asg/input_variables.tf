@@ -29,8 +29,6 @@ variable "autoscaling_min_size" {}
 variable "autoscaling_desired_size" {}
 variable "autoscaling_max_size" {}
 
-variable "ssm_parameter_alb_host_key_postfix" {}
-
 variable "ssm_policy_arn" {}
 
 variable "app_bucket_postfix" {}
