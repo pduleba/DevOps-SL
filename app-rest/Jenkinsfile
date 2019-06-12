@@ -1,3 +1,14 @@
+def aws_region = ""
+def aws_bucket = ""
+
+def http_host = ""
+
+def database_host = ""
+def database_port = ""
+def database_name = ""
+def database_username = ""
+def database_password = ""
+
 pipeline {
 
     //-----------------------------------------
@@ -32,6 +43,8 @@ pipeline {
 
     parameters {
         choice choices: ['aws', 'local'], description: 'Maven profile', name: 'MAVEN_PROFILE'
+        choice choices: ['dev', 'test'], description: 'Target environment', name: 'TARGET_ENVIRONMENT'
+        choice choices: ['true', 'false'], description: 'Maven profile', name: 'DRY_RUN'
     }
 
     tools {
@@ -39,6 +52,15 @@ pipeline {
     }
 
     stages {
+
+        stage("SSM parameter store") {
+            steps {
+                dir("$ROOT_PATH") {
+                    aws_bucket = sh(returnStdout : true, script: "exec/ux/apply-plan.sh s3/app-bucket ${params.TARGET_ENVIRONMENT}").trim()
+                }
+            }
+        }
+
         stage("Configuration review") {
             steps {
                 sh "echo AWS_ACCESS_KEY_ID      = $AWS_ACCESS_KEY_ID"
@@ -52,54 +74,51 @@ pipeline {
                 sh "echo VERSION                = $VERSION"
 
                 sh "echo MAVEN_PROFILE          = ${params.MAVEN_PROFILE}"
+                sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
+                sh "echo DRY_RUN                = ${params.DRY_RUN}"
 
                 sh "mvn -B --version"
                 sh "echo ${env.MAVEN_HOME}"
                 sh "aws --version"
+
+                sh "echo aws_bucket = ${aws_bucket}"
             }
         }
 
         stage("Maven clean") {
             steps {
                 dir("$ROOT_PATH") {
-                    sh "mvn -B clean"
+                    sh "mvn -B clean release:clean"
                 }
             }
         }
 
-        stage("Maven install") {
+
+        stage("Maven release") {
             steps {
                 dir("$ROOT_PATH") {
-                    sh "mvn -B install -P${params.MAVEN_PROFILE}"
+                    sh "mvn -B release:prepare release:perform -DdryRun=${params.DRY_RUN} -P${params.MAVEN_PROFILE}"
                 }
             }
         }
 
-        stage("Is build valid?") {
+        stage("Is release valid?") {
             steps {
                 script {
                     try {
                         timeout(time: 5, unit: "MINUTES") {
-                            input message: 'Is build valid?', ok: 'Yes'
+                            input message: 'Is release valid?', ok: 'Yes'
                         }
-                        echo "Build has been approved"
+                        echo "Release has been approved"
                     } catch (err) {
-                        echo "Build has not been approved"
+                        echo "Release has not been approved"
                         throw err
                     }
                 }
             }
         }
 
-        stage("Maven release") {
-            steps {
-                dir("$ROOT_PATH") {
-                    sh "mvn -B release:clean release:prepare release:perform -DdryRun=true -P${params.MAVEN_PROFILE}"
-                }
-            }
-        }
-
-        stage("Deploy to S3") {
+        stage("CodeDeploy") {
             steps {
                 dir("$ROOT_PATH") {
                     sh "ls -alt"
