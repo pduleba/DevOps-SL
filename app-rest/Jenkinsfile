@@ -171,7 +171,7 @@ def maskValue(String value) {
 
 def getReleaseParameters() {
     return "-DdryRun=${params.DRY_RUN} " +
-            "-DskipTests " +
+            "-Darguments=\"-DskipTests\" " +
             "-P${params.MAVEN_PROFILE} " +
             "-Dproject.aws.region=${env.AWS_DEFAULT_REGION} " +
             "-Dproject.aws.bucket=${env.APP_BUCKET} " +
