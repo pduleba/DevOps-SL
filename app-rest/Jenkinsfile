@@ -33,7 +33,7 @@ pipeline {
         EXEC_ROOT_PATH      = "util-IaaC"
         APP_ROOT_PATH       = "app-rest"
         BUILD_OUTPUT_PATH   = "${env.APP_ROOT_PATH}/target"
-        // Following requires requires pipeline-utility-steps (https://wiki.jenkins.io/display/JENKINS/Pipeline+Utility+Steps+Plugin)
+        // Depends on pipeline-utility-steps (https://wiki.jenkins.io/display/JENKINS/Pipeline+Utility+Steps+Plugin)
         ARTIFACT_ID         = readMavenPom(file: "${env.APP_ROOT_PATH}/pom.xml").getArtifactId()
         VERSION             = readMavenPom(file: "${env.APP_ROOT_PATH}/pom.xml").getVersion()
     }
@@ -45,7 +45,7 @@ pipeline {
     parameters {
         choice choices: ['dev', 'test'], description: 'Target environment', name: 'TARGET_ENVIRONMENT'
         choice choices: ['aws', 'local'], description: 'Maven profile', name: 'MAVEN_PROFILE'
-        choice choices: ['true', 'false'], description: 'Maven profile', name: 'DRY_RUN'
+        choice choices: ['true', 'false'], description: 'Release dry run', name: 'DRY_RUN'
     }
 
     tools {
@@ -58,7 +58,25 @@ pipeline {
             steps {
                 dir("$EXEC_ROOT_PATH") {
                     script {
-                        aws_bucket = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh s3/app-bucket ${params.TARGET_ENVIRONMENT}").trim()
+                        aws_region  = "$AWS_DEFAULT_REGION"
+                        aws_bucket  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
+                                "app/bucket ${params.TARGET_ENVIRONMENT}").trim()
+
+                        http_host   = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
+                                "http/host ${params.TARGET_ENVIRONMENT}").trim()
+
+                        database_host  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
+                                "database/host ${params.TARGET_ENVIRONMENT}").trim()
+                        database_port  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
+                                "database/port ${params.TARGET_ENVIRONMENT}").trim()
+                        database_host  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
+                                "database/host ${params.TARGET_ENVIRONMENT}").trim()
+                        database_name  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
+                                "database/name ${params.TARGET_ENVIRONMENT}").trim()
+                        database_username  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
+                                "database/username ${params.TARGET_ENVIRONMENT}").trim()
+                        database_password  = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh " +
+                                "database/password ${params.TARGET_ENVIRONMENT}").trim()
                     }
                 }
             }
@@ -81,11 +99,20 @@ pipeline {
                 sh "echo MAVEN_PROFILE          = ${params.MAVEN_PROFILE}"
                 sh "echo DRY_RUN                = ${params.DRY_RUN}"
 
+                sh "echo aws_region             = ${aws_region}"
+                sh "echo aws_bucket             = ${aws_bucket}"
+
+                sh "echo aws_bucket             = ${http_host}"
+
+                sh "echo database_host          = ${database_host}"
+                sh "echo database_port          = ${database_port}"
+                sh "echo database_name          = ${database_name}"
+                sh "echo database_username      = ${database_username}"
+                sh "echo database_password      = ${database_password}"
+
                 sh "mvn -B --version"
                 sh "echo ${env.MAVEN_HOME}"
                 sh "aws --version"
-
-                sh "echo aws_bucket = ${aws_bucket}"
             }
         }
 

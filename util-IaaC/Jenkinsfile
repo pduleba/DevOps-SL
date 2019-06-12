@@ -28,9 +28,15 @@ pipeline {
     }
 
     parameters {
-        choice choices: ['dev', 'test'], description: 'Target environment', name: 'TARGET_ENVIRONMENT'
-        choice choices: ['backend', 'bastion', 'infrastructure', 'network', 'storage'], description: 'Target Terraform module', name: 'TERRAFORM_MODULE'
-        choice choices: ['create', 'destroy'], description: 'Execution mode', name: 'EXECUTION_MODE'
+        choice choices: ['dev', 'test'],
+                description: 'Target environment',
+                name: 'TARGET_ENVIRONMENT'
+        choice choices: ['backend', 'bastion', 'infrastructure', 'network', 'storage'],
+                description: 'Target Terraform module',
+                name: 'TERRAFORM_MODULE'
+        choice choices: ['create', 'destroy'],
+                description: 'Execution mode',
+                name: 'EXECUTION_MODE'
     }
 
     tools {

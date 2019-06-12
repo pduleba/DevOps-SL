@@ -26,7 +26,7 @@ ssm_parameter_database_port_key_postfix = "dev/database/port"
 ssm_parameter_database_name_key_postfix = "dev/database/name"
 ssm_parameter_database_username_key_postfix = "dev/database/username"
 ssm_parameter_database_password_key_postfix = "dev/database/password"
-ssm_parameter_app_bucket_key_postfix = "dev/s3/app-bucket"
+ssm_parameter_app_bucket_key_postfix = "dev/app/bucket"
 
 app_bucket_postfix = "app-bucket"
 

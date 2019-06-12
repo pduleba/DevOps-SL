@@ -46,7 +46,7 @@ autoscaling_min_size = 1
 autoscaling_desired_size = 1
 autoscaling_max_size = 1
 
-ssm_parameter_http_host_key_postfix = "test/alb/host"
+ssm_parameter_http_host_key_postfix = "test/http/host"
 
 ssm_policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 
