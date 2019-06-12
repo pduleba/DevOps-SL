@@ -56,7 +56,7 @@ pipeline {
 
         stage("SSM parameter store") {
             steps {
-                dir("$ROOT_PATH") {
+                dir("$EXEC_ROOT_PATH") {
                     script {
                         aws_bucket = sh(returnStdout : true, script: "exec/ux/utils/get-parameter.sh s3/app-bucket ${params.TARGET_ENVIRONMENT}").trim()
                     }
@@ -100,7 +100,7 @@ pipeline {
 
         stage("Maven release") {
             steps {
-                dir("$EXEC_ROOT_PATH") {
+                dir("$APP_ROOT_PATH") {
                     sh "mvn -B release:prepare release:perform -DdryRun=${params.DRY_RUN} -P${params.MAVEN_PROFILE}"
                 }
             }
