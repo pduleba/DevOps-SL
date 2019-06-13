@@ -26,7 +26,9 @@ pipeline {
         TARGET_PATH             = "${env.ROOT_PATH}/target"
 
         // Depends on pipeline-utility-steps (https://wiki.jenkins.io/display/JENKINS/Pipeline+Utility+Steps+Plugin)
-        VERSION                 = readMavenPom(file: "${env.POM_PATH}").getVersion()
+        def pom                 = readMavenPom(file: "${env.POM_PATH}")
+        ARTIFACT_ID             = pom.getArtifactId()
+        VERSION                 = pom.getVersion()
     }
 
     options {
@@ -36,7 +38,7 @@ pipeline {
     parameters {
         choice choices: ['dev', 'test'], description: 'Target environment', name: 'TARGET_ENVIRONMENT'
         choice choices: ['aws', 'local'], description: 'Maven profile', name: 'MAVEN_PROFILE'
-        booleanParam defaultValue: false, description: 'Release dry run', name: 'DRY_RUN'
+        booleanParam defaultValue: true, description: 'Release dry run', name: 'DRY_RUN'
     }
 
     tools {
@@ -56,6 +58,7 @@ pipeline {
                 sh "echo POM_PATH               = ${env.POM_PATH}"
                 sh "echo TARGET_PATH            = ${env.TARGET_PATH}"
 
+                sh "echo ARTIFACT_ID            = ${env.ARTIFACT_ID}"
                 sh "echo VERSION                = ${env.VERSION}"
 
                 sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
@@ -119,7 +122,9 @@ pipeline {
                             sh "mvn -B release:clean"
                             sh "mvn -B release:prepare ${getReleaseParameters()}"
 
-                            env.VERSION = readMavenPom().getVersion()
+                            def pom         = readMavenPom()
+                            env.ARTIFACT_ID = pom.getArtifactId()
+                            env.VERSION     = pom.getVersion()
 
                             sh "mvn -B release:perform ${getReleaseParameters()}"
                         }
