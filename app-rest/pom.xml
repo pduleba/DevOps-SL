@@ -271,7 +271,7 @@
         <connection>scm:git:https://github.com/pduleba/DevOps-SL.git</connection>
         <developerConnection>scm:git:https://github.com/pduleba/DevOps-SL.git</developerConnection>
         <url>https://github.com/pduleba/DevOps-SL/${project.scm.tag}</url>
-        <tag>master</tag>
+        <tag>HEAD</tag>
     </scm>
 
 </project>

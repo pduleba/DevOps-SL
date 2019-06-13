@@ -36,7 +36,7 @@ pipeline {
     parameters {
         choice choices: ['dev', 'test'], description: 'Target environment', name: 'TARGET_ENVIRONMENT'
         choice choices: ['aws', 'local'], description: 'Maven profile', name: 'MAVEN_PROFILE'
-        choice choices: ['true', 'false'], description: 'Release dry run', name: 'DRY_RUN'
+        booleanParam defaultValue: false, description: 'Release dry run', name: 'DRY_RUN'
     }
 
     tools {
@@ -149,7 +149,7 @@ pipeline {
                     (
                         (currentBuild.result == null || currentBuild.result == 'SUCCESS')
                             &&
-                        params.DRY_RUN == false
+                        params.DRY_RUN
                     )
                 }
             }
