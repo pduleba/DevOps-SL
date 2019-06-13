@@ -24,6 +24,9 @@ RUN apk add bash-completion
 RUN sed -i 's/^root.*\/bin\/ash/root:x:0:0:root:\/root:\/bin\/bash/1' /etc/passwd
 ENV PS1 '\u@\h:\W \$ '
 
+# Install ssh
+RUN apk add openssh
+
 # Install OpenJDK
 RUN apk add openjdk8
 ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk

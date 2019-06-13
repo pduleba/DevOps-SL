@@ -20,6 +20,13 @@ RUN apk update && apk upgrade
 # Update bash
 ENV PS1 '\u@\h:\W \$ '
 
+# Install ssh
+RUN apk add openssh
+
+# Install OpenJDK (already installed)
+# RUN apk add openjdk8
+# ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
+
 # Install git
 RUN apk add git
 
