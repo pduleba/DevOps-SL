@@ -116,23 +116,23 @@ pipeline {
             steps {
                 dir("$ROOT_PATH") {
                     withAWSParameterStore(credentialsId: "${env.AWS_CREDENTIALS_ID}",
-                            path: "/pduleba/${params.TARGET_ENVIRONMENT}",
-                            regionName: "${env.AWS_DEFAULT_REGION}",
-                            naming: 'relative',
-                            recursive: true) {
+                        path: "/pduleba/${params.TARGET_ENVIRONMENT}",
+                        regionName: "${env.AWS_DEFAULT_REGION}",
+                        naming: 'relative',
+                        recursive: true) {
 
-                        script {
-                            sh "mvn -B release:clean"
-                            sh "mvn -B release:prepare ${getReleaseParameters()}"
+                        // Plugin :: https://wiki.jenkins.io/display/JENKINS/Config+File+Provider+Plugin
+                        configFileProvider([configFile(fileId: "${env.MVN_GLOBAL_SETTINGS_ID}", variable: 'MAVEN_SETTINGS')]) {
+                            sh "mvn -B clean release:clean"
+                            sh "mvn -B release:prepare ${getReleaseParameters()} -s ${env.MAVEN_SETTINGS}"
 
-                            def pom         = readMavenPom()
-                            env.ARTIFACT_ID = pom.getArtifactId()
-                            env.VERSION     = pom.getVersion()
-
-                            // Plugin :: https://wiki.jenkins.io/display/JENKINS/Config+File+Provider+Plugin
-                            configFileProvider([configFile(fileId: "${env.MVN_GLOBAL_SETTINGS_ID}", variable: 'MAVEN_SETTINGS')]) {
-                                sh "mvn -B release:perform ${getReleaseParameters()} -s ${env.MAVEN_SETTINGS}"
+                            script {
+                                def pom = readMavenPom()
+                                env.ARTIFACT_ID = pom.getArtifactId()
+                                env.VERSION = pom.getVersion()
                             }
+
+                            sh "mvn -B release:perform ${getReleaseParameters()} -s ${env.MAVEN_SETTINGS}"
                         }
                     }
                 }
