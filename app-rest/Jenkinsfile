@@ -146,7 +146,11 @@ pipeline {
         stage("CodeDeploy") {
             when {
                 expression {
-                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                    (
+                        (currentBuild.result == null || currentBuild.result == 'SUCCESS')
+                            &&
+                        params.DRY_RUN == false
+                    )
                 }
             }
             steps {
