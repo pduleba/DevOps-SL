@@ -115,13 +115,14 @@ pipeline {
                             naming: 'relative',
                             recursive: true) {
 
-                        sh "mvn -B release:clean"
-                        sh "mvn -B release:prepare ${getReleaseParameters()}"
                         script {
-                            env.VERSION = readMavenPom().getVersion()
-                        }
-                        sh "mvn -B release:perform ${getReleaseParameters()}"
+                            sh "mvn -B release:clean"
+                            sh "mvn -B release:prepare ${getReleaseParameters()}"
 
+                            env.VERSION = readMavenPom().getVersion()
+
+                            sh "mvn -B release:perform ${getReleaseParameters()}"
+                        }
                     }
                 }
             }
