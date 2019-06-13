@@ -13,6 +13,7 @@ pipeline {
         }
     }
 
+    // can not be updated - like final
     environment {
         // Access to AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY via "CloudBees AWS Credentials Plugin"
         AWS_CREDENTIALS_ID      = "aws-credentials"
@@ -25,11 +26,6 @@ pipeline {
         ROOT_PATH               = "app-rest"
         POM_PATH                = "${env.ROOT_PATH}/pom.xml"
         TARGET_PATH             = "${env.ROOT_PATH}/target"
-
-        // Plugin :: https://wiki.jenkins.io/display/JENKINS/Pipeline+Utility+Steps+Plugin
-        def pom                 = readMavenPom(file: "${env.POM_PATH}")
-        ARTIFACT_ID             = pom.getArtifactId()
-        VERSION                 = pom.getVersion()
     }
 
     options {
@@ -50,6 +46,8 @@ pipeline {
 
         stage("Configuration review") {
             steps {
+                storeMavenDetails()
+
                 sh "echo AWS_ACCESS_KEY_ID      = ${env.AWS_ACCESS_KEY_ID}"
                 sh "echo AWS_SECRET_ACCESS_KEY  = ${env.AWS_SECRET_ACCESS_KEY}"
                 sh "echo AWS_DEFAULT_REGION     = ${env.AWS_DEFAULT_REGION}"
@@ -59,8 +57,8 @@ pipeline {
                 sh "echo POM_PATH               = ${env.POM_PATH}"
                 sh "echo TARGET_PATH            = ${env.TARGET_PATH}"
 
-                sh "echo ARTIFACT_ID            = ${env.ARTIFACT_ID}"
-                sh "echo VERSION                = ${env.VERSION}"
+                sh "echo ARTIFACT_ID            = ${ARTIFACT_ID}"
+                sh "echo VERSION                = ${VERSION}"
 
                 sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
                 sh "echo MAVEN_PROFILE          = ${params.MAVEN_PROFILE}"
@@ -125,20 +123,12 @@ pipeline {
                             sh "mvn -B clean release:clean"
                             sh "mvn -B release:prepare ${getReleaseParameters()} -s ${env.MAVEN_SETTINGS}"
 
-                            script {
-                                sh "echo BEFORE ${env.VERSION}"
-                                def pom = readMavenPom()
-                                env.VERSION = pom.getVersion()
-                                sh "echo AFTER 1 ${env.VERSION}"
-                            }
-
-                            sh "echo AFTER 2 ${env.VERSION}"
+                            storeMavenDetails()
 
                             sh "mvn -B release:perform ${getReleaseParameters()} -s ${env.MAVEN_SETTINGS}"
                         }
                     }
                 }
-                sh "echo AFTER 3 ${env.VERSION}"
             }
         }
 
@@ -147,11 +137,11 @@ pipeline {
                 script {
                     try {
                         timeout(time: 5, unit: "MINUTES") {
-                            input message: "Is release ${env.VERSION} valid?", ok: 'Yes'
+                            input message: "Is release ${VERSION} valid?", ok: 'Yes'
                         }
-                        echo "Release ${env.VERSION} has been approved"
+                        echo "Release ${VERSION} has been approved"
                     } catch (err) {
-                        echo "Release ${env.VERSION} has not been approved"
+                        echo "Release ${VERSION} has not been approved"
                         throw err
                     }
                 }
@@ -182,6 +172,13 @@ pipeline {
             sh "rm -rf $TARGET_PATH"
         }
     }
+}
+
+def storeMavenDetails() {
+    // Plugin :: https://wiki.jenkins.io/display/JENKINS/Pipeline+Utility+Steps+Plugin
+    def pom                 = readMavenPom(file: "${env.POM_PATH}")
+    ARTIFACT_ID             = pom.getArtifactId()
+    VERSION                 = pom.getVersion()
 }
 
 def maskValue(String value) {

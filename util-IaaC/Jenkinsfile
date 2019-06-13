@@ -12,6 +12,7 @@ pipeline {
         }
     }
 
+    // can not be updated - like final
     environment {
         // Access to AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY via "CloudBees AWS Credentials Plugin"
         AWS                 = credentials('aws-credentials')
