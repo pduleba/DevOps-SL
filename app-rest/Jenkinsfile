@@ -16,7 +16,6 @@ pipeline {
     environment {
         // Access to AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY via "CloudBees AWS Credentials Plugin"
         AWS_CREDENTIALS_ID      = "aws-credentials"
-        GIT_CREDENTIALS_ID      = "git-credentials"
         MVN_GLOBAL_SETTINGS_ID  = "global-maven-settings"
 
         AWS                     = credentials('aws-credentials')
@@ -127,15 +126,19 @@ pipeline {
                             sh "mvn -B release:prepare ${getReleaseParameters()} -s ${env.MAVEN_SETTINGS}"
 
                             script {
+                                sh "echo BEFORE ${env.VERSION}"
                                 def pom = readMavenPom()
-                                env.ARTIFACT_ID = pom.getArtifactId()
                                 env.VERSION = pom.getVersion()
+                                sh "echo AFTER 1 ${env.VERSION}"
                             }
+
+                            sh "echo AFTER 2 ${env.VERSION}"
 
                             sh "mvn -B release:perform ${getReleaseParameters()} -s ${env.MAVEN_SETTINGS}"
                         }
                     }
                 }
+                sh "echo AFTER 3 ${env.VERSION}"
             }
         }
 
@@ -161,7 +164,7 @@ pipeline {
                     (
                         (currentBuild.result == null || currentBuild.result == 'SUCCESS')
                             &&
-                        params.DRY_RUN
+                        params.DRY_RUN == false
                     )
                 }
             }
