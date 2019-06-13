@@ -17,6 +17,7 @@ pipeline {
         // Access to AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY via "CloudBees AWS Credentials Plugin"
         AWS_CREDENTIALS_ID      = "aws-credentials"
         GIT_CREDENTIALS_ID      = "git-credentials"
+        MVN_GLOBAL_SETTINGS_ID  = "global-maven-settings"
 
         AWS                     = credentials('aws-credentials')
         AWS_DEFAULT_REGION      = credentials('aws-default-region')
@@ -129,8 +130,8 @@ pipeline {
                             env.VERSION     = pom.getVersion()
 
                             // Plugin :: https://wiki.jenkins.io/display/JENKINS/Config+File+Provider+Plugin
-                            configFileProvider([configFile('global-maven-settings')]) {
-                                sh "mvn -B release:perform ${getReleaseParameters()}"
+                            configFileProvider([configFile(fileId: "${env.MVN_GLOBAL_SETTINGS_ID}", variable: 'MAVEN_SETTINGS')]) {
+                                sh "mvn -B release:perform ${getReleaseParameters()} -s ${env.MAVEN_SETTINGS}"
                             }
                         }
                     }
