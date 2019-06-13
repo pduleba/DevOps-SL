@@ -30,7 +30,6 @@ pipeline {
         def pom                 = readMavenPom(file: "${env.POM_PATH}")
         ARTIFACT_ID             = pom.getArtifactId()
         VERSION                 = pom.getVersion()
-        URL                     = pom.getScm().getUrl()
     }
 
     options {
