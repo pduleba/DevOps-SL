@@ -26,10 +26,11 @@ pipeline {
         POM_PATH                = "${env.ROOT_PATH}/pom.xml"
         TARGET_PATH             = "${env.ROOT_PATH}/target"
 
-        // Depends on pipeline-utility-steps (https://wiki.jenkins.io/display/JENKINS/Pipeline+Utility+Steps+Plugin)
+        // Plugin :: https://wiki.jenkins.io/display/JENKINS/Pipeline+Utility+Steps+Plugin
         def pom                 = readMavenPom(file: "${env.POM_PATH}")
         ARTIFACT_ID             = pom.getArtifactId()
         VERSION                 = pom.getVersion()
+        URL                     = pom.getScm().getUrl()
     }
 
     options {
@@ -66,6 +67,7 @@ pipeline {
                 sh "echo MAVEN_PROFILE          = ${params.MAVEN_PROFILE}"
                 sh "echo DRY_RUN                = ${params.DRY_RUN}"
 
+                // Plugin :: https://wiki.jenkins.io/display/JENKINS/AWS+Parameter+Store+Plugin
                 withAWSParameterStore(credentialsId: "${env.AWS_CREDENTIALS_ID}",
                         path: "/pduleba/${params.TARGET_ENVIRONMENT}",
                         regionName: "${env.AWS_DEFAULT_REGION}",
@@ -127,7 +129,10 @@ pipeline {
                             env.ARTIFACT_ID = pom.getArtifactId()
                             env.VERSION     = pom.getVersion()
 
-                            sh "mvn -B release:perform ${getReleaseParameters()}"
+                            // Plugin :: https://wiki.jenkins.io/display/JENKINS/Config+File+Provider+Plugin
+                            configFileProvider([configFile('global-maven-settings')]) {
+                                sh "mvn -B release:perform ${getReleaseParameters()}"
+                            }
                         }
                     }
                 }
