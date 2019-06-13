@@ -166,12 +166,6 @@ pipeline {
             }
         }
     }
-
-    post {
-        cleanup {
-            sh "rm -rf $TARGET_PATH"
-        }
-    }
 }
 
 def storeMavenDetails() {
