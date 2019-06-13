@@ -24,7 +24,6 @@ pipeline {
         AWS_DEFAULT_OUTPUT      = credentials('aws-default-output')
 
         ROOT_PATH               = "app-rest"
-        POM_PATH                = "${env.ROOT_PATH}/pom.xml"
         TARGET_PATH             = "${env.ROOT_PATH}/target"
     }
 
@@ -46,7 +45,9 @@ pipeline {
 
         stage("Configuration review") {
             steps {
-                storeMavenDetails()
+                dir("${env.ROOT_PATH}") {
+                    storeMavenDetails()
+                }
 
                 sh "echo AWS_ACCESS_KEY_ID      = ${env.AWS_ACCESS_KEY_ID}"
                 sh "echo AWS_SECRET_ACCESS_KEY  = ${env.AWS_SECRET_ACCESS_KEY}"
@@ -54,7 +55,6 @@ pipeline {
                 sh "echo AWS_DEFAULT_OUTPUT     = ${env.AWS_DEFAULT_OUTPUT}"
 
                 sh "echo ROOT_PATH              = ${env.ROOT_PATH}"
-                sh "echo POM_PATH               = ${env.POM_PATH}"
                 sh "echo TARGET_PATH            = ${env.TARGET_PATH}"
 
                 sh "echo ARTIFACT_ID            = ${ARTIFACT_ID}"
@@ -95,7 +95,7 @@ pipeline {
 
         stage("Maven clean") {
             steps {
-                dir("$ROOT_PATH") {
+                dir("${env.ROOT_PATH}") {
                     sh "mvn -B clean release:clean"
                 }
             }
@@ -103,7 +103,7 @@ pipeline {
 
         stage("Maven verify") {
             steps {
-                dir("$ROOT_PATH") {
+                dir("${env.ROOT_PATH}") {
                     sh "mvn -B clean test -P${params.MAVEN_PROFILE}"
                 }
             }
@@ -111,7 +111,7 @@ pipeline {
 
         stage("Maven release") {
             steps {
-                dir("$ROOT_PATH") {
+                dir("${env.ROOT_PATH}") {
                     withAWSParameterStore(credentialsId: "${env.AWS_CREDENTIALS_ID}",
                         path: "/pduleba/${params.TARGET_ENVIRONMENT}",
                         regionName: "${env.AWS_DEFAULT_REGION}",
@@ -170,7 +170,7 @@ pipeline {
 
 def storeMavenDetails() {
     // Plugin :: https://wiki.jenkins.io/display/JENKINS/Pipeline+Utility+Steps+Plugin
-    def pom                 = readMavenPom(file: "${env.POM_PATH}")
+    def pom                 = readMavenPom()
     ARTIFACT_ID             = pom.getArtifactId()
     VERSION                 = pom.getVersion()
 }
