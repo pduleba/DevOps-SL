@@ -272,8 +272,8 @@
     </profiles>
 
     <scm>
-        <connection>scm:git:https://github.com/pduleba/DevOps-SL.git</connection>
-        <developerConnection>scm:git:https://github.com/pduleba/DevOps-SL.git</developerConnection>
+        <connection>scm:git:git@github.com:pduleba/DevOps-SL.git</connection>
+        <developerConnection>scm:git:git@github.com:pduleba/DevOps-SL.git</developerConnection>
         <url>http://github.com/pduleba/DevOps-SL</url>
         <tag>HEAD</tag>
     </scm>

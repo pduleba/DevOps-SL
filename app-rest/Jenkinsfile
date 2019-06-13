@@ -16,6 +16,7 @@ pipeline {
     environment {
         // Access to AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY via "CloudBees AWS Credentials Plugin"
         AWS_CREDENTIALS_ID      = "aws-credentials"
+        GIT_CREDENTIALS_ID      = "git-credentials"
 
         AWS                     = credentials('aws-credentials')
         AWS_DEFAULT_REGION      = credentials('aws-default-region')
