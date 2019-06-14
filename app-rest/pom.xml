@@ -24,7 +24,7 @@
         <!-- Project properties -->
         <project.http.protocol>http</project.http.protocol>
         <project.http.port>8080</project.http.port>
-        <project.http.context.path>/app-rest</project.http.context.path>
+        <project.http.context.path>app-rest</project.http.context.path>
         <project.http.api.path>api</project.http.api.path>
         <project.http.url>${project.http.protocol}://${project.http.host}:${project.http.port}/${project.http.context.path}/${project.http.api.path}</project.http.url>
         <project.database.url>jdbc:mysql://${project.database.host}:${project.database.port}/${project.database.name}</project.database.url>

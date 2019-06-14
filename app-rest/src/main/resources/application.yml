@@ -2,7 +2,7 @@
 server:
   port: @project.http.port@
   servlet:
-    context-path: @project.http.context.path@
+    context-path: /@project.http.context.path@
 ---
 spring:
   profiles:

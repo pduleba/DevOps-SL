@@ -119,8 +119,8 @@ pipeline {
                         // Plugin :: https://wiki.jenkins.io/display/JENKINS/Config+File+Provider+Plugin
                         configFileProvider([configFile(fileId: "${env.MVN_GLOBAL_SETTINGS_ID}", variable: 'MAVEN_SETTINGS')]) {
                             sh "mvn -B clean release:clean"
-                            sh "mvn -B release:prepare ${getReleaseArguments(false)}"
-                            sh "mvn -B release:perform ${getReleaseArguments(true)}"
+                            sh "mvn -B release:prepare ${getReleaseArguments(true)}"
+                            sh "mvn -B release:perform ${getReleaseArguments(false)}"
                         }
                     }
                 }
@@ -167,14 +167,14 @@ def maskValue(String value) {
     return value?.trim() ? "****" : ""
 }
 
-String getReleaseArguments(boolean perform) {
+String getReleaseArguments(boolean prepare) {
     // INFO :: StringJoiner must be enabled on Jenkins via http://localhost:8181/scriptApproval/
     StringJoiner innerArguments = new StringJoiner(" ");
     innerArguments
             .add("-P${params.MAVEN_PROFILE}")
             .add("-DskipTests")
 
-    if (perform) {
+    if (prepare) {
         innerArguments
                 .add("-Dproject.aws.region=${env.AWS_DEFAULT_REGION}")
                 .add("-Dproject.aws.bucket=${env.APP_BUCKET}")
