@@ -26,7 +26,7 @@ pipeline {
         ROOT_PATH               = "app-rest"
         TARGET_PATH             = "${env.ROOT_PATH}/target"
 
-        def pom                 = readMavenPom("${env.ROOT_PATH}/pom.xml")
+        def pom                 = readMavenPom(file: "${env.ROOT_PATH}/pom.xml")
         RELEASE_VERSION         = pom.getVersion().replace("-SNAPSHOT", "")
         ARTIFACT_ID             = pom.getArtifactId()
     }
@@ -119,8 +119,8 @@ pipeline {
                         // Plugin :: https://wiki.jenkins.io/display/JENKINS/Config+File+Provider+Plugin
                         configFileProvider([configFile(fileId: "${env.MVN_GLOBAL_SETTINGS_ID}", variable: 'MAVEN_SETTINGS')]) {
                             sh "mvn -B clean release:clean"
-                            sh "mvn -B release:prepare ${getReleaseParameters()} -s ${env.MAVEN_SETTINGS}"
-                            sh "mvn -B release:perform ${getReleaseParameters()} -s ${env.MAVEN_SETTINGS}"
+                            sh "mvn -B release:prepare ${getReleaseArguments(false)}"
+                            sh "mvn -B release:perform ${getReleaseArguments(true)}"
                         }
                     }
                 }
@@ -167,16 +167,31 @@ def maskValue(String value) {
     return value?.trim() ? "****" : ""
 }
 
-def getReleaseParameters() {
-    return "-DdryRun=${params.DRY_RUN} " +
-            "-Darguments=\"-DskipTests\" " +
-            "-P${params.MAVEN_PROFILE} " +
-            "-Dproject.aws.region=${env.AWS_DEFAULT_REGION} " +
-            "-Dproject.aws.bucket=${env.APP_BUCKET} " +
-            "-Dproject.http.host=${env.HTTP_HOST} " +
-            "-Dproject.database.host=${env.DATABASE_HOST} " +
-            "-Dproject.database.port=${env.DATABASE_PORT} " +
-            "-Dproject.database.name=${env.DATABASE_NAME} " +
-            "-Dproject.database.username=${env.DATABASE_USERNAME} " +
-            "-Dproject.database.password=${env.DATABASE_PASSWORD}"
+String getReleaseArguments(boolean perform) {
+    StringJoiner innerArguments = new StringJoiner(" ");
+    innerArguments
+            .add("-P${params.MAVEN_PROFILE}")
+            .add("-DskipTests")
+
+    if (perform) {
+        innerArguments
+                .add("-Dproject.aws.region=${env.AWS_DEFAULT_REGION}")
+                .add("-Dproject.aws.bucket=${env.APP_BUCKET}")
+                .add("-Dproject.http.host=${env.HTTP_HOST}")
+                .add("-Dproject.database.host=${env.DATABASE_HOST}")
+                .add("-Dproject.database.port=${env.DATABASE_PORT}")
+                .add("-Dproject.database.name=${env.DATABASE_NAME}")
+                .add("-Dproject.database.username=${env.DATABASE_USERNAME}")
+                .add("-Dproject.database.password=${env.DATABASE_PASSWORD}")
+    }
+
+    StringJoiner arguments = new StringJoiner(" ")
+            .add("-DdryRun=${params.DRY_RUN}")
+            .add("-s")
+            .add("${env.MAVEN_SETTINGS}")
+            .add("-Darguments=\"")
+            .add(innerArguments.toString())
+            .add("\"")
+
+    return arguments.toString()
 }
