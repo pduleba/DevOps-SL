@@ -25,6 +25,10 @@ pipeline {
 
         ROOT_PATH               = "app-rest"
         TARGET_PATH             = "${env.ROOT_PATH}/target"
+
+        def pom                 = readMavenPom("${env.ROOT_PATH}/pom.xml")
+        RELEASE_VERSION         = pom.getVersion().replace("-SNAPSHOT", "")
+        ARTIFACT_ID             = pom.getArtifactId()
     }
 
     options {
@@ -45,10 +49,6 @@ pipeline {
 
         stage("Configuration review") {
             steps {
-                dir("${env.ROOT_PATH}") {
-                    storeMavenDetails()
-                }
-
                 sh "echo AWS_ACCESS_KEY_ID      = ${env.AWS_ACCESS_KEY_ID}"
                 sh "echo AWS_SECRET_ACCESS_KEY  = ${env.AWS_SECRET_ACCESS_KEY}"
                 sh "echo AWS_DEFAULT_REGION     = ${env.AWS_DEFAULT_REGION}"
@@ -57,8 +57,8 @@ pipeline {
                 sh "echo ROOT_PATH              = ${env.ROOT_PATH}"
                 sh "echo TARGET_PATH            = ${env.TARGET_PATH}"
 
-                sh "echo ARTIFACT_ID            = ${ARTIFACT_ID}"
-                sh "echo VERSION                = ${VERSION}"
+                sh "echo ARTIFACT_ID            = ${env.ARTIFACT_ID}"
+                sh "echo RELEASE_VERSION        = ${env.RELEASE_VERSION}"
 
                 sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
                 sh "echo MAVEN_PROFILE          = ${params.MAVEN_PROFILE}"
@@ -113,18 +113,15 @@ pipeline {
             steps {
                 dir("${env.ROOT_PATH}") {
                     withAWSParameterStore(credentialsId: "${env.AWS_CREDENTIALS_ID}",
-                        path: "/pduleba/${params.TARGET_ENVIRONMENT}",
-                        regionName: "${env.AWS_DEFAULT_REGION}",
-                        naming: 'relative',
-                        recursive: true) {
+                            path: "/pduleba/${params.TARGET_ENVIRONMENT}",
+                            regionName: "${env.AWS_DEFAULT_REGION}",
+                            naming: 'relative',
+                            recursive: true) {
 
                         // Plugin :: https://wiki.jenkins.io/display/JENKINS/Config+File+Provider+Plugin
                         configFileProvider([configFile(fileId: "${env.MVN_GLOBAL_SETTINGS_ID}", variable: 'MAVEN_SETTINGS')]) {
                             sh "mvn -B clean release:clean"
                             sh "mvn -B release:prepare ${getReleaseParameters()} -s ${env.MAVEN_SETTINGS}"
-
-                            storeMavenDetails()
-
                             sh "mvn -B release:perform ${getReleaseParameters()} -s ${env.MAVEN_SETTINGS}"
                         }
                     }
@@ -137,11 +134,11 @@ pipeline {
                 script {
                     try {
                         timeout(time: 5, unit: "MINUTES") {
-                            input message: "Is release ${VERSION} valid?", ok: 'Yes'
+                            input message: "Is release ${env.RELEASE_VERSION} valid?", ok: 'Yes'
                         }
-                        echo "Release ${VERSION} has been approved"
+                        echo "Release ${env.RELEASE_VERSION} has been approved"
                     } catch (err) {
-                        echo "Release ${VERSION} has not been approved"
+                        echo "Release ${env.RELEASE_VERSION} has not been approved"
                         throw err
                     }
                 }
@@ -152,9 +149,9 @@ pipeline {
             when {
                 expression {
                     (
-                        (currentBuild.result == null || currentBuild.result == 'SUCCESS')
-                            &&
-                        params.DRY_RUN == false
+                            (currentBuild.result == null || currentBuild.result == 'SUCCESS')
+                                    &&
+                                    params.DRY_RUN == false
                     )
                 }
             }
@@ -166,13 +163,6 @@ pipeline {
             }
         }
     }
-}
-
-def storeMavenDetails() {
-    // Plugin :: https://wiki.jenkins.io/display/JENKINS/Pipeline+Utility+Steps+Plugin
-    def pom                 = readMavenPom()
-    ARTIFACT_ID             = pom.getArtifactId()
-    VERSION                 = pom.getVersion()
 }
 
 def maskValue(String value) {
