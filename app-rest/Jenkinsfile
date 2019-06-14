@@ -168,44 +168,31 @@ def maskValue(String value) {
 }
 
 String getReleaseArguments(boolean perform) {
-    // Jenkins is blocking 'StringJoiner' in scripts
-    StringBuilder innerArguments = new StringBuilder()
+    // INFO :: StringJoiner must be enabled on Jenkins via http://localhost:8181/scriptApproval/
+    StringJoiner innerArguments = new StringJoiner(" ");
     innerArguments
-            .append("-P${params.MAVEN_PROFILE}")
-            .append(" ")
-            .append("-DskipTests")
+            .add("-P${params.MAVEN_PROFILE}")
+            .add("-DskipTests")
 
     if (perform) {
         innerArguments
-                .append("-Dproject.aws.region=${env.AWS_DEFAULT_REGION}")
-                .append(" ")
-                .append("-Dproject.aws.bucket=${env.APP_BUCKET}")
-                .append(" ")
-                .append("-Dproject.http.host=${env.HTTP_HOST}")
-                .append(" ")
-                .append("-Dproject.database.host=${env.DATABASE_HOST}")
-                .append(" ")
-                .append("-Dproject.database.port=${env.DATABASE_PORT}")
-                .append(" ")
-                .append("-Dproject.database.name=${env.DATABASE_NAME}")
-                .append(" ")
-                .append("-Dproject.database.username=${env.DATABASE_USERNAME}")
-                .append(" ")
-                .append("-Dproject.database.password=${env.DATABASE_PASSWORD}")
+                .add("-Dproject.aws.region=${env.AWS_DEFAULT_REGION}")
+                .add("-Dproject.aws.bucket=${env.APP_BUCKET}")
+                .add("-Dproject.http.host=${env.HTTP_HOST}")
+                .add("-Dproject.database.host=${env.DATABASE_HOST}")
+                .add("-Dproject.database.port=${env.DATABASE_PORT}")
+                .add("-Dproject.database.name=${env.DATABASE_NAME}")
+                .add("-Dproject.database.username=${env.DATABASE_USERNAME}")
+                .add("-Dproject.database.password=${env.DATABASE_PASSWORD}")
     }
 
-    StringBuilder arguments = new StringBuilder()
-            .append("-DdryRun=${params.DRY_RUN}")
-            .append(" ")
-            .append("-s")
-            .append(" ")
-            .append("${env.MAVEN_SETTINGS}")
-            .append(" ")
-            .append("-Darguments=\"")
-            .append(" ")
-            .append(innerArguments.toString())
-            .append(" ")
-            .append("\"")
+    StringJoiner arguments = new StringJoiner(" ")
+            .add("-DdryRun=${params.DRY_RUN}")
+            .add("-s")
+            .add("${env.MAVEN_SETTINGS}")
+            .add("-Darguments=\"")
+            .add(innerArguments.toString())
+            .add("\"")
 
     return arguments.toString()
 }
