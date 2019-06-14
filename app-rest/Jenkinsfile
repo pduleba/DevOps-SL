@@ -78,13 +78,11 @@ pipeline {
 
                     echo "HTTP_HOST             = ${env.HTTP_HOST}"
 
-                    script {
-                        echo "DATABASE_HOST         = ${maskValue(env.DATABASE_NAME)}"
-                        echo "DATABASE_PORT         = ${maskValue(env.DATABASE_PORT)}"
-                        echo "DATABASE_NAME         = ${maskValue(env.DATABASE_NAME)}"
-                        echo "DATABASE_USERNAME     = ${maskValue(env.DATABASE_USERNAME)}"
-                        echo "DATABASE_PASSWORD     = ${maskValue(env.DATABASE_PASSWORD)}"
-                    }
+                    echo "DATABASE_HOST         = ${maskValue(env.DATABASE_NAME)}"
+                    echo "DATABASE_PORT         = ${maskValue(env.DATABASE_PORT)}"
+                    echo "DATABASE_NAME         = ${maskValue(env.DATABASE_NAME)}"
+                    echo "DATABASE_USERNAME     = ${maskValue(env.DATABASE_USERNAME)}"
+                    echo "DATABASE_PASSWORD     = ${maskValue(env.DATABASE_PASSWORD)}"
                 }
 
                 sh "mvn -B --version"
