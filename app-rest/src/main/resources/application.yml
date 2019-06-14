@@ -23,9 +23,9 @@ spring:
     # Available properties listed in FlywayProperties.java
     installedBy: @project.flayway.installedBy@
     #
-    url: @project.datasource.url@
-    user: @project.datasource.username@
-    password: @project.datasource.password@
+    url: @project.database.url@
+    user: @project.database.username@
+    password: @project.database.password@
 ---
 spring:
   freemarker:
@@ -35,9 +35,9 @@ spring:
     # Use MySQL dialect
     platform: mysql
     #
-    url: @project.datasource.url@
-    username: @project.datasource.username@
-    password: @project.datasource.password@
+    url: @project.database.url@
+    username: @project.database.username@
+    password: @project.database.password@
   jpa:
     hibernate:
       ddl-auto: none
