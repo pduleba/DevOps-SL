@@ -27,8 +27,9 @@ pipeline {
         TARGET_PATH             = "${env.ROOT_PATH}/target"
 
         def pom                 = readMavenPom(file: "${env.ROOT_PATH}/pom.xml")
-        RELEASE_VERSION         = pom.getVersion().replace("-SNAPSHOT", "")
         ARTIFACT_ID             = pom.getArtifactId()
+        RELEASE_VERSION         = pom.getVersion().replace("-SNAPSHOT", "")
+        RELEASE_PACKAGE         = "${env.ARTIFACT_ID}-${env.RELEASE_VERSION}.jar"
     }
 
     options {
@@ -57,7 +58,7 @@ pipeline {
                 sh "echo ROOT_PATH              = ${env.ROOT_PATH}"
                 sh "echo TARGET_PATH            = ${env.TARGET_PATH}"
 
-                sh "echo ARTIFACT_ID            = ${env.ARTIFACT_ID}"
+                sh "echo RELEASE_PACKAGE        = ${env.RELEASE_PACKAGE}"
                 sh "echo RELEASE_VERSION        = ${env.RELEASE_VERSION}"
 
                 sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
@@ -122,6 +123,10 @@ pipeline {
                             sh "mvn -B release:prepare ${getReleaseArguments(true)}"
                             sh "mvn -B release:perform ${getReleaseArguments(false)}"
                         }
+
+                        script {
+                            S3_LOCATION = "s3://${env.APP_BUCKET}/releases/${env.RELEASE_PACKAGE}"
+                        }
                     }
                 }
             }
@@ -143,13 +148,30 @@ pipeline {
             }
         }
 
+        stage("S3 deploy") {
+            when {
+                expression {
+                    (
+                        (currentBuild.result == null || currentBuild.result == 'SUCCESS')
+                            &&
+                        (params.DRY_RUN == false)
+                    )
+                }
+            }
+            steps {
+                dir("${env.ROOT_PATH}") {
+                    sh "exec/ux/exec-deploy.sh ${env.RELEASE_PACKAGE} ${S3_LOCATION}"
+                }
+            }
+        }
+
         stage("CodeDeploy") {
             when {
                 expression {
                     (
-                            (currentBuild.result == null || currentBuild.result == 'SUCCESS')
-                                    &&
-                                    params.DRY_RUN == false
+                        (currentBuild.result == null || currentBuild.result == 'SUCCESS')
+                            &&
+                        (params.DRY_RUN == false)
                     )
                 }
             }

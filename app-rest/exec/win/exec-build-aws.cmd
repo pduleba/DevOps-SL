@@ -1,3 +1,4 @@
+:: Win Script
 mvn clean install -Paws ^
 	-Daws.bucket=bucket ^
 	-Dhttp.host=host ^
