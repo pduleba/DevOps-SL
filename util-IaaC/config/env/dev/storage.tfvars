@@ -2,6 +2,8 @@
 # VARIABLES
 ##################################################################################
 
+environment = "dev"
+
 # Relates to network.tfvars
 vpc_name_postfix = "vpc"
 public_subnet_name_postfix = "public-subnet"
@@ -21,18 +23,17 @@ database_name = "appdb"
 database_username = "user"
 database_port = "3306"
 
-ssm_parameter_database_host_key_postfix = "dev/database/host"
-ssm_parameter_database_port_key_postfix = "dev/database/port"
-ssm_parameter_database_name_key_postfix = "dev/database/name"
-ssm_parameter_database_username_key_postfix = "dev/database/username"
-ssm_parameter_database_password_key_postfix = "dev/database/password"
-ssm_parameter_app_bucket_key_postfix = "dev/app/bucket"
+ssm_parameter_database_host_key_postfix = "database/host"
+ssm_parameter_database_port_key_postfix = "database/port"
+ssm_parameter_database_name_key_postfix = "database/name"
+ssm_parameter_database_username_key_postfix = "database/username"
+ssm_parameter_database_password_key_postfix = "database/password"
+ssm_parameter_app_bucket_key_postfix = "app/bucket"
 
 app_bucket_postfix = "app-bucket"
 
 # https://docs.aws.amazon.com/console/elasticloadbalancing/access-logs
 # https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html
 access_log_bucket_name_postfix = "alb-bucket"
-access_log_bucket_log_prefix = "dev"
 access_log_bucket_owner_account_id = "890769921003"
 access_log_alb_owner_account_id = "127311923021"  // region related

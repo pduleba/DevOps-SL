@@ -24,7 +24,7 @@ module "ssm-parameter-app-bucket" {
   owner        = "${var.owner}"
   name_prefix  = "/${var.resource_name_prefix}"
   name_delimiter = "/"
-  name_postfix  = "${var.ssm_parameter_app_bucket_key_postfix}"
+  name_postfix  = "${var.ssm_parameter_environment_postfix}/${var.ssm_parameter_app_bucket_key_postfix}"
 
   tag_name_prefix = "${var.resource_name_prefix}"
   tag_name_delimiter = "-"

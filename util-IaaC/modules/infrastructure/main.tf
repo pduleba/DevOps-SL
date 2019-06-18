@@ -8,6 +8,7 @@ variable "bucket" {}
 
 variable "owner" {}
 variable "resource_name_prefix" {}
+variable "environment" {}
 
 variable "vpc_name_postfix" {}
 variable "public_subnet_name_postfix" {}
@@ -31,7 +32,6 @@ variable "listener_rule_s3_condition_values" { type = "list" }
 variable "listener_rule_rds_condition_values" { type = "list" }
 
 variable "access_log_bucket_name_postfix" {}
-variable "access_log_bucket_log_prefix" {}
 
 variable "launch_configuration_image_id" {}
 variable "launch_configuration_instance_type" {}
@@ -93,8 +93,9 @@ module "alb" {
   target_group_s3_path              = "${var.target_group_s3_path}"
 
   access_log_bucket_name_postfix = "${var.access_log_bucket_name_postfix}"
-  access_log_bucket_log_prefix   = "${var.access_log_bucket_log_prefix}"
+  access_log_bucket_log_prefix   = "${var.environment}"
 
+  ssm_parameter_environment_postfix   = "${var.environment}"
   ssm_parameter_http_host_key_postfix = "${var.ssm_parameter_http_host_key_postfix}"
 }
 

@@ -88,7 +88,7 @@ module "ssm-parameter-database-host" {
   owner        = "${var.owner}"
   name_prefix  = "/${var.resource_name_prefix}"
   name_delimiter = "/"
-  name_postfix  = "${var.ssm_parameter_database_host_key_postfix}"
+  name_postfix  = "${var.ssm_parameter_environment_postfix}/${var.ssm_parameter_database_host_key_postfix}"
 
   tag_name_prefix = "${var.resource_name_prefix}"
   tag_name_delimiter = "-"
@@ -103,7 +103,7 @@ module "ssm-parameter-database-port" {
   owner        = "${var.owner}"
   name_prefix  = "/${var.resource_name_prefix}"
   name_delimiter = "/"
-  name_postfix  = "${var.ssm_parameter_database_port_key_postfix}"
+  name_postfix  = "${var.ssm_parameter_environment_postfix}/${var.ssm_parameter_database_port_key_postfix}"
 
   tag_name_prefix = "${var.resource_name_prefix}"
   tag_name_delimiter = "-"
@@ -118,7 +118,7 @@ module "ssm-parameter-database-name" {
   owner        = "${var.owner}"
   name_prefix  = "/${var.resource_name_prefix}"
   name_delimiter = "/"
-  name_postfix  = "${var.ssm_parameter_database_name_key_postfix}"
+  name_postfix  = "${var.ssm_parameter_environment_postfix}/${var.ssm_parameter_database_name_key_postfix}"
 
   tag_name_prefix = "${var.resource_name_prefix}"
   tag_name_delimiter = "-"
@@ -133,7 +133,7 @@ module "ssm-parameter-database-username" {
   owner        = "${var.owner}"
   name_prefix  = "/${var.resource_name_prefix}"
   name_delimiter = "/"
-  name_postfix  = "${var.ssm_parameter_database_username_key_postfix}"
+  name_postfix  = "${var.ssm_parameter_environment_postfix}/${var.ssm_parameter_database_username_key_postfix}"
 
   tag_name_prefix = "${var.resource_name_prefix}"
   tag_name_delimiter = "-"
@@ -148,7 +148,7 @@ module "ssm-parameter-database-password" {
   owner        = "${var.owner}"
   name_prefix  = "/${var.resource_name_prefix}"
   name_delimiter = "/"
-  name_postfix  = "${var.ssm_parameter_database_password_key_postfix}"
+  name_postfix  = "${var.ssm_parameter_environment_postfix}/${var.ssm_parameter_database_password_key_postfix}"
 
   tag_name_prefix = "${var.resource_name_prefix}"
   tag_name_delimiter = "-"

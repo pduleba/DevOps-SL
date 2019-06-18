@@ -26,6 +26,7 @@ variable "database_name" {}
 variable "database_username" {}
 variable "database_port" {}
 
+variable "ssm_parameter_environment_postfix" {}
 variable "ssm_parameter_database_host_key_postfix" {}
 variable "ssm_parameter_database_port_key_postfix" {}
 variable "ssm_parameter_database_name_key_postfix" {}

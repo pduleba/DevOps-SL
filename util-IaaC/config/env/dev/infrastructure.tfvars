@@ -2,6 +2,8 @@
 # VARIABLES
 ##################################################################################
 
+environment = "dev"
+
 # Relates to network.tfvars
 vpc_name_postfix = "vpc"
 public_subnet_name_postfix = "public-subnet"
@@ -34,7 +36,6 @@ listener_rule_s3_condition_values = [
 # https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html
 # Relates to storage.tfvars
 access_log_bucket_name_postfix = "alb-bucket"
-access_log_bucket_log_prefix = "dev"
 
 launch_configuration_image_id = "ami-0c6b1d09930fac512"
 launch_configuration_instance_type = "t2.micro"
@@ -46,7 +47,7 @@ autoscaling_min_size = 1
 autoscaling_desired_size = 1
 autoscaling_max_size = 1
 
-ssm_parameter_http_host_key_postfix = "dev/http/host"
+ssm_parameter_http_host_key_postfix = "http/host"
 
 ssm_policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 

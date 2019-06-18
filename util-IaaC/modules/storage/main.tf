@@ -8,6 +8,7 @@ variable "bucket" {}
 
 variable "owner" {}
 variable "resource_name_prefix" {}
+variable "environment" {}
 
 variable "vpc_name_postfix" {}
 variable "public_subnet_name_postfix" {}
@@ -35,7 +36,6 @@ variable "ssm_parameter_database_password_key_postfix" {}
 variable "app_bucket_postfix" {}
 
 variable "access_log_bucket_name_postfix" {}
-variable "access_log_bucket_log_prefix" {}
 variable "access_log_bucket_owner_account_id" {}
 variable "access_log_alb_owner_account_id" {}
 
@@ -72,6 +72,7 @@ module "rds" {
   database_username = "${var.database_username}"
   database_port     = "${var.database_port}"
 
+  ssm_parameter_environment_postfix           = "${var.environment}"
   ssm_parameter_database_host_key_postfix     = "${var.ssm_parameter_database_host_key_postfix}"
   ssm_parameter_database_port_key_postfix     = "${var.ssm_parameter_database_port_key_postfix}"
   ssm_parameter_database_name_key_postfix     = "${var.ssm_parameter_database_name_key_postfix}"
@@ -92,9 +93,10 @@ module "s3" {
   app_bucket_postfix = "${var.app_bucket_postfix}"
 
   access_log_bucket_name_postfix     = "${var.access_log_bucket_name_postfix}"
-  access_log_bucket_log_prefix       = "${var.access_log_bucket_log_prefix}"
+  access_log_bucket_log_prefix       = "${var.environment}"
   access_log_bucket_owner_account_id = "${var.access_log_bucket_owner_account_id}"
   access_log_alb_owner_account_id    = "${var.access_log_alb_owner_account_id}"
 
+  ssm_parameter_environment_postfix    = "${var.environment}"
   ssm_parameter_app_bucket_key_postfix = "${var.ssm_parameter_app_bucket_key_postfix}"
 }
