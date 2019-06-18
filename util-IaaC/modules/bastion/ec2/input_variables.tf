@@ -19,7 +19,7 @@ variable "instance_security_group_name_postfix" {}
 variable "instance_image_id" {}
 variable "instance_type" {}
 variable "instance_key_name" {}
-variable "instance_user_data_script_path" {}
+variable "instance_user_data_template_path" {}
 
 variable "ssm_policy_arn" {}
 

@@ -28,6 +28,10 @@ data "aws_iam_policy_document" "flowlog_assume_role_policy_document" {
 
     effect = "Allow"
 
+    actions = [
+      "sts:AssumeRole",
+    ]
+
     principals {
       type = "Service"
 
@@ -35,9 +39,5 @@ data "aws_iam_policy_document" "flowlog_assume_role_policy_document" {
         "vpc-flow-logs.amazonaws.com",
       ]
     }
-
-    actions = [
-      "sts:AssumeRole",
-    ]
   }
 }

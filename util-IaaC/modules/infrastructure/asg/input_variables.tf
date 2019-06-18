@@ -22,7 +22,7 @@ variable "target_group_s3_arn" {}
 variable "launch_configuration_image_id" {}
 variable "launch_configuration_instance_type" {}
 variable "launch_configuration_key_name" {}
-variable "launch_configuration_user_data_script_path" {}
+variable "launch_configuration_user_data_template_path" {}
 
 variable "autoscaling_serivce_role_arn" {}
 variable "autoscaling_min_size" {}

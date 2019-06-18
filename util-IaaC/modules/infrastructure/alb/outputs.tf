@@ -2,10 +2,18 @@
 # OUTPUT
 ##################################################################################
 
-output "target-groups-rds-arn" {
-  value = "${element(aws_alb_target_group.alb_target_groups.*.arn, 0)}"
+output "target_group_rds_arn" {
+  value = "${
+    length(aws_alb_target_group.alb_target_groups) > 0 ?
+    element(aws_alb_target_group.alb_target_groups.*.arn, 0) :
+    null
+  }"
 }
 
-output "target-groups-s3-arn" {
-  value = "${element(aws_alb_target_group.alb_target_groups.*.arn, 1)}"
+output "target_group_s3_arn" {
+  value = "${
+    length(aws_alb_target_group.alb_target_groups) > 1 ?
+    element(aws_alb_target_group.alb_target_groups.*.arn, 1) :
+    null
+  }"
 }

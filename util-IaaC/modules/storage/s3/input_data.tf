@@ -8,13 +8,6 @@ data "aws_iam_policy_document" "access_log_s3_bucket_policy_document" {
 
     effect = "Allow"
 
-    principals {
-      type = "AWS"
-      identifiers = "${list(
-        var.access_log_alb_owner_account_id
-      )}"
-    }
-
     actions = [
       "s3:PutObject"
     ]
@@ -27,5 +20,12 @@ data "aws_iam_policy_document" "access_log_s3_bucket_policy_document" {
         var.access_log_bucket_owner_account_id
       )
     )}"
+
+    principals {
+      type = "AWS"
+      identifiers = "${list(
+        var.access_log_alb_owner_account_id
+      )}"
+    }
   }
 }

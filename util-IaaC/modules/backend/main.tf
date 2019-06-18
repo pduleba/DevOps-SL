@@ -22,17 +22,17 @@ data "aws_iam_policy_document" "backend_policy_document" {
   statement {
     effect = "Allow"
 
-    // principals - bucket creator access only by default
-    principals {
-      type        = "AWS"
-      identifiers = "${var.bucket_policy_principals}"
-    }
-
     actions = ["s3:*"]
 
     resources = [
       "arn:aws:s3:::${var.bucket}/*",
     ]
+
+    // principals - bucket creator access only by default
+    principals {
+      type        = "AWS"
+      identifiers = "${var.bucket_policy_principals}"
+    }
   }
 }
 

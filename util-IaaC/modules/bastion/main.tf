@@ -18,7 +18,7 @@ variable "bastion_security_group_name_postfix" {}
 variable "instance_image_id" {}
 variable "instance_type" {}
 variable "instance_key_name" {}
-variable "instance_user_data_script_path" {}
+variable "instance_user_data_template_path" {}
 
 variable "ssm_policy_arn" {}
 
@@ -45,10 +45,10 @@ module "bastion" {
 
   instance_security_group_name_postfix = "${var.bastion_security_group_name_postfix}"
 
-  instance_image_id              = "${var.instance_image_id}"
-  instance_type                  = "${var.instance_type}"
-  instance_key_name              = "${var.instance_key_name}"
-  instance_user_data_script_path = "${var.instance_user_data_script_path}"
+  instance_image_id                = "${var.instance_image_id}"
+  instance_type                    = "${var.instance_type}"
+  instance_key_name                = "${var.instance_key_name}"
+  instance_user_data_template_path = "${var.instance_user_data_template_path}"
 
   ssm_policy_arn = "${var.ssm_policy_arn}"
 

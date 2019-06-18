@@ -47,7 +47,7 @@ data "aws_s3_bucket" "app_bucket" {
 }
 
 data "template_file" "user_data" {
-  template = "${file(var.launch_configuration_user_data_script_path)}"
+  template = "${file(var.launch_configuration_user_data_template_path)}"
 }
 
 # https://www.terraform.io/docs/providers/aws/guides/iam-policy-documents.html
@@ -69,6 +69,10 @@ data "aws_iam_policy_document" "instance_assume_role_policy" {
 
     effect = "Allow"
 
+    actions = [
+      "sts:AssumeRole",
+    ]
+
     principals {
       type = "Service"
 
@@ -76,9 +80,5 @@ data "aws_iam_policy_document" "instance_assume_role_policy" {
         "ec2.amazonaws.com",
       ]
     }
-
-    actions = [
-      "sts:AssumeRole",
-    ]
   }
 }
