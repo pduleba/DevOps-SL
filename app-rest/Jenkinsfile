@@ -29,7 +29,7 @@ pipeline {
         def pom                 = readMavenPom(file: "${env.ROOT_PATH}/pom.xml")
         ARTIFACT_ID             = pom.getArtifactId()
         RELEASE_VERSION         = pom.getVersion().replace("-SNAPSHOT", "")
-        RELEASE_PACKAGE         = "${env.ARTIFACT_ID}-${env.RELEASE_VERSION}.jar"
+        RELEASE_PACKAGE         = "${env.ARTIFACT_ID}-${env.RELEASE_VERSION}.zip"
     }
 
     options {
@@ -178,7 +178,6 @@ pipeline {
             steps {
                 dir("$TARGET_PATH") {
                     sh "echo EXECUTE CODE DEPLOY"
-                    sh "ls -alt"
                 }
             }
         }
