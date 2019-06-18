@@ -22,7 +22,7 @@ variable "deployment_group_trigger_events" {
 }
 variable "deployment_group_alarm_names" {}
 variable "deployment_group_alarm_enabled" {default = true}
-variable "deployment_group_alarm_ignore_poll_alarm_failure" {default = true}
+variable "deployment_group_alarm_ignore_poll_alarm_failure" {default = false}
 variable "deployment_group_auto_rollback_enabled" {default = true}
 variable "deployment_group_auto_rollback_events" {
   type = "list"

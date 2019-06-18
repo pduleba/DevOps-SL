@@ -22,7 +22,6 @@ resource "aws_cloudwatch_metric_alarm" "alarms" {
   datapoints_to_alarm = "${var.datapoints_to_alarm}"
   unit                = "${var.unit}"
   treat_missing_data  = "${var.treat_missing_data}"
-  evaluate_low_sample_count_percentiles = "${var.evaluate_low_sample_count_percentiles}"
 
   alarm_description = "${
     count.index % 2 < 1 ?

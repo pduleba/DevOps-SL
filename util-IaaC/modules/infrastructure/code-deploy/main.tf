@@ -22,7 +22,7 @@ resource "aws_codedeploy_deployment_group" "deployment_group" {
   deployment_style {
     // TODO :: Verify 'BLUE_GREEN' + 'DISCOVER_EXISTING'
     deployment_type = "IN_PLACE"
-    deployment_option = "WITH_TRAFFIC_CONTROL"
+    deployment_option = "WITHOUT_TRAFFIC_CONTROL"
   }
 
   # Environment configuration (ASG/EC2/On-premise)

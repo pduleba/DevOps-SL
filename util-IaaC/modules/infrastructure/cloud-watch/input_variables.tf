@@ -21,7 +21,6 @@ variable "datapoints_to_alarm" {default = 1}
 variable "unit" {default = "Percent"}
 variable "treat_missing_data" {default = "ignore"}
 variable "actions_enabled" {default = true}
-variable "evaluate_low_sample_count_percentiles" {default = "ignore"}
 
 variable "autoscaling_group_rds_name" {}
 variable "autoscaling_group_s3_name" {}
