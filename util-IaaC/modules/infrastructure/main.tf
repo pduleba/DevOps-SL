@@ -163,9 +163,9 @@ module "cloud-watch" {
   resource_name_prefix  = "${var.resource_name_prefix}"
   resource_name_postfix = "cloud-watch"
 
-  autoscaling_group_rds_id = "${module.asg.autoscaling_group_rds_id}"
-  autoscaling_group_s3_id  = "${module.asg.autoscaling_group_s3_id}"
-  sns_topic_id             = "${module.sns.topic_id}"
+  autoscaling_group_rds_name = "${module.asg.autoscaling_group_rds_name}"
+  autoscaling_group_s3_name  = "${module.asg.autoscaling_group_s3_name}"
+  sns_topic_name             = "${module.sns.topic_name}"
 }
 
 module "code-deploy" {
@@ -179,11 +179,11 @@ module "code-deploy" {
   resource_name_prefix  = "${var.resource_name_prefix}"
   resource_name_postfix = "code-deploy"
 
-  deployment_group_policy_arn               = "${var.deployment_group_policy_arn}"
-  deployment_group_alarm_names              = "${module.cloud-watch.alarm_names}"
-  deployment_group_autoscaling_group_rds_id = "${module.asg.autoscaling_group_rds_id}"
-  deployment_group_autoscaling_group_s3_id  = "${module.asg.autoscaling_group_s3_id}"
-  deployment_group_trigger_id               = "${module.sns.topic_id}"
+  deployment_group_policy_arn                 = "${var.deployment_group_policy_arn}"
+  deployment_group_alarm_names                = "${module.cloud-watch.alarm_names}"
+  deployment_group_autoscaling_group_rds_name = "${module.asg.autoscaling_group_rds_name}"
+  deployment_group_autoscaling_group_s3_name  = "${module.asg.autoscaling_group_s3_name}"
+  deployment_group_trigger_name               = "${module.sns.topic_name}"
 
   deployment_config_minimum_healthy_hosts = "${var.deployment_config_minimum_healthy_hosts}"
 }

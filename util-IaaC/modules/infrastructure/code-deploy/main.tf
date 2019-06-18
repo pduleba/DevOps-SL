@@ -55,15 +55,15 @@ resource "aws_codedeploy_deployment_group" "deployment_group" {
 
   # Alarms
   alarm_configuration {
-    alarms = "${var.deployment_group_alarm_names}"
     enabled = "${var.deployment_group_alarm_enabled}"
+    alarms = "${var.deployment_group_alarm_names}"
     ignore_poll_alarm_failure = "${var.deployment_group_alarm_ignore_poll_alarm_failure}"
   }
 
   # Rollbacks
   auto_rollback_configuration {
     enabled = "${var.deployment_group_auto_rollback_enabled}"
-
+    events = "${var.deployment_group_auto_rollback_events}"
   }
 }
 
@@ -76,6 +76,9 @@ resource "aws_codedeploy_deployment_config" "deployment_config" {
     type = "HOST_COUNT"
     value = "${var.deployment_config_minimum_healthy_hosts}"
   }
+
+  // Traffic routing configuration should be null for Server deployment configuration
+  // traffic_routing_config = null
 }
 
 resource "aws_iam_role" "code_deploy_role" {

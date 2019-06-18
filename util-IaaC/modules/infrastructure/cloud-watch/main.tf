@@ -19,14 +19,28 @@ resource "aws_cloudwatch_metric_alarm" "alarms" {
   period              = "${var.period}"
   statistic           = "${var.statistic}"
   threshold           = "${var.threshold}"
+  datapoints_to_alarm = "${var.datapoints_to_alarm}"
+  unit                = "${var.unit}"
   treat_missing_data  = "${var.treat_missing_data}"
+  evaluate_low_sample_count_percentiles = "${var.evaluate_low_sample_count_percentiles}"
 
-  alarm_actions = "${list(data.aws_sns_topic.topic.arn)}"
   alarm_description = "${
     count.index % 2 < 1 ?
     module.alarm-rds.description :
     module.alarm-s3.description
   }"
+
+  dimensions = {
+    AutoScalingGroupName = "${
+      count.index % 2 < 1 ?
+      data.aws_autoscaling_group.rds.name :
+      data.aws_autoscaling_group.s3.name
+    }"
+  }
+
+  actions_enabled     = "${var.actions_enabled}"
+  insufficient_data_actions = "${list(data.aws_sns_topic.topic.arn)}"
+  alarm_actions = "${list(data.aws_sns_topic.topic.arn)}"
 
   tags = "${
     count.index % 2 < 1 ?

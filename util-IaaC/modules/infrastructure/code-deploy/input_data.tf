@@ -7,15 +7,15 @@ data "aws_iam_policy" "code_deploy_policy" {
 }
 
 data "aws_sns_topic" "topic" {
-  name = "${var.deployment_group_trigger_id}"
+  name = "${var.deployment_group_trigger_name}"
 }
 
 data "aws_autoscaling_group" "rds" {
-  name = "${var.deployment_group_autoscaling_group_rds_id}"
+  name = "${var.deployment_group_autoscaling_group_rds_name}"
 }
 
 data "aws_autoscaling_group" "s3" {
-  name = "${var.deployment_group_autoscaling_group_s3_id}"
+  name = "${var.deployment_group_autoscaling_group_s3_name}"
 }
 
 data "aws_iam_policy_document" "code_deploy_assume_role_policy" {

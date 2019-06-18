@@ -10,10 +10,10 @@ variable "owner" {}
 variable "resource_name_prefix" {}
 variable "resource_name_postfix" {}
 
-variable "deployment_group_autoscaling_group_rds_id" {}
-variable "deployment_group_autoscaling_group_s3_id" {}
+variable "deployment_group_autoscaling_group_rds_name" {}
+variable "deployment_group_autoscaling_group_s3_name" {}
 variable "deployment_group_policy_arn" {}
-variable "deployment_group_trigger_id" {}
+variable "deployment_group_trigger_name" {}
 variable "deployment_group_trigger_events" {
   type = "list"
   default = [
@@ -33,3 +33,5 @@ variable "deployment_group_auto_rollback_events" {
 }
 
 variable "deployment_config_minimum_healthy_hosts" {}
+variable "deployment_config_time_based_linear_interval" {default = 1}
+variable "deployment_config_time_based_linear_percentage" {default = 50}
