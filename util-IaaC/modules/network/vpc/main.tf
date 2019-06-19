@@ -159,22 +159,8 @@ resource "aws_security_group" "alb_sg" {
 
   ingress {
     protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
-    cidr_blocks = "${var.ingress_cidrs}"
-  }
-
-  ingress {
-    protocol    = "tcp"
     from_port   = 8080
     to_port     = 8080
-    cidr_blocks = "${var.ingress_cidrs}"
-  }
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 443
-    to_port     = 443
     cidr_blocks = "${var.ingress_cidrs}"
   }
 
@@ -215,11 +201,19 @@ resource "aws_security_group" "ec2_sg" {
   vpc_id      = "${aws_vpc.vpc.id}"
   description = "${module.ec2-sg.description}"
 
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 22
+    to_port     = 22
+    security_groups = "${list(aws_security_group.bastion_sg.id)}"
+  }
+
   ingress {
     protocol        = "tcp"
-    from_port       = 3306
-    to_port         = 3306
-    security_groups = "${list(aws_security_group.alb_sg.id, aws_security_group.bastion_sg.id)}"
+    from_port       = 8080
+    to_port         = 8080
+    security_groups = "${list(aws_security_group.alb_sg.id)}"
   }
 
   egress {
