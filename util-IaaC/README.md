@@ -43,5 +43,20 @@ specified
 * `exec\[win/ux]\utils\session-start MODULE ENV LOG_NAME` - Utility :: Starts execution recording
 * `exec\[win/ux]\utils\session-stop` - Utility :: Stops execution recording
 
+* Accessing instance via Bastion
+  * `ps aux | grep -v grep | grep ssh-agent` - verify if `ssh-agent` is already running
+  * `eval ``ssh-agent`` ` - start `ssh-agent`
+  * `ssh-add -k key.pem` - add your PEM key
+  * `ssh-add -L` - list added keys
+  * Connect via Bastion
+    * `ssh -At user@bastion-ip -i key.pem` + `ssh user@private-ip` - connect using `ssh` via `bastion-ip` to `private-ip`
+    * `ssh -At user@bastion-ip ssh user@private-ip` - similar but one command
+  * Copy via Bastion
+    * `scp -i key.pem -o ProxyCommand="ssh user@bastion-ip nc private-ip 22" package.zip user@private-ip:~/` - copy using `scp` via `bastion-ip` to `private-ip`
+      * `nc` command must be installed on Bastion!
+
 ## Documentation
 * [Terraform](https://www.terraform.io/docs/index.html)
+* [About ssh-agent and ssh-add in Unix](https://kb.iu.edu/d/aeww)
+* [Securely Connect to Linux Instances Running in a Private Amazon VPC](https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/)
+* [Connect To The Application Instance Using SSH](https://docs.bitnami.com/aws-templates/infrastructure/lamp-production-ready/get-started/connect-ssh/)
