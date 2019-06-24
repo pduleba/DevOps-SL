@@ -21,4 +21,7 @@ sudo service app-rest start
 ### Check status
 # sudo service app-rest status
 ### Check logs
-# cat /var/log/<appname>.log
+### ### - Spring Boot
+# cat /var/log/app-rest.log
+### ### - Code Deploy - https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments-view-logs.html
+# cat /opt/codedeploy-agent/deployment-root/deployment-logs/codedeploy-agent-deployments.log

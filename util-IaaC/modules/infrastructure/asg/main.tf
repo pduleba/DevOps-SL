@@ -91,7 +91,6 @@ resource "aws_launch_configuration" "launch_configurations" {
   name                        = "${count.index % 2 < 1 ? module.launch-configuration-rds.name : module.launch-configuration-s3.name}"
   iam_instance_profile        = "${aws_iam_instance_profile.ec2_instance_profile.name}"
   enable_monitoring           = false
-  user_data                   = "${data.template_file.user_data.rendered}"
   associate_public_ip_address = false
 
   # Storage

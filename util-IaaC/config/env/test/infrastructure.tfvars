@@ -36,11 +36,10 @@ listener_rule_s3_condition_values = [
 # https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html
 # Relates to storage.tfvars
 access_log_bucket_name_postfix = "alb-bucket"
-
-launch_configuration_image_id = "ami-0cc96feef8c6bbff3"
+// TODO :: This AMI has been created manually using 'launch_configuration_user_data.tpl' - use Packer as part of Jenkinsfile
+launch_configuration_image_id = "ami-0e496305d5dccccf6"
 launch_configuration_instance_type = "t2.micro"
 launch_configuration_key_name = "pduleba_ec2_linux_us-east-1_key"
-launch_configuration_user_data_template_path = "./../../config/templates/launch_configuration_user_data.tpl"
 
 autoscaling_serivce_role_arn = "arn:aws:iam::890769921003:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
 autoscaling_min_size = 1

@@ -36,7 +36,6 @@ variable "access_log_bucket_name_postfix" {}
 variable "launch_configuration_image_id" {}
 variable "launch_configuration_instance_type" {}
 variable "launch_configuration_key_name" {}
-variable "launch_configuration_user_data_template_path" {}
 
 variable "autoscaling_serivce_role_arn" {}
 variable "autoscaling_min_size" {}
@@ -122,7 +121,6 @@ module "asg" {
   launch_configuration_image_id                = "${var.launch_configuration_image_id}"
   launch_configuration_instance_type           = "${var.launch_configuration_instance_type}"
   launch_configuration_key_name                = "${var.launch_configuration_key_name}"
-  launch_configuration_user_data_template_path = "${var.launch_configuration_user_data_template_path}"
 
   autoscaling_serivce_role_arn = "${var.autoscaling_serivce_role_arn}"
   autoscaling_min_size         = "${var.autoscaling_min_size}"
