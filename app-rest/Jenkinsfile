@@ -29,6 +29,7 @@ pipeline {
         def pom                 = readMavenPom(file: "${env.ROOT_PATH}/pom.xml")
         ARTIFACT_ID             = pom.getArtifactId()
         RELEASE_VERSION         = pom.getVersion().replace("-SNAPSHOT", "")
+        RELEASE_BUNDLE_TYPE     = "zip"
     }
 
     options {
@@ -36,9 +37,18 @@ pipeline {
     }
 
     parameters {
-        choice choices: ['dev', 'test'], description: 'Target environment', name: 'TARGET_ENVIRONMENT'
-        choice choices: ['aws', 'local'], description: 'Maven profile', name: 'MAVEN_PROFILE'
-        booleanParam defaultValue: true, description: 'Release dry run', name: 'DRY_RUN'
+        choice choices: ['dev', 'test'],
+                name: 'ENVIRONMENT', description: 'Target environment'
+        choice choices: ['aws', 'local'],
+                name: 'MAVEN_PROFILE', description: 'Maven profile'
+        booleanParam defaultValue: true,
+                name: 'DRY_RUN', description: 'Release dry run'
+        choice choices: ['pduleba-code-deploy-application'],
+                name: 'CODE_DEPLOY_APPLICATION', description: 'Code deploy application name'
+        choice choices: ['pduleba-code-deploy-deployment-group'],
+                name: 'CODE_DEPLOY_GROUP', description: 'Code deploy deployment group name'
+        choice choices: ['pduleba-code-deploy-deployment-config'], description: 'Code deploy deployment config name',
+                name: 'CODE_DEPLOY_CONFIG'
     }
 
     tools {
@@ -54,19 +64,16 @@ pipeline {
                 sh "echo AWS_DEFAULT_REGION     = ${env.AWS_DEFAULT_REGION}"
                 sh "echo AWS_DEFAULT_OUTPUT     = ${env.AWS_DEFAULT_OUTPUT}"
 
-                sh "echo ROOT_PATH              = ${env.ROOT_PATH}"
-                sh "echo TARGET_PATH            = ${env.TARGET_PATH}"
-
                 sh "echo ARTIFACT_ID            = ${env.ARTIFACT_ID}"
                 sh "echo RELEASE_VERSION        = ${env.RELEASE_VERSION}"
 
-                sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
+                sh "echo ENVIRONMENT            = ${params.ENVIRONMENT}"
                 sh "echo MAVEN_PROFILE          = ${params.MAVEN_PROFILE}"
                 sh "echo DRY_RUN                = ${params.DRY_RUN}"
 
                 // Plugin :: https://wiki.jenkins.io/display/JENKINS/AWS+Parameter+Store+Plugin
                 withAWSParameterStore(credentialsId: "${env.AWS_CREDENTIALS_ID}",
-                        path: "/pduleba/${params.TARGET_ENVIRONMENT}",
+                        path: "/pduleba/${params.ENVIRONMENT}",
                         regionName: "${env.AWS_DEFAULT_REGION}",
                         naming: 'relative',
                         recursive: true) {
@@ -111,7 +118,7 @@ pipeline {
             steps {
                 dir("${env.ROOT_PATH}") {
                     withAWSParameterStore(credentialsId: "${env.AWS_CREDENTIALS_ID}",
-                            path: "/pduleba/${params.TARGET_ENVIRONMENT}",
+                            path: "/pduleba/${params.ENVIRONMENT}",
                             regionName: "${env.AWS_DEFAULT_REGION}",
                             naming: 'relative',
                             recursive: true) {
@@ -124,13 +131,17 @@ pipeline {
                         }
 
                         script {
-                            RELEASE_ID = "${env.ARTIFACT_ID}-${env.RELEASE_VERSION}"
-                            RELEASE_EXECUTABLE = "${RELEASE_ID}.jar"
-                            RELEASE_PACKAGE = "${RELEASE_ID}.zip"
-                            S3_LOCATION = "s3://${env.APP_BUCKET}/releases/${RELEASE_PACKAGE}"
+                            EXECUTABLE_ID = "${env.ARTIFACT_ID}-${env.RELEASE_VERSION}"
+                            EXECUTABLE_NAME = "${EXECUTABLE_ID}.jar"
+
+                            RELEASE_PACKAGE = "${EXECUTABLE_ID}.${env.RELEASE_BUNDLE_TYPE}"
+
+                            S3_BUCKET = "${env.APP_BUCKET}"
+                            S3_KEY = "releases/${params.ENVIRONMENT}/${RELEASE_PACKAGE}"
+                            S3_LOCATION = "s3://${S3_BUCKET}/${S3_KEY}"
                         }
 
-                        sh "exec/ux/exec-package.sh ${RELEASE_EXECUTABLE} ${RELEASE_PACKAGE} ${env.RELEASE_VERSION}"
+                        sh "exec/ux/exec-package.sh ${EXECUTABLE_NAME} ${RELEASE_PACKAGE} ${env.RELEASE_VERSION}"
 
                         stash name: "release", includes: "target/${RELEASE_PACKAGE}"
                     }
@@ -186,20 +197,22 @@ pipeline {
             }
             steps {
                 dir("$TARGET_PATH") {
-                    sh "echo EXECUTE CODE DEPLOY"
+                    sh "exec/ux/exec-code-deploy.sh " +
+                            "${env.CODE_DEPLOY_APPLICATION} ${env.CODE_DEPLOY_GROUP} ${env.CODE_DEPLOY_CONFIG} " +
+                            "${S3_BUCKET} ${S3_KEY} ${env.RELEASE_BUNDLE_TYPE}"
                 }
             }
         }
     }
 }
 
-def maskValue(String value) {
+static def maskValue(String value) {
     return value?.trim() ? "****" : ""
 }
 
 String getReleaseArguments(boolean prepare) {
     // INFO :: StringJoiner must be enabled on Jenkins via http://localhost:8181/scriptApproval/
-    StringJoiner innerArguments = new StringJoiner(" ");
+    StringJoiner innerArguments = new StringJoiner(" ")
     innerArguments
             .add("-P${params.MAVEN_PROFILE}")
             .add("-DskipTests")
