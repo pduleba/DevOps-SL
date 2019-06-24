@@ -29,7 +29,6 @@ pipeline {
         def pom                 = readMavenPom(file: "${env.ROOT_PATH}/pom.xml")
         ARTIFACT_ID             = pom.getArtifactId()
         RELEASE_VERSION         = pom.getVersion().replace("-SNAPSHOT", "")
-        RELEASE_PACKAGE         = "${env.ARTIFACT_ID}-${env.RELEASE_VERSION}.zip"
     }
 
     options {
@@ -58,7 +57,7 @@ pipeline {
                 sh "echo ROOT_PATH              = ${env.ROOT_PATH}"
                 sh "echo TARGET_PATH            = ${env.TARGET_PATH}"
 
-                sh "echo RELEASE_PACKAGE        = ${env.RELEASE_PACKAGE}"
+                sh "echo ARTIFACT_ID            = ${env.ARTIFACT_ID}"
                 sh "echo RELEASE_VERSION        = ${env.RELEASE_VERSION}"
 
                 sh "echo TARGET_ENVIRONMENT     = ${params.TARGET_ENVIRONMENT}"
@@ -125,8 +124,15 @@ pipeline {
                         }
 
                         script {
-                            S3_LOCATION = "s3://${env.APP_BUCKET}/releases/${env.RELEASE_PACKAGE}"
+                            RELEASE_ID = "${env.ARTIFACT_ID}-${env.RELEASE_VERSION}"
+                            RELEASE_EXECUTABLE = "${RELEASE_ID}.jar"
+                            RELEASE_PACKAGE = "${RELEASE_ID}.zip"
+                            S3_LOCATION = "s3://${env.APP_BUCKET}/releases/${RELEASE_PACKAGE}"
                         }
+
+                        sh "exec/ux/exec-package.sh ${RELEASE_EXECUTABLE} ${RELEASE_PACKAGE} ${env.RELEASE_VERSION}"
+
+                        stash name: "release", includes: "target/${RELEASE_PACKAGE}"
                     }
                 }
             }
@@ -160,7 +166,10 @@ pipeline {
             }
             steps {
                 dir("${env.ROOT_PATH}") {
-                    sh "exec/ux/exec-deploy.sh ${env.RELEASE_PACKAGE} ${S3_LOCATION}"
+                    script {
+                        unstash name: "release"
+                        sh "exec/ux/exec-deploy.sh ${RELEASE_PACKAGE} ${S3_LOCATION}"
+                    }
                 }
             }
         }

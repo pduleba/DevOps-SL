@@ -15,7 +15,9 @@
   * version update
   * create tag with sources on GitHub
   * executable `is not` released
-### use `app-rest`
+### create package
+* `exec-package.bat EXECUTABLE_NAME PACKAGE_NAME` - creates CodeDeploy archive using released executables
+### usage of `app-rest`
 * RESTful API
   * Import [DevOps.postman_collection.json](/util-postman/DevOps.postman_collection.json) Postman collection, where
     * `RDSController` contains API for RDS/MySQL
