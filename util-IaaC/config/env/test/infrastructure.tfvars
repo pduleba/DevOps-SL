@@ -37,7 +37,7 @@ listener_rule_s3_condition_values = [
 # Relates to storage.tfvars
 access_log_bucket_name_postfix = "alb-bucket"
 
-launch_configuration_image_id = "ami-0c6b1d09930fac512"
+launch_configuration_image_id = "ami-0cc96feef8c6bbff3"
 launch_configuration_instance_type = "t2.micro"
 launch_configuration_key_name = "pduleba_ec2_linux_us-east-1_key"
 launch_configuration_user_data_template_path = "./../../config/templates/launch_configuration_user_data.tpl"

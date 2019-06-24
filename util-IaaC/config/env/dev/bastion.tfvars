@@ -9,7 +9,7 @@ private_subnet_name_postfix = "private-subnet"
 
 bastion_security_group_name_postfix = "bastion-sg"
 
-instance_image_id = "ami-0c6b1d09930fac512"
+instance_image_id = "ami-0cc96feef8c6bbff3"
 instance_type = "t2.micro"
 instance_key_name = "pduleba_ec2_linux_us-east-1_key"
 instance_user_data_template_path = "./../../config/templates/ec2_bastion_user_data.tpl"
