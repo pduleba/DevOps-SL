@@ -132,7 +132,7 @@ pipeline {
 
                         sh "exec/ux/exec-package.sh ${RELEASE_EXECUTABLE} ${RELEASE_PACKAGE} ${env.RELEASE_VERSION}"
 
-                        stash name: "release", includes: "${RELEASE_PACKAGE}"
+                        stash name: "release", includes: "target/${RELEASE_PACKAGE}"
                     }
                 }
             }
