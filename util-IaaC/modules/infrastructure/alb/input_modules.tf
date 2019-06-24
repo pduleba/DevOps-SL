@@ -48,6 +48,8 @@ module "target-group-rds" {
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
   name_postfix = "${var.target_group_rds_name_postfix}"
+
+  path = "${var.target_group_rds_path}"
 }
 
 module "target-group-s3" {
@@ -56,6 +58,8 @@ module "target-group-s3" {
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
   name_postfix = "${var.target_group_s3_name_postfix}"
+
+  path = "${var.target_group_s3_path}"
 }
 
 module "alb-access-log-bucket" {
