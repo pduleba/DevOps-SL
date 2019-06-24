@@ -168,7 +168,7 @@ pipeline {
                 dir("${env.ROOT_PATH}") {
                     script {
                         unstash name: "release"
-                        sh "exec/ux/exec-deploy.sh ${RELEASE_PACKAGE} ${S3_LOCATION}"
+                        sh "exec/ux/exec-s3-copy.sh ${RELEASE_PACKAGE} ${S3_LOCATION}"
                     }
                 }
             }
