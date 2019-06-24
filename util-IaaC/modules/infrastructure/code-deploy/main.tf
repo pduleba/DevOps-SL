@@ -31,15 +31,6 @@ resource "aws_codedeploy_deployment_group" "deployment_group" {
     data.aws_autoscaling_group.rds.name,
     data.aws_autoscaling_group.s3.name
   )}"
-  dynamic "ec2_tag_filter" {
-    for_each = "${module.deployment-group.base_tags}"
-
-    content {
-      type                = "KEY_AND_VALUE"
-      key                 = ec2_tag_filter.key
-      value               = ec2_tag_filter.value
-    }
-  }
 
   # Deployment settings
   deployment_config_name = "${aws_codedeploy_deployment_config.deployment_config.id}"
