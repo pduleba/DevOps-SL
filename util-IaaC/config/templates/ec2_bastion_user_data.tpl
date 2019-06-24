@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo yum update -y
+# Other
 sudo yum install nc -y
 sudo yum install jq -y
 sudo yum install java-1.8.0-openjdk-devel -y
