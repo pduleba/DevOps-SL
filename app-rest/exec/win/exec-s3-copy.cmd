@@ -1,5 +1,4 @@
 :: Win Script
-mvn release:clean ^
-	release:prepare ^
-	release:perform ^
-	-Paws
+@aws s3 cp ^
+	./target/%1 ^
+	%2
