@@ -20,6 +20,9 @@ RUN apk update && apk upgrade
 # Update bash
 ENV PS1 '\u@\h:\W \$ '
 
+# Install zip
+RUN apk add zip
+
 # Install ssh
 RUN apk add openssh
 

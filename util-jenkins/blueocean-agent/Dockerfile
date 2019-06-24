@@ -24,6 +24,9 @@ RUN apk add bash-completion
 RUN sed -i 's/^root.*\/bin\/ash/root:x:0:0:root:\/root:\/bin\/bash/1' /etc/passwd
 ENV PS1 '\u@\h:\W \$ '
 
+# Install zip
+RUN apk add zip
+
 # Install ssh
 RUN apk add openssh
 
