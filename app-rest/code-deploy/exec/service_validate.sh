@@ -4,10 +4,10 @@ while [[ true ]]
 do
     if [[ $(systemctl is-active app-rest) == 'active' ]]
     then
-        echo "Checking service status..."
-        sleep 3s
-    else
         echo "Service is running!"
         exit 0
+    else
+        echo "Waiting for service..."
+        sleep 3s
     fi
 done
