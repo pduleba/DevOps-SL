@@ -81,4 +81,7 @@
             </div>
         </div>
     </div>
+    <div align="right">
+        <p> Version @project.version@ </p>
+    </div>
 </div>

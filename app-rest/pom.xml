@@ -214,6 +214,7 @@
                     <include>**/application.js</include>
                     <include>**/application.yml</include>
                     <include>**/aws.yml</include>
+                    <include>**/view.ftl</include>
                 </includes>
             </resource>
             <resource>
@@ -223,6 +224,7 @@
                     <exclude>**/application.js</exclude>
                     <exclude>**/application.yml</exclude>
                     <exclude>**/aws.yml</exclude>
+                    <exclude>**/view.ftl</exclude>
                 </excludes>
             </resource>
         </resources>
