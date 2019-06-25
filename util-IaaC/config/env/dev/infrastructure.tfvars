@@ -36,7 +36,7 @@ access_log_bucket_name_postfix = "alb-bucket"
 access_log_bucket_owner_account_id = "890769921003"
 access_log_alb_owner_account_id = "127311923021"  // region related
 
-// TODO :: This AMI has been created manually using 'launch_configuration_user_data.tpl' - use Packer as part of Jenkinsfile
+// TODO :: Add Packer to Jenkinsfile - this AMI has been created manually using 'launch_configuration_user_data.tpl'
 launch_configuration_image_id = "ami-0e496305d5dccccf6"
 launch_configuration_instance_type = "t2.micro"
 launch_configuration_key_name = "pduleba_ec2_linux_us-east-1_key"
