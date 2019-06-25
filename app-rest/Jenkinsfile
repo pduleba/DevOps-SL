@@ -165,7 +165,7 @@ pipeline {
             }
         }
 
-        stage("S3 deploy") {
+        stage("S3 copy") {
             when {
                 expression {
                     (
@@ -196,7 +196,7 @@ pipeline {
                 }
             }
             steps {
-                dir("$TARGET_PATH") {
+                dir("${env.ROOT_PATH}") {
                     sh "exec/ux/exec-code-deploy.sh " +
                             "${env.CODE_DEPLOY_APPLICATION} ${env.CODE_DEPLOY_GROUP} ${env.CODE_DEPLOY_CONFIG} " +
                             "${S3_BUCKET} ${S3_KEY} ${env.RELEASE_BUNDLE_TYPE}"
