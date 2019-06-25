@@ -51,12 +51,12 @@ module "rds" {
   public_subnet_name_postfix  = "${var.public_subnet_name_postfix}"
   private_subnet_name_postfix = "${var.private_subnet_name_postfix}"
 
-  rds_engine                  = "${var.rds_engine}"
-  rds_engine_mode             = "${var.rds_engine_mode}"
-  rds_engine_version          = "${var.rds_engine_version}"
-  rds_instance_class          = "${var.rds_instance_class}"
-  rds_parameter_group         = "${var.rds_parameter_group}"
-  rds_cluster_parameter_group = "${var.rds_cluster_parameter_group}"
+  rds_engine                      = "${var.rds_engine}"
+  rds_engine_mode                 = "${var.rds_engine_mode}"
+  rds_engine_version              = "${var.rds_engine_version}"
+  rds_instance_class              = "${var.rds_instance_class}"
+  rds_parameter_group             = "${var.rds_parameter_group}"
+  rds_cluster_parameter_group     = "${var.rds_cluster_parameter_group}"
   rds_security_group_name_postfix = "${var.rds_security_group_name_postfix}"
 
   database_name     = "${var.database_name}"

@@ -10,14 +10,6 @@ module "app-bucket" {
   name_postfix = "${var.resource_name_postfix}"
 }
 
-module "alb-access-log-bucket" {
-  source = "../../utils/resource"
-
-  owner        = "${var.owner}"
-  name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "${var.access_log_bucket_name_postfix}"
-}
-
 module "ssm-parameter-app-bucket" {
   source = "../../utils/resource"
 

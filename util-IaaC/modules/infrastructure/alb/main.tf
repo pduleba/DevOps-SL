@@ -25,7 +25,7 @@ resource "aws_alb" "alb" {
   enable_http2               = true
   access_logs {
     enabled = true
-    bucket  = "${data.aws_s3_bucket.access_log_s3_bucket.bucket}"
+    bucket  = "${aws_s3_bucket.access_log_bucket.id}"
     prefix  = "${var.access_log_bucket_log_prefix}"
   }
 
@@ -104,6 +104,16 @@ resource "aws_alb_target_group" "alb_target_groups" {
   }
 
   tags = "${count.index % 2 < 1 ? module.target-group-rds.tags : module.target-group-s3.tags}"
+}
+
+resource "aws_s3_bucket" "access_log_bucket" {
+  bucket = "${module.access-log-bucket.name}"
+
+  acl           = "private"
+  force_destroy = "true"
+  policy        = "${data.aws_iam_policy_document.access_log_s3_bucket_policy_document.json}"
+
+  tags = "${module.access-log-bucket.tags}"
 }
 
 resource "aws_ssm_parameter" "http_host" {

@@ -43,7 +43,7 @@ data "aws_iam_policy" "ssm_policy" {
 }
 
 data "aws_s3_bucket" "app_bucket" {
-  bucket = "${var.app_bucket}"
+  bucket = "${var.app_bucket_id}"
 }
 
 # https://www.terraform.io/docs/providers/aws/guides/iam-policy-documents.html

@@ -62,7 +62,7 @@ module "target-group-s3" {
   path = "${var.target_group_s3_path}"
 }
 
-module "alb-access-log-bucket" {
+module "access-log-bucket" {
   source = "../../utils/resource"
 
   owner        = "${var.owner}"

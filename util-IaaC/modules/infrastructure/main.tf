@@ -94,8 +94,10 @@ module "alb" {
   listener_rule_rds_condition_values    = "${var.listener_rule_rds_condition_values}"
   listener_rule_s3_condition_values     = "${var.listener_rule_s3_condition_values}"
 
-  access_log_bucket_name_postfix = "${var.access_log_bucket_name_postfix}"
-  access_log_bucket_log_prefix   = "${var.environment}"
+  access_log_bucket_name_postfix     = "${var.access_log_bucket_name_postfix}"
+  access_log_bucket_log_prefix       = "${var.environment}"
+  access_log_bucket_owner_account_id = "${var.access_log_bucket_owner_account_id}"
+  access_log_alb_owner_account_id    = "${var.access_log_alb_owner_account_id}"
 
   ssm_parameter_environment_postfix   = "${var.environment}"
   ssm_parameter_http_host_key_postfix = "${var.ssm_parameter_http_host_key_postfix}"
@@ -115,17 +117,16 @@ module "s3" {
 
   app_bucket_cors_allowed_headers = "${var.app_bucket_cors_allowed_headers}"
   app_bucket_cors_allowed_methods = "${var.app_bucket_cors_allowed_methods}"
-  app_bucket_cors_allowed_origins = "${format(
-    "%s://%s:%s",
-    var.protocol,
-    module.alb.dns_name,
-    var.port
+  app_bucket_cors_allowed_origins = "${list(
+    format(
+      "%s://%s:%s",
+      var.protocol,
+      module.alb.dns_name,
+      var.port
+    )
   )}"
 
-  access_log_bucket_name_postfix     = "${var.access_log_bucket_name_postfix}"
-  access_log_bucket_log_prefix       = "${var.environment}"
-  access_log_bucket_owner_account_id = "${var.access_log_bucket_owner_account_id}"
-  access_log_alb_owner_account_id    = "${var.access_log_alb_owner_account_id}"
+  access_log_bucket_id = "${module.alb.access_log_bucket_id}"
 
   ssm_parameter_environment_postfix    = "${var.environment}"
   ssm_parameter_app_bucket_key_postfix = "${var.ssm_parameter_app_bucket_key_postfix}"
@@ -151,11 +152,11 @@ module "asg" {
   target_group_rds_arn = "${module.alb.target_group_rds_arn}"
   target_group_s3_arn  = "${module.alb.target_group_s3_arn}"
 
-  app_bucket = "${module.s3.bucket_id}"
+  app_bucket_id = "${module.s3.app_bucket_id}"
 
-  launch_configuration_image_id                = "${var.launch_configuration_image_id}"
-  launch_configuration_instance_type           = "${var.launch_configuration_instance_type}"
-  launch_configuration_key_name                = "${var.launch_configuration_key_name}"
+  launch_configuration_image_id      = "${var.launch_configuration_image_id}"
+  launch_configuration_instance_type = "${var.launch_configuration_instance_type}"
+  launch_configuration_key_name      = "${var.launch_configuration_key_name}"
 
   autoscaling_serivce_role_arn = "${var.autoscaling_serivce_role_arn}"
   autoscaling_min_size         = "${var.autoscaling_min_size}"

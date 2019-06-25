@@ -19,7 +19,7 @@ variable "instance_security_group_name_postfix" {}
 variable "target_group_rds_arn" {}
 variable "target_group_s3_arn" {}
 
-variable "app_bucket" {}
+variable "app_bucket_id" {}
 
 variable "launch_configuration_image_id" {}
 variable "launch_configuration_instance_type" {}
