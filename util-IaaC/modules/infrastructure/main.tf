@@ -120,7 +120,9 @@ module "s3" {
   app_bucket_cors_allowed_origins = "${list(
     format(
       "%s://%s:%s",
-      var.protocol,
+      lower(
+        var.protocol
+      ),
       module.alb.dns_name,
       var.port
     )
