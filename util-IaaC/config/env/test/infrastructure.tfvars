@@ -23,19 +23,19 @@ target_group_deregistration_delay = 300
 target_group_slow_start = 300
 
 listener_default_action_redirect_path = "/app-rest/s3/index"
-listener_rule_rds_condition_values = [
-  "/app-rest/api/rds/*",
-  "/app-rest/rds/*"
-]
-listener_rule_s3_condition_values = [
-  "/app-rest/api/s3/*",
-  "/app-rest/s3/*"
-]
+listener_rule_rds_condition_values = [ "/app-rest/api/rds/*", "/app-rest/rds/*" ]
+listener_rule_s3_condition_values = [ "/app-rest/api/s3/*", "/app-rest/s3/*" ]
+
+app_bucket_postfix = "app-bucket"
+app_bucket_cors_allowed_headers = [ "*" ]
+app_bucket_cors_allowed_methods = [ "PUT" ]
 
 # https://docs.aws.amazon.com/console/elasticloadbalancing/access-logs
 # https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html
-# Relates to storage.tfvars
 access_log_bucket_name_postfix = "alb-bucket"
+access_log_bucket_owner_account_id = "890769921003"
+access_log_alb_owner_account_id = "127311923021"  // region related
+
 // TODO :: This AMI has been created manually using 'launch_configuration_user_data.tpl' - use Packer as part of Jenkinsfile
 launch_configuration_image_id = "ami-0e496305d5dccccf6"
 launch_configuration_instance_type = "t2.micro"
@@ -46,9 +46,9 @@ autoscaling_min_size = 1
 autoscaling_desired_size = 1
 autoscaling_max_size = 1
 
-ssm_parameter_http_host_key_postfix = "http/host"
-
 ssm_policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+ssm_parameter_http_host_key_postfix = "http/host"
+ssm_parameter_app_bucket_key_postfix = "app/bucket"
 
 sns_delivery_policy_template_path = "./../../config/templates/delivery_policy.tpl.json"
 sns_policy_source_owner_account_id = "890769921003"
@@ -57,8 +57,4 @@ sns_endpoint = "+48697250630"
 
 # https://docs.aws.amazon.com/codedeploy/latest/userguide/getting-started-create-service-role.html
 deployment_group_policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
-
 deployment_config_minimum_healthy_hosts = 1
-
-# Relates to storage.tfvars
-app_bucket_postfix = "app-bucket"

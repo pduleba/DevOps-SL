@@ -9,7 +9,11 @@ resource "aws_s3_bucket" "app_bucket" {
   acl           = "private"
   force_destroy = "true"
 
-  // TODO :: Add CORS rule for app-bucket
+  cors_rule {
+    allowed_headers = "${var.app_bucket_cors_allowed_headers}"
+    allowed_methods = "${var.app_bucket_cors_allowed_methods}"
+    allowed_origins = "${var.app_bucket_cors_allowed_origins}"
+  }
 
   tags = "${module.app-bucket.tags}"
 }

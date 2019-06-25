@@ -15,7 +15,7 @@ resource "aws_autoscaling_group" "autoscaling_groups" {
   desired_capacity = "${var.autoscaling_desired_size}" // can be replaced by 'aws_autoscaling_policy'
   max_size         = "${var.autoscaling_max_size}"
   min_size         = "${var.autoscaling_min_size}"
-  // TODO :: Use all AZs in region ?
+
   vpc_zone_identifier = "${data.aws_subnet.private.*.id}"
   availability_zones  = "${data.aws_subnet.private.*.availability_zone_id}"
   target_group_arns = "${list(

@@ -31,7 +31,13 @@ variable "listener_default_action_redirect_path" {}
 variable "listener_rule_s3_condition_values" { type = "list" }
 variable "listener_rule_rds_condition_values" { type = "list" }
 
+variable "app_bucket_postfix" {}
+variable "app_bucket_cors_allowed_headers" { type = "list" }
+variable "app_bucket_cors_allowed_methods" { type = "list" }
+
 variable "access_log_bucket_name_postfix" {}
+variable "access_log_bucket_owner_account_id" {}
+variable "access_log_alb_owner_account_id" {}
 
 variable "launch_configuration_image_id" {}
 variable "launch_configuration_instance_type" {}
@@ -42,9 +48,9 @@ variable "autoscaling_min_size" {}
 variable "autoscaling_desired_size" {}
 variable "autoscaling_max_size" {}
 
-variable "ssm_parameter_http_host_key_postfix" {}
-
 variable "ssm_policy_arn" {}
+variable "ssm_parameter_http_host_key_postfix" {}
+variable "ssm_parameter_app_bucket_key_postfix" {}
 
 variable "sns_delivery_policy_template_path" {}
 variable "sns_policy_source_owner_account_id" {}
@@ -52,10 +58,7 @@ variable "sns_protocol" {}
 variable "sns_endpoint" {}
 
 variable "deployment_group_policy_arn" {}
-
 variable "deployment_config_minimum_healthy_hosts" {}
-
-variable "app_bucket_postfix" {}
 
 ##################################################################################
 # MODULES
@@ -80,22 +83,52 @@ module "alb" {
   port     = "${var.port}"
   protocol = "${var.protocol}"
 
-  listener_default_action_redirect_path = "${var.listener_default_action_redirect_path}"
-  listener_rule_rds_condition_values    = "${var.listener_rule_rds_condition_values}"
-  listener_rule_s3_condition_values     = "${var.listener_rule_s3_condition_values}"
-
-  target_group_deregistration_delay = "${var.target_group_deregistration_delay}"
-  target_group_slow_start           = "${var.target_group_slow_start}"
   target_group_rds_name_postfix     = "${var.target_group_rds_name_postfix}"
   target_group_rds_path             = "${var.target_group_rds_path}"
   target_group_s3_name_postfix      = "${var.target_group_s3_name_postfix}"
   target_group_s3_path              = "${var.target_group_s3_path}"
+  target_group_deregistration_delay = "${var.target_group_deregistration_delay}"
+  target_group_slow_start           = "${var.target_group_slow_start}"
+
+  listener_default_action_redirect_path = "${var.listener_default_action_redirect_path}"
+  listener_rule_rds_condition_values    = "${var.listener_rule_rds_condition_values}"
+  listener_rule_s3_condition_values     = "${var.listener_rule_s3_condition_values}"
 
   access_log_bucket_name_postfix = "${var.access_log_bucket_name_postfix}"
   access_log_bucket_log_prefix   = "${var.environment}"
 
   ssm_parameter_environment_postfix   = "${var.environment}"
   ssm_parameter_http_host_key_postfix = "${var.ssm_parameter_http_host_key_postfix}"
+}
+
+
+module "s3" {
+  source = "./s3"
+
+  profile = "${var.profile}"
+  region  = "${var.region}"
+  bucket  = "${var.bucket}"
+
+  owner                 = "${var.owner}"
+  resource_name_prefix  = "${var.resource_name_prefix}"
+  resource_name_postfix = "${var.app_bucket_postfix}"
+
+  app_bucket_cors_allowed_headers = "${var.app_bucket_cors_allowed_headers}"
+  app_bucket_cors_allowed_methods = "${var.app_bucket_cors_allowed_methods}"
+  app_bucket_cors_allowed_origins = "${format(
+    "%s://%s:%s",
+    var.protocol,
+    module.alb.dns_name,
+    var.port
+  )}"
+
+  access_log_bucket_name_postfix     = "${var.access_log_bucket_name_postfix}"
+  access_log_bucket_log_prefix       = "${var.environment}"
+  access_log_bucket_owner_account_id = "${var.access_log_bucket_owner_account_id}"
+  access_log_alb_owner_account_id    = "${var.access_log_alb_owner_account_id}"
+
+  ssm_parameter_environment_postfix    = "${var.environment}"
+  ssm_parameter_app_bucket_key_postfix = "${var.ssm_parameter_app_bucket_key_postfix}"
 }
 
 module "asg" {
@@ -118,6 +151,8 @@ module "asg" {
   target_group_rds_arn = "${module.alb.target_group_rds_arn}"
   target_group_s3_arn  = "${module.alb.target_group_s3_arn}"
 
+  app_bucket = "${module.s3.bucket_id}"
+
   launch_configuration_image_id                = "${var.launch_configuration_image_id}"
   launch_configuration_instance_type           = "${var.launch_configuration_instance_type}"
   launch_configuration_key_name                = "${var.launch_configuration_key_name}"
@@ -128,8 +163,6 @@ module "asg" {
   autoscaling_max_size         = "${var.autoscaling_max_size}"
 
   ssm_policy_arn = "${var.ssm_policy_arn}"
-
-  app_bucket_postfix = "${var.app_bucket_postfix}"
 }
 
 module "sns" {
@@ -177,11 +210,11 @@ module "code-deploy" {
   resource_name_prefix  = "${var.resource_name_prefix}"
   resource_name_postfix = "code-deploy"
 
-  deployment_group_policy_arn                 = "${var.deployment_group_policy_arn}"
-  deployment_group_alarm_names                = "${module.cloud-watch.alarm_names}"
   deployment_group_autoscaling_group_rds_name = "${module.asg.autoscaling_group_rds_name}"
   deployment_group_autoscaling_group_s3_name  = "${module.asg.autoscaling_group_s3_name}"
+  deployment_group_policy_arn                 = "${var.deployment_group_policy_arn}"
   deployment_group_trigger_name               = "${module.sns.topic_name}"
+  deployment_group_alarm_names                = "${module.cloud-watch.alarm_names}"
 
   deployment_config_minimum_healthy_hosts = "${var.deployment_config_minimum_healthy_hosts}"
 }

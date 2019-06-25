@@ -8,8 +8,11 @@ variable "bucket" {}
 
 variable "owner" {}
 variable "resource_name_prefix" {}
+variable "resource_name_postfix" {}
 
-variable "app_bucket_postfix" {}
+variable "app_bucket_cors_allowed_headers" { type = "list" }
+variable "app_bucket_cors_allowed_methods" { type = "list" }
+variable "app_bucket_cors_allowed_origins" { type = "list" }
 
 variable "access_log_bucket_name_postfix" {}
 variable "access_log_bucket_log_prefix" {}

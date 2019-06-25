@@ -7,7 +7,7 @@ module "app-bucket" {
 
   owner        = "${var.owner}"
   name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "${var.app_bucket_postfix}"
+  name_postfix = "${var.resource_name_postfix}"
 }
 
 module "alb-access-log-bucket" {

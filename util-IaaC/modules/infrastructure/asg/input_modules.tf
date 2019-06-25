@@ -90,11 +90,3 @@ module "instance-s3-inline-policy" {
   name_prefix  = "${var.resource_name_prefix}"
   name_postfix = "${var.resource_name_postfix}-inline-policy"
 }
-
-module "app-bucket" {
-  source = "../../utils/resource"
-
-  owner        = "${var.owner}"
-  name_prefix  = "${var.resource_name_prefix}"
-  name_postfix = "${var.app_bucket_postfix}"
-}

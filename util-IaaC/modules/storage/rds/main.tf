@@ -2,7 +2,7 @@
 # RESOURCES
 ##################################################################################
 
-# TODO :: Add custom aws_db_option_group & custom aws_appautoscaling_target
+// TODO :: Add custom aws_db_option_group & custom aws_appautoscaling_target
 # See for more details https://github.com/terraform-aws-modules/terraform-aws-rds-aurora/blob/master/main.tf
 
 resource "aws_rds_cluster" "aurora_cluster" {

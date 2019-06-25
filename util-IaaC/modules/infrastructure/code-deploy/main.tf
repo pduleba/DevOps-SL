@@ -20,7 +20,7 @@ resource "aws_codedeploy_deployment_group" "deployment_group" {
 
   # Deployment type
   deployment_style {
-    // TODO :: Verify 'BLUE_GREEN' + 'DISCOVER_EXISTING'
+    // TODO :: Add 'BLUE_GREEN' with 'DISCOVER_EXISTING'
     // https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html#reference-appspec-file-structure-hooks-availability
     deployment_type = "IN_PLACE"
     deployment_option = "WITHOUT_TRAFFIC_CONTROL"

@@ -19,6 +19,8 @@ variable "instance_security_group_name_postfix" {}
 variable "target_group_rds_arn" {}
 variable "target_group_s3_arn" {}
 
+variable "app_bucket" {}
+
 variable "launch_configuration_image_id" {}
 variable "launch_configuration_instance_type" {}
 variable "launch_configuration_key_name" {}
@@ -29,5 +31,3 @@ variable "autoscaling_desired_size" {}
 variable "autoscaling_max_size" {}
 
 variable "ssm_policy_arn" {}
-
-variable "app_bucket_postfix" {}
