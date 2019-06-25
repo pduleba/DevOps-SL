@@ -42,9 +42,9 @@ launch_configuration_instance_type = "t2.micro"
 launch_configuration_key_name = "pduleba_ec2_linux_us-east-1_key"
 
 autoscaling_serivce_role_arn = "arn:aws:iam::890769921003:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
-autoscaling_min_size = 1
-autoscaling_desired_size = 1
-autoscaling_max_size = 1
+autoscaling_min_size = 2
+autoscaling_desired_size = 2
+autoscaling_max_size = 2
 
 ssm_policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 ssm_parameter_http_host_key_postfix = "http/host"
