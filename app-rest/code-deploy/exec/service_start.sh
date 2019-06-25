@@ -5,6 +5,6 @@ then
     echo "Service already started"
 else
     echo "Starting service..."
-    sudo service app-rest start
+    sudo systemctl start app-rest
     echo "Starting service... Complete"
 fi

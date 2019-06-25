@@ -16,10 +16,10 @@ sudo chattr +i /home/ec2-user/app-rest/app-rest-0.0.8.jar
 sudo ln -s /home/ec2-user/app-rest/app-rest-0.0.8.jar /etc/init.d/app-rest
 sudo chkconfig app-rest on
 
-sudo service app-rest start
+sudo systemctl start app-rest
 
 ### Check status
-# sudo service app-rest status
+# sudo systemctl status app-rest
 ### Check logs
 ### ### - Spring Boot
 # cat /var/log/app-rest.log
