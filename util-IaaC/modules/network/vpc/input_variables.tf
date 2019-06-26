@@ -19,8 +19,7 @@ variable "ec2_security_group_name_postfix" {}
 variable "rds_security_group_name_postfix" {}
 
 variable "vpc_cidr" {}
-variable "subnet_count" {}
-variable "subnet_public_count" {}
+variable "az_use_count" {}
 variable "ingress_cidrs" {}
 
 variable "flowlog_bucket_postfix" {}

@@ -52,14 +52,14 @@ resource "aws_vpc" "vpc" {
 
 resource "aws_subnet" "subnets" {
   # Loop
-  count = "${var.subnet_count}"
+  count = "${local.SUBNET_COUNT}"
 
   vpc_id                  = "${aws_vpc.vpc.id}"
   cidr_block              = "${cidrsubnet(var.vpc_cidr, 4, count.index)}"
-  availability_zone       = "${data.aws_availability_zones.azs.names[count.index]}"
-  map_public_ip_on_launch = "${count.index < var.subnet_public_count}"
+  availability_zone       = "${data.aws_availability_zones.azs.names[count.index % var.az_use_count]}"
+  map_public_ip_on_launch = "${count.index < local.PUBLIC_SUBNET_COUNT}"
 
-  tags = "${count.index < var.subnet_public_count ? module.public-subnet.tags : module.private-subnet.tags}"
+  tags = "${count.index < local.PUBLIC_SUBNET_COUNT ? module.public-subnet.tags : module.private-subnet.tags}"
 }
 
 resource "aws_internet_gateway" "igw" {
@@ -79,7 +79,7 @@ resource "aws_nat_gateway" "ngw" {
   allocation_id = "${aws_eip.ngw_eip.id}"
 
   # Use last public subnet
-  subnet_id = "${element(aws_subnet.subnets.*.id, var.subnet_public_count - 1)}"
+  subnet_id = "${element(aws_subnet.subnets.*.id, local.PUBLIC_SUBNET_COUNT - 1)}"
 
   tags = "${module.ngw.tags}"
 }
@@ -108,11 +108,11 @@ resource "aws_route_table" "private_rt" {
 
 resource "aws_route_table_association" "rt_associations" {
   # Loop
-  count = "${var.subnet_count}"
+  count = "${local.SUBNET_COUNT}"
 
-  # route_tables[0].id = public RT + INTERNET GW
-  # route_tables[1].id = private RT + NAT GW
-  route_table_id = "${count.index < var.subnet_public_count ? aws_route_table.public_rt.id : aws_route_table.private_rt.id}"
+  # route_tables[PUBLIC_SUBNET_COUNT].id = public RT + INTERNET GW
+  # route_tables[PRIVATE_SUBNET_COUNT].id = private RT + NAT GW
+  route_table_id = "${count.index < local.PUBLIC_SUBNET_COUNT ? aws_route_table.public_rt.id : aws_route_table.private_rt.id}"
 
   subnet_id = "${element(aws_subnet.subnets.*.id, count.index)}"
 }
@@ -126,8 +126,8 @@ resource "aws_network_acl" "nacls" {
   subnet_ids = "${
     slice(
       aws_subnet.subnets.*.id,
-      count.index % 2 < 1 ? 0 : var.subnet_public_count,
-      count.index % 2 < 1 ? var.subnet_public_count : var.subnet_count
+      count.index % 2 < 1 ? 0 : local.PUBLIC_SUBNET_COUNT,
+      count.index % 2 < 1 ? local.PUBLIC_SUBNET_COUNT : local.SUBNET_COUNT
     )
   }"
 

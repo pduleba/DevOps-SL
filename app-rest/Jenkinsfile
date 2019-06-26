@@ -201,7 +201,7 @@ pipeline {
                             "${env.CODE_DEPLOY_APPLICATION} ${env.CODE_DEPLOY_GROUP} ${env.CODE_DEPLOY_CONFIG} " +
                             "${S3_BUCKET} ${S3_KEY} ${env.RELEASE_BUNDLE_TYPE}"
                 }
-                // TODO Add wait for CodeDeploy complete
+                // TODO :: Add wait for CodeDeploy complete and react on status (SUCCESS/FAILURE)
                 // 'aws deploy get-deployment --deployment-id d-QBO3BK49B | jq -r ".deploymentInfo.status"' can be used
             }
         }

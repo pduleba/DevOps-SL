@@ -10,11 +10,8 @@ resource "aws_alb" "alb" {
   load_balancer_type = "application"
   internal           = false
   ip_address_type    = "ipv4"
-  // TODO :: Are public subnets required here?
-  subnets = "${concat(
-    data.aws_subnet.private.*.id,
-    data.aws_subnet.public.*.id
-  )}"
+
+  subnets = "${data.aws_subnet.public.*.id}"
 
   # Security groups
   security_groups = "${list(data.aws_security_group.alb.id)}"

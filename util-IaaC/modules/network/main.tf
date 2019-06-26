@@ -19,8 +19,7 @@ variable "ec2_security_group_name_postfix" {}
 variable "rds_security_group_name_postfix" {}
 
 variable "vpc_cidr" {}
-variable "subnet_count" {}
-variable "subnet_public_count" {}
+variable "az_use_count" {}
 variable "ingress_cidrs" {}
 
 variable "flowlog_bucket_postfix" {}
@@ -47,10 +46,9 @@ module "network" {
   ec2_security_group_name_postfix     = "${var.ec2_security_group_name_postfix}"
   rds_security_group_name_postfix     = "${var.rds_security_group_name_postfix}"
 
-  vpc_cidr            = "${var.vpc_cidr}"
-  subnet_count        = "${var.subnet_count}"
-  subnet_public_count = "${var.subnet_public_count}"
-  ingress_cidrs       = "${var.ingress_cidrs}"
+  vpc_cidr      = "${var.vpc_cidr}"
+  az_use_count  = "${var.az_use_count}"
+  ingress_cidrs = "${var.ingress_cidrs}"
 
   flowlog_bucket_postfix = "${var.flowlog_bucket_postfix}"
 }
