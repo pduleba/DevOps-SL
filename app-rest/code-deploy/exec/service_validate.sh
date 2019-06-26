@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+echo "-------- PREVIOUS EXIT CODE ---------"
+echo "previous exit code" $?
+echo "-------- PREVIOUS EXIT CODE ---------"
+
 echo "-------- VALIDATE BEFORE ---------"
 ps aux | grep -v grep | grep java
 echo "-------- VALIDATE BEFORE ---------"
