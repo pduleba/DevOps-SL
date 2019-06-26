@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+echo "-------- STOP BEFORE ---------"
+ps aux | grep -v grep | grep java
+echo "-------- STOP BEFORE ---------"
+
 if [[ $(systemctl is-active app-rest) == 'active' ]]
 then
     echo "Stopping service..."
@@ -8,3 +12,7 @@ then
 else
     echo "Service already stopped"
 fi
+
+echo "-------- STOP AFTER ---------"
+ps aux | grep -v grep | grep java
+echo "-------- STOP AFTER ---------"

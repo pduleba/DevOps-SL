@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+echo "-------- VALIDATE BEFORE ---------"
+ps aux | grep -v grep | grep java
+echo "-------- VALIDATE BEFORE ---------"
+
 while [[ true ]]
 do
     status=$(systemctl is-active app-rest)
@@ -12,3 +16,7 @@ do
         sleep 3s
     fi
 done
+
+echo "-------- VALIDATE AFTER ---------"
+ps aux | grep -v grep | grep java
+echo "-------- VALIDATE AFTER ---------"
