@@ -53,9 +53,9 @@ RUN apk add docker
 RUN apk add ansible
 
 # Install terraform
-RUN wget -O ~/terraform_0.12.3_linux_amd64.zip https://releases.hashicorp.com/terraform/0.12.3/terraform_0.12.3_linux_amd64.zip
-RUN unzip ~/terraform_0.12.3_linux_amd64.zip -d ~/
-RUN mv ~/terraform /usr/bin/ && rm -rf terraform_0.12.3_linux_amd64.zip
+RUN wget -O ~/terraform_0.12.1_linux_amd64.zip https://releases.hashicorp.com/terraform/0.12.1/terraform_0.12.1_linux_amd64.zip
+RUN unzip ~/terraform_0.12.1_linux_amd64.zip -d ~/
+RUN mv ~/terraform /usr/bin/ && rm -rf terraform_0.12.1_linux_amd64.zip
 
 # For HTTP
 EXPOSE 8181:8080/tcp
